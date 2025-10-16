@@ -258,15 +258,11 @@ def calculate_percentage(user_id):
 
 @app.route("/entry", methods = ["POST", "GET"])
 def entry():
-    if request.method == "POST":
-
-        return redirect(url_for("entry"))
-
-    else:
-        if "id" in session:
+    if "id" in session:
+        if request.method == "GET":
             return render_template("entry.html", entries = Entry.query.filter_by(user_id = session["id"]).all())
-        else:
-            return redirect(url_for("login"))
+    else:
+        return redirect(url_for("login"))
         
 
 @app.route("/add_entry", methods = ["POST", "GET"])
@@ -281,12 +277,10 @@ def add_entry():
 
 @app.route("/display_entry/<entry_id>", methods=["POST", "GET"])
 def display_entry(entry_id):
-    print("reached")
-    expenses = Expenses.query.filter_by(user_id = session["id"]).all()
-    print(f"ID: {entry_id}")
-    entry = Entry.query.filter_by(id = int(entry_id)).first()                   #FIX THIS   FIX THIS   FIX THIS   FIX THIS   FIX THIS   FIX THIS   FIX THIS   FIX THIS   FIX THIS   FIX THIS   FIX THIS   
-
     if "id" in session:
+        expenses = Expenses.query.filter_by(user_id = session["id"]).all()
+        print(f"ID: {entry_id}")
+        entry = Entry.query.filter_by(id = int(entry_id)).first()                     
         return render_template("display_entry.html", expenses = expenses, entry = entry)
     else:
         return redirect(url_for("login"))
@@ -307,7 +301,7 @@ def delete_entry(entry_id):
             return redirect(url_for("login"))
 
 
-@app.route("/add_income/<entry_id>", methods = ["POST"])
+@app.route("/add_income/<entry_id>", methods = ["POST", "GET"])
 def add_income(entry_id):
     if "id" in session:
         if request.method == "POST":
@@ -317,9 +311,12 @@ def add_income(entry_id):
                 current_entry.add_money(income)
             else:
                 flash("Allocation to Expenses do not add to 100")
-        return redirect(url_for("display_entry", entry_id = entry_id))
+            return redirect(url_for(f"display_entry", entry_id = entry_id))
+        
+        else:
+            return redirect(url_for("stats"))
     else:
-        return redirect(url_for("logout"))
+        return redirect(url_for("login"))
     
 '''
 @app.route("/delete_entries")
