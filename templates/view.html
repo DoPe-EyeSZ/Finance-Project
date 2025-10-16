@@ -1,0 +1,26 @@
+{% extends "budget_base.html"%}
+{% block title %}VIEW ALL DATA {% endblock %}
+
+{% block content %} 
+    <h1>VIEW OF ALL DATA</h1>
+    {% for data in info %}
+
+        <p>User name: {{data["User"].name}}</p>
+        <p>User email: {{data["User"].email}}</p>
+        <p>User pw: {{data["User"].pw}}</p>
+        <p>User Expenses:</p>
+        <p>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\</p>
+        {% for expense in data["Expenses"] %}
+            <p>EXPENSE: {{expense.name}} | Percentage: {{expense.percentage}}</p>
+        {% endfor%}
+        <p>\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\</p>
+        {% for entry in data["Entry"] %}
+            <p>Date: {{entry.date}} | Income: {{entry.income}}</p>
+        {% endfor%}
+
+
+    <p>--------------------------------------------------------</p>
+    {% endfor %}
+
+
+{% endblock %}

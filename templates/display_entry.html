@@ -1,0 +1,61 @@
+{% extends "budget_base.html" %}
+{% block title%} ENTRY VIEWING {% endblock%}
+
+{% block content %}
+<h1>DATE: {{entry.date}}</h1>
+<h1>CURRENT INCOME: {{entry.income}}</h1>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <p>{{msg}}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<h1>Enter Income</h1>
+<form action="/add_income/{{entry.id}}" method="POST">
+    <p><input type="number" name="income"></p>
+    <p><button type="submit">Submit</button></p>
+
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Expense</th>
+            <th>Allocated</th>
+            <th>Spendings</th>
+            <th>Saved</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for expense in expenses %}
+            {% if expense %}
+                <tr>
+                    <td>{{expense.name}}</td>
+                    <td>DO LATER</td>
+                    <td>DO LATER</td>
+                    <td>DO LATER</td>
+
+                </tr>
+
+            {% endif %}
+        {% endfor%}
+    </tbody>
+
+</table>
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts%}
+
+{% endblock %}

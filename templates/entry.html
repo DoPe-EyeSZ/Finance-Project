@@ -1,0 +1,55 @@
+{% extends "budget_base.html" %}
+{% block title%} Entries {% endblock%}
+
+{% block content %}
+<h1>ENTRY TAB</h1>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <p>{{msg}}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for entry in entries %}
+            {% if entry%}
+                <form action="/display_entry/{{entry.id}}" method="POST">
+                    <tr>
+                        <td>{{entry.date}}</td>
+                        <td><button type="submit" class="btn btn-success">View</button> <button type="submit" class="btn btn-danger" formaction="delete_entry/{{entry.id}}"> Delete </button></td>
+                    </tr>
+                </form>
+                
+            {% endif %}
+        {% endfor %}
+        <tr>
+            <form action="/add_entry", method="POST">
+                <td><p>#</p></td>
+                <td><button type="submit" class="btn btn-primary">Add</button></td>
+            </form>
+        </tr>
+
+
+    </tbody>
+</table>
+
+
+
+
+{% endblock %}
+
+{% block scripts%}
+
+{% endblock %}

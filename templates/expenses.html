@@ -1,0 +1,71 @@
+{% extends "budget_base.html"%}
+{% block title %} Manage Expenses {% endblock %}
+
+
+{% block content %}
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <p>{{msg}}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+<h1>Expenses</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"> # </th>
+      <th scope="col" data-field="expense" data-sortable="true" data-align="center">Expense</th>
+      <th scope="col" data-field="percent" data-sortable="true" data-align="center">Percentage</th>
+      <th scope="col"> Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for expense in expenses%}
+      {% if expense %}
+        <tr>
+          <form action="/edit_expense/{{expense.id}}" method = "POST">
+            <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
+            <td><input type="text" name="name" value="{{expense.name}}" ></td>
+            <td><input type="number" name="percentage" value="{{expense.percentage}}" ></td>
+            <td><button type="submit" class="btn btn-success"> Save </button> <button class="btn btn-danger" formaction="/delete_expense/{{expense.id}}" > Delete </button></td>
+          </form>
+        </tr>
+      {% endif %}
+    {% endfor %}
+    <tr>
+      <form action="#" method="POST">
+
+        <td><p>+</p></td>
+
+        <td><input type="text" name="expense_name"></td><p>
+
+        <td><input type="number" name="percent"></td>
+
+        <td><button type="submit" class="btn btn-primary">Add</button></td>
+
+
+      </form>
+    </tr>
+
+  </tbody>
+</table>
+
+<h1>Summary</h1>
+{% if status[0] != 100 %}
+  <h2>ERROR</h2>
+{% endif %}
+<h2>Percentage: {{status[0]}}</h2>
+<h2>Status: {{status[1]}}</h2>
+
+{% endblock %}
+
+{% block scripts%}
+
+{% endblock %}

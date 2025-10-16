@@ -1,0 +1,27 @@
+{% extends "base.html"%}
+{% block title %}Sign Up Page{% endblock %}
+
+{% block content %} 
+<h1>This is the Sign Up</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages%}
+                <p>{{message}}</p>
+            {% endfor%}
+        {% endif %}
+    {% endwith %}
+
+<form action="#" method="POST">
+    <p>Please Enter your email</p>
+    <p><input type="email" name="email"></p>
+
+    <p>Please Enter you name</p>
+    <p><input type="text" name="name"></p>
+    
+    <p>Please enter your password</p>
+    <p><input type="password" name="pw"></p>
+    <p><input type="submit" value="submit"></p>
+
+</form>
+
+{% endblock %}
