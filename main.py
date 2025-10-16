@@ -1,7 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
-print("hi")
 
 
 app = Flask(__name__)
