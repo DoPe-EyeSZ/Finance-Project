@@ -1,10 +1,12 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
+from dotenv import load_dotenv
+import os
 
-
+load_dotenv()
 app = Flask(__name__)
-app.secret_key = "zp7kkOFK4C308RoC2wXWw7pz2"
+app.secret_key = os.getenv("secret_key")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///budget.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -318,16 +320,7 @@ def add_income(entry_id):
     else:
         return redirect(url_for("login"))
     
-'''
-@app.route("/delete_entries")
-def delete_entries():
-    if "id" in session:
-        entries = Entry.query.filter_by(user_id = session["id"]).all()
-        for entry in entries:
-            db.session.delete(entry)
-            db.session.commit()
-        return redirect(url_for("view"))
-'''
+
 
 
 
