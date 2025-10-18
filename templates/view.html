@@ -5,25 +5,23 @@
     <h1>VIEW OF ALL DATA</h1>
     {% for data in info %}
 
+        <h2>USER DATA</h2>
         <p>User name: {{data["User"].name}}</p>
         <p>User email: {{data["User"].email}}</p>
         <p>User pw: {{data["User"].pw}}</p>
         <p>User Expenses:</p>
-        <p>
-
-        </p>
+        
+        <h2>EXPENSE DATA</h2>
         {% for expense in data["Expenses"] %}
             <p>EXPENSE: {{expense.name}} | Percentage: {{expense.percentage}} | Status: {{expense.status}} | Earnings: {{expense.earnings}}| Spendings: {{expense.spendings}}| Savings: {{expense.savings}}</p>
         {% endfor%}
-        <p>
-
-        </p>
+        
+        <h2>ENTRY DATA</h2>
         {% for entry in data["Entry"] %}
             <p>Date: {{entry.date}} | Income: {{entry.income}}</p>
         {% endfor%}
-        <p>
-
-        </p>
+        
+        <h2>SNAPSHOT DATA</h2>
         {% for snap in data["Snapshot"] %}
             <p>Expense Name: {{snap.expense_name}} | Expense Percent: {{snap.expense_percentage}}</p>
         {% endfor %}
