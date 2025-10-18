@@ -22,10 +22,10 @@ class User(db.Model):        #Stores all user info
     pw = db.Column(db.String(25))
 
 
-    def __init__(self, email, pw, name):
+    def __init__(self, email, name, pw):
         self.email = email
-        self.pw = pw
         self.name = name
+        self.pw = pw
 
 
 class Expenses(db.Model):        #Stores all expense category per user
@@ -74,11 +74,11 @@ class Spending(db.Model):        #Stores every spending per entry
     reasoning = db.Column(db.String(100))
     amount = db.Column(db.Float)
 
-    def __init__(self, user_id, entry_id, amount, reasoning):
-        self.user_id = user_id
+    def __init__(self, entry_id, user_id, reasoning, amount):
         self.entry_id = entry_id
-        self.amount = amount
+        self.user_id = user_id
         self.reasoning = reasoning
+        self.amount = amount
 
 
 class Exp_Snap(db.Model):       #Stores a snapshot of the expense
@@ -94,7 +94,7 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
         self.entry_id = entry_id
         self.expense_id = expense_id
         self.expense_name = expense_name
-        self.expense_percentage = expense_percentage
+        self.expense_percent = expense_percentage
 
      
 
@@ -226,7 +226,7 @@ def expenses():
         inputted_expense = request.form["expense_name"]
         inputted_percentage = float(request.form["percent"])
 
-        expense = Expenses(session["id"], inputted_expense, inputted_percentage)
+        expense = Expenses(session["id"], inputted_expense.upper(), inputted_percentage)
         db.session.add(expense)
         db.session.commit()
 
@@ -257,10 +257,15 @@ def edit_expense(expense_id):
 def delete_expense(expense_id):
     if "id" in session:
         if request.method == "POST":        #Turns status false so users will not see expense
+            snap = Exp_Snap.query.filter_by(expense_id = expense_id).all()
             removed_expense = Expenses.query.filter_by(id = expense_id).first()
-            removed_expense.status = False
+            if snap:
+                removed_expense.status = False
+                
+            else:
+                db.session.delete(removed_expense)
             db.session.commit()
-        return redirect(url_for("expenses"))
+            return redirect(url_for("expenses"))
     else:
         return redirect(url_for("login"))
 
@@ -293,18 +298,21 @@ def entry():
 @app.route("/add_entry", methods = ["POST", "GET"])
 def add_entry():
     if request.method == "POST":
-        user_id = session["id"]     
-        entry = Entry(user_id)      #Creates New entry
-        db.session.add(entry)
-        
-        expenses = Expenses.query.filter_by(user_id = session["id"]).all()      #Retrieve current expenses
-        for expense in expenses:
-            snapshot = Exp_Snap(session["id"], entry.id, expense.id, expense.name, expense.percentage)
-            db.session.add(snapshot)
+        if calculate_percentage(session["id"])[2]:
+            user_id = session["id"]     
+            entry = Entry(user_id)      #Creates New entry
+            db.session.add(entry)
+            
+            expenses = Expenses.query.filter_by(user_id = session["id"], status = True).all()      #Retrieve current expenses
+            for expense in expenses:
+                snapshot = Exp_Snap(session["id"], entry.id, expense.id, expense.name, expense.percentage)
+                db.session.add(snapshot)
+            db.session.commit()
 
-        db.session.commit()
-
-    return redirect(url_for("entry"))
+            return redirect(url_for("entry"))
+        else:
+            flash("expenses do not add to 100")
+            return redirect(url_for("expenses"))
 
 
 @app.route("/display_entry/<entry_id>", methods=["POST", "GET"])
@@ -322,7 +330,10 @@ def display_entry(entry_id):
 def delete_entry(entry_id):
     if request.method == "POST":
         entry = Entry.query.filter_by(user_id = session["id"], id = int(entry_id)).first()
+        snaps = Exp_Snap.query.filter_by(entry_id = entry_id).all()
         db.session.delete(entry)
+        for snap in snaps:
+            db.session.delete(snap)
         db.session.commit()
         return redirect(url_for("entry"))
     else:
@@ -365,7 +376,9 @@ def view():
     for user in User.query.all():
         user_expense = Expenses.query.filter_by(user_id = user.id).all()
         user_entry = Entry.query.filter_by(user_id = user.id).all()
-        info.append({"User": user, "Expenses": user_expense, "Entry": user_entry})
+        user_snapshots = Exp_Snap.query.filter_by(user_id = user.id).all()
+
+        info.append({"User": user, "Expenses": user_expense, "Entry": user_entry, "Snapshot": user_snapshots})
 
     return render_template("view.html", info = info)
 

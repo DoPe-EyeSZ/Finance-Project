@@ -35,9 +35,9 @@
             {% if snapshot %}
                 <tr>
                     <td>{{snapshot.expense_name}}</td>
-                    <td>{{snapshot.expense_percentage}}</td>
-                    <td>{{snapshot.expense_name}}</td>
-                    <td>{{snapshot.expense_name}}</td>
+                    <td>${{snapshot.expense_percent/100 * entry.income}}</td>
+                    <td>$$</td>
+                    <td>$$</td>
 
                 </tr>
 
