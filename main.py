@@ -18,8 +18,8 @@ db = SQLAlchemy(app)
 class User(db.Model):        #Stores all user info
     id = db.Column(db.Integer, primary_key = True)
     email = db.Column(db.String(25))
-    pw = db.Column(db.String(25))
     name = db.Column(db.String(25))
+    pw = db.Column(db.String(25))
 
 
     def __init__(self, email, pw, name):
@@ -33,6 +33,10 @@ class Expenses(db.Model):        #Stores all expense category per user
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     name = db.Column(db.String(25))
     percentage = db.Column(db.Float)
+    status = db.Column(db.Boolean, default = True)
+    savings = db.Column(db.Float, default = 0.0) 
+    earnings = db.Column(db.Float, default = 0.0)
+    spendings = db.Column(db.Float, default = 0.0)
 
     def __init__(self, user_id, name, percentage):
         self.user_id = user_id
@@ -51,13 +55,12 @@ class Expenses(db.Model):        #Stores all expense category per user
 class Entry(db.Model):        #Stores each entry per user
     id = db.Column(db.Integer, primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    income = db.Column(db.Float)
-    date = db.Column(db.Integer)            #FIGURE OUT HOW TO ADD DATE LATER
+    income = db.Column(db.Float, default = 0.0)
+    date = db.Column(db.Integer, default = date.today())
 
     def __init__(self, user_id):
         self.user_id = user_id
-        self.income = 0
-        self.date = date.today()
+
     
     def add_money(self, money):
         self.income += float(money)
@@ -66,21 +69,32 @@ class Entry(db.Model):        #Stores each entry per user
 
 class Spending(db.Model):        #Stores every spending per entry
     id = db.Column(db.Integer, primary_key = True)
-    user_id = db.Column(db.Integer)
     entry_id = db.Column(db.Integer)
-    amount = db.Column(db.Float)
+    user_id = db.Column(db.Integer)
     reasoning = db.Column(db.String(100))
+    amount = db.Column(db.Float)
 
-    def __init__(self, entry_id, amount, reasoning):
+    def __init__(self, user_id, entry_id, amount, reasoning):
+        self.user_id = user_id
         self.entry_id = entry_id
         self.amount = amount
         self.reasoning = reasoning
 
 
-class Saving(db.Model):
+class Exp_Snap(db.Model):       #Stores a snapshot of the expense
     id = db.Column(db.Integer, primary_key = True)
+    entry_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer)
-    savings = db.Column(db.Float)
+    expense_id = db.Column(db.Integer)
+    expense_name = db.Column(db.String)
+    expense_percent = db.Column(db.Float)
+
+    def __init__(self, user_id, entry_id, expense_id, expense_name, expense_percentage):
+        self.user_id = user_id
+        self.entry_id = entry_id
+        self.expense_id = expense_id
+        self.expense_name = expense_name
+        self.expense_percentage = expense_percentage
 
      
 
@@ -170,6 +184,7 @@ def sign_up():
 def delete():        #Deletes User account from DB
     if "id" in session:
         user = get_user(session["id"])
+
         user_expense = Expenses.query.filter_by(user_id = session["id"]).all()
         for expense in user_expense:
             db.session.delete(expense)
@@ -183,6 +198,11 @@ def delete():        #Deletes User account from DB
         user_spending = Spending.query.filter_by(user_id = session["id"]).all()
         for spending in user_spending:
             db.session.delete(spending)
+            db.session.commit()
+
+        user_snapshot = Exp_Snap.query.filter_by(user_id = session["id"]).all()
+        for snap in user_snapshot:
+            db.session.delete(snap)
             db.session.commit()
 
         db.session.delete(user)
@@ -214,7 +234,7 @@ def expenses():
 
     else:
         if "id" in session:
-            return render_template("expenses.html", expenses = Expenses.query.filter_by(user_id = session["id"]).all(), status = calculate_percentage(session["id"]))
+            return render_template("expenses.html", expenses = Expenses.query.filter_by(user_id = session["id"], status = True).all(), status = calculate_percentage(session["id"]))        #only shows expenses not deleted by user
         else:
             return redirect(url_for("login")) 
         
@@ -222,32 +242,35 @@ def expenses():
 @app.route("/edit_expense/<expense_id>", methods = ["POST", "GET"])     
 def edit_expense(expense_id):
     if request.method == "POST":
+
         new_name = request.form.get("name")
         new_percent = request.form.get("percentage")
 
         old_expense = Expenses.query.filter_by(id = expense_id).first()
-
         old_expense.change_name(new_name)
         old_expense.change_percentage(new_percent)
 
     return redirect(url_for("expenses"))
 
 
-@app.route("/delete_expense/<expense_id>", methods = ["POST", "GET"])
+@app.route("/delete_expense/<expense_id>", methods = ["POST"])
 def delete_expense(expense_id):
-    if request.method == "POST":
-        removed_expense = Expenses.query.filter_by(id = expense_id).first()
-        db.session.delete(removed_expense)
-        db.session.commit()
-
-    return redirect(url_for("expenses"))
+    if "id" in session:
+        if request.method == "POST":        #Turns status false so users will not see expense
+            removed_expense = Expenses.query.filter_by(id = expense_id).first()
+            removed_expense.status = False
+            db.session.commit()
+        return redirect(url_for("expenses"))
+    else:
+        return redirect(url_for("login"))
 
 
 def calculate_percentage(user_id):
     expenses = Expenses.query.filter_by(user_id = user_id).all()
     total = 0
     for expense in expenses:
-        total += expense.percentage
+        if expense.status == True:      #Checks if the expense was deleted by user
+            total += expense.percentage
     
     if total!=100:
         return [total, "Does not equate to 100%", False]
@@ -270,20 +293,26 @@ def entry():
 @app.route("/add_entry", methods = ["POST", "GET"])
 def add_entry():
     if request.method == "POST":
-        user_id = session["id"]
-        entry = Entry(user_id)
+        user_id = session["id"]     
+        entry = Entry(user_id)      #Creates New entry
         db.session.add(entry)
+        
+        expenses = Expenses.query.filter_by(user_id = session["id"]).all()      #Retrieve current expenses
+        for expense in expenses:
+            snapshot = Exp_Snap(session["id"], entry.id, expense.id, expense.name, expense.percentage)
+            db.session.add(snapshot)
+
         db.session.commit()
+
     return redirect(url_for("entry"))
 
 
 @app.route("/display_entry/<entry_id>", methods=["POST", "GET"])
 def display_entry(entry_id):
     if "id" in session:
-        expenses = Expenses.query.filter_by(user_id = session["id"]).all()
-        print(f"ID: {entry_id}")
-        entry = Entry.query.filter_by(id = int(entry_id)).first()                     
-        return render_template("display_entry.html", expenses = expenses, entry = entry)
+        snapshot = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()
+        entry = Entry.query.filter_by(id = int(entry_id)).first()
+        return render_template("display_entry.html", snapshots = snapshot, entry = entry)
     else:
         return redirect(url_for("login"))
         

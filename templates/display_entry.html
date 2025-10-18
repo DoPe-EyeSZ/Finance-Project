@@ -31,13 +31,13 @@
     </thead>
 
     <tbody>
-        {% for expense in expenses %}
-            {% if expense %}
+        {% for snapshot in snapshots %}
+            {% if snapshot %}
                 <tr>
-                    <td>{{expense.name}}</td>
-                    <td>DO LATER</td>
-                    <td>DO LATER</td>
-                    <td>DO LATER</td>
+                    <td>{{snapshot.expense_name}}</td>
+                    <td>{{snapshot.expense_percentage}}</td>
+                    <td>{{snapshot.expense_name}}</td>
+                    <td>{{snapshot.expense_name}}</td>
 
                 </tr>
 
