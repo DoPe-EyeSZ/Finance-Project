@@ -15,7 +15,7 @@
 
 <h1>Enter Income</h1>
 <form action="/add_income/{{entry.id}}" method="POST">
-    <p><input type="number" name="income"></p>
+    <p><input type="number" step="0.01" name="income"></p>
     <p><button type="submit">Submit</button></p>
 
 </form>
@@ -35,7 +35,7 @@
             {% if snapshot %}
                 <tr>
                     <td>{{snapshot.expense_name}}</td>
-                    <td>${{snapshot.expense_percent/100 * entry.income}}</td>
+                    <td>${{ ((snapshot.expense_percent/100) * entry.income) | round(2)}}</td>
                     <td>$$</td>
                     <td>$$</td>
 

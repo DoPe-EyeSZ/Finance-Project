@@ -239,7 +239,7 @@ def expenses():
             return redirect(url_for("login")) 
         
 
-@app.route("/edit_expense/<expense_id>", methods = ["POST", "GET"])     
+@app.route("/edit_expense/<expense_id>", methods = ["POST"])     
 def edit_expense(expense_id):
     if request.method == "POST":
 
@@ -247,7 +247,7 @@ def edit_expense(expense_id):
         new_percent = request.form.get("percentage")
 
         old_expense = Expenses.query.filter_by(id = expense_id).first()
-        old_expense.change_name(new_name)
+        old_expense.change_name(new_name.upper())
         old_expense.change_percentage(new_percent)
 
     return redirect(url_for("expenses"))
