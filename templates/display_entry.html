@@ -35,8 +35,15 @@
             {% if snapshot %}
                 <tr>
                     <td>{{snapshot.expense_name}}</td>
-                    <td>${{ ((snapshot.expense_percent/100) * entry.income) | round(2)}}</td>
-                    <td>$$</td>
+                    <td>${{ snapshot.earnings }}</td>
+                    <td>
+                        <form action="#">
+                            <p><input type="number" step="0.01" placeholder="Amount Spent"></p>
+                            <p><input type="text" placeholder="Reasoning (Optional)"></p>
+
+                        </form>
+
+                    </td>
                     <td>$$</td>
 
                 </tr>

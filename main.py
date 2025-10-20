@@ -87,14 +87,14 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
     user_id = db.Column(db.Integer)
     expense_id = db.Column(db.Integer)
     expense_name = db.Column(db.String)
-    expense_percent = db.Column(db.Float)
-
-    def __init__(self, user_id, entry_id, expense_id, expense_name, expense_percentage):
+    expense_percentage = db.Column(db.Float)
+    expense_earnings = db.Column(db.Float, default = 0.0)
+    def __init__(self, entry_id, user_id, expense_id, expense_name, expense_percentage):
         self.user_id = user_id
         self.entry_id = entry_id
         self.expense_id = expense_id
         self.expense_name = expense_name
-        self.expense_percent = expense_percentage
+        self.expense_percentage = expense_percentage
 
      
 
@@ -318,9 +318,15 @@ def add_entry():
 @app.route("/display_entry/<entry_id>", methods=["POST", "GET"])
 def display_entry(entry_id):
     if "id" in session:
-        snapshot = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()
+        snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()
         entry = Entry.query.filter_by(id = int(entry_id)).first()
-        return render_template("display_entry.html", snapshots = snapshot, entry = entry)
+        
+        for snapshot in snapshots:
+            expense_earnings = round((entry.income * snapshot.expense_percentage/100), 2)
+            snapshot.earnings = expense_earnings
+            db.session.commit() 
+
+        return render_template("display_entry.html", snapshots = snapshots, entry = entry)
     else:
         return redirect(url_for("login"))
         
