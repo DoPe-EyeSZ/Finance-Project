@@ -3,12 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 from dotenv import load_dotenv
 import os
+from datetime import timedelta
+
 
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("secret_key")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///budget.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SESSION_PERMANENT"] = False
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 
 
 
@@ -50,6 +54,23 @@ class Expenses(db.Model):        #Stores all expense category per user
     def change_percentage(self, new_percent):
         self.percentage = new_percent
         db.session.commit()
+    
+    def calculate_spending(self):
+        for spending in Spending.query.filter_by(expense_id = id).all():
+            amount = spending.amount
+            self.spendings += amount
+        db.session.commit()
+
+    def calculate_earnings(self):
+        for expense in Exp_Snap.query.filter_by(expense_id = id).all():
+            amount = expense.expense_earnings
+            self.earnings += float(amount)
+        db.session.commit()
+
+    def calculate_savings(self):
+        self.savings = self.earnings - self.spendings
+        db.session.commit()
+
 
 
 class Entry(db.Model):        #Stores each entry per user
@@ -119,7 +140,7 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
 @app.route("/")
 @app.route("/home")
 def home():
-    session.clear()
+
     return render_template("home.html")
 
 
@@ -137,7 +158,7 @@ def login():
         if user:      #Checks if user exists
             if inputted_pw == user.pw:      #Login Successful
 
-                session["id"] = user.id     #Save user ID to session
+                session["user_id"] = user.id     #Save user ID to session
                 session["name"] = user.name
                 flash("login worked")
                 return redirect(url_for("stats"))
@@ -153,7 +174,7 @@ def login():
             return render_template("login.html")
 
     else:       #User went to login page unconventionally
-        if "id" in session:
+        if "user_id" in session:
             return redirect(url_for("stats"))
         else:
             return render_template("login.html")
@@ -162,7 +183,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    if "id" in session:
+    if "user_id" in session:
         flash("You've successfully logged out", "info")
     else:
         flash("You're not even logged in lol", "info")
@@ -191,7 +212,7 @@ def sign_up():
             usr = User(inputted_email, inputted_pw, inputted_name)
             db.session.add(usr)
             db.session.commit()
-            session["id"] = usr.id
+            session["user_id"] = usr.id
             return redirect(url_for("stats"))
         
     else:        #User just clicks on signup button
@@ -200,25 +221,25 @@ def sign_up():
 
 @app.route("/delete")
 def delete():        #Deletes User account from DB
-    if "id" in session:
-        user = get_user(session["id"])
+    if "user_id" in session:
+        user = get_user(session["user_id"])
 
-        user_expense = Expenses.query.filter_by(user_id = session["id"]).all()
+        user_expense = Expenses.query.filter_by(user_id = session["user_id"]).all()
         for expense in user_expense:
             db.session.delete(expense)
             db.session.commit()
 
-        user_entry = Entry.query.filter_by(user_id = session["id"]).all()
+        user_entry = Entry.query.filter_by(user_id = session["user_id"]).all()
         for entry in user_entry:
             db.session.delete(entry)
             db.session.commit()
 
-        user_spending = Spending.query.filter_by(user_id = session["id"]).all()
+        user_spending = Spending.query.filter_by(user_id = session["user_id"]).all()
         for spending in user_spending:
             db.session.delete(spending)
             db.session.commit()
 
-        user_snapshot = Exp_Snap.query.filter_by(user_id = session["id"]).all()
+        user_snapshot = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
         for snap in user_snapshot:
             db.session.delete(snap)
             db.session.commit()
@@ -234,8 +255,8 @@ def delete():        #Deletes User account from DB
 
 @app.route("/stats", methods=["GET"])
 def stats():
-    if "id" in session:
-        return render_template("stats.html", name = get_user(session["id"]).name)
+    if "user_id" in session:
+        return render_template("stats.html", name = get_user(session["user_id"]).name)
     else:
         return render_template("login.html")
     
@@ -247,15 +268,15 @@ def expenses():
         inputted_expense = request.form["expense_name"]
         inputted_percentage = float(request.form["percent"])
 
-        expense = Expenses(session["id"], inputted_expense.upper(), inputted_percentage)
+        expense = Expenses(session["user_id"], inputted_expense.upper(), inputted_percentage)
         db.session.add(expense)
         db.session.commit()
 
         return redirect(url_for("expenses"))
 
     else:
-        if "id" in session:
-            return render_template("expenses.html", expenses = Expenses.query.filter_by(user_id = session["id"], status = True).all(), status = calculate_percentage(session["id"]))        #only shows expenses not deleted by user
+        if "user_id" in session:
+            return render_template("expenses.html", expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all(), status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
         else:
             return redirect(url_for("login")) 
         
@@ -276,7 +297,7 @@ def edit_expense(expense_id):
 
 @app.route("/delete_expense/<expense_id>", methods = ["POST"])
 def delete_expense(expense_id):
-    if "id" in session:
+    if "user_id" in session:
         if request.method == "POST":        #Turns status false so users will not see expense
             snap = Exp_Snap.query.filter_by(expense_id = expense_id).all()
             removed_expense = Expenses.query.filter_by(id = expense_id).first()
@@ -285,7 +306,7 @@ def delete_expense(expense_id):
                 
             else:
                 db.session.delete(removed_expense)
-            db.session.commit()
+                db.session.commit()
             return redirect(url_for("expenses"))
     else:
         return redirect(url_for("login"))
@@ -309,9 +330,9 @@ def calculate_percentage(user_id):
 
 @app.route("/entry", methods = ["POST", "GET"])
 def entry():
-    if "id" in session:
+    if "user_id" in session:
         if request.method == "GET":
-            return render_template("entry.html", entries = Entry.query.filter_by(user_id = session["id"]).all())
+            return render_template("entry.html", entries = Entry.query.filter_by(user_id = session["user_id"]).all())
     else:
         return redirect(url_for("login"))
         
@@ -319,14 +340,14 @@ def entry():
 @app.route("/add_entry", methods = ["POST", "GET"])
 def add_entry():
     if request.method == "POST":
-        if calculate_percentage(session["id"])[2]:
-            user_id = session["id"]     
-            entry = Entry(user_id)      #Creates New entry
-            db.session.add(entry)
+        if calculate_percentage(session["user_id"])[2]:
+            user_id = session["user_id"]     
+            new_entry = Entry(user_id)      #Creates New entry
+            db.session.add(new_entry)
             
-            expenses = Expenses.query.filter_by(user_id = session["id"], status = True).all()      #Retrieve current expenses
+            expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()      #Retrieve current expenses
             for expense in expenses:
-                snapshot = Exp_Snap(session["id"], entry.id, expense.id, expense.name, expense.percentage)
+                snapshot = Exp_Snap(new_entry.id, session["user_id"], expense.id, expense.name, expense.percentage)
                 db.session.add(snapshot)
             db.session.commit()
 
@@ -338,33 +359,37 @@ def add_entry():
 
 @app.route("/display_entry/<entry_id>", methods=["POST", "GET"])
 def display_entry(entry_id):
-    if "id" in session:
+    if "user_id" in session:
         snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()
         entry = Entry.query.filter_by(id = int(entry_id)).first()
         
-        for snapshot in snapshots:
-            expense_earnings = round((entry.income * snapshot.expense_percentage/100), 2)
-            snapshot.earnings = expense_earnings
+        for snapshot in snapshots:      #Calculate earnings under each expense
+            earnings = round((entry.income * snapshot.expense_percentage/100), 2)
+
+            snapshot.earnings = earnings
             db.session.commit() 
 
         return render_template("display_entry.html", snapshots = snapshots, entry = entry)
     else:
         return redirect(url_for("login"))
-        
+    
 
 
 @app.route("/delete_entry/<entry_id>", methods=["POST", "GET"])
 def delete_entry(entry_id):
     if request.method == "POST":
-        entry = Entry.query.filter_by(user_id = session["id"], id = int(entry_id)).first()
+        entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
         snaps = Exp_Snap.query.filter_by(entry_id = entry_id).all()
-        db.session.delete(entry)
+
         for snap in snaps:
             db.session.delete(snap)
+            db.session.commit()
+    
+        db.session.delete(entry)
         db.session.commit()
         return redirect(url_for("entry"))
     else:
-        if "id" in session:
+        if "user_id" in session:
             return redirect(url_for("entry"))
         else:
             return redirect(url_for("login"))
@@ -372,11 +397,11 @@ def delete_entry(entry_id):
 
 @app.route("/add_income/<entry_id>", methods = ["POST", "GET"])
 def add_income(entry_id):
-    if "id" in session:
+    if "user_id" in session:
         if request.method == "POST":
-            if calculate_percentage(session["id"])[2]:
+            if calculate_percentage(session["user_id"])[2]:
                 income = float(request.form.get("income"))
-                current_entry = Entry.query.filter_by(user_id = session["id"], id = int(entry_id)).first()
+                current_entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
                 current_entry.add_money(income)
             else:
                 flash("Allocation to Expenses do not add to 100")
@@ -396,16 +421,18 @@ def add_income(entry_id):
 
 @app.route("/add_spending/<int:snap_id>", methods = ["POST"])
 def add_spending(snap_id):
-    if "id" in session:
-        amount = float(request.form.get("spending"))
+    if "user_id" in session:
+        amount = float(request.form.get("spending"))        
         reasoning = str(request.form.get("reasoning"))
+
         snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()
         expense_id = snap.expense_id
         entry_id = snap.entry_id
 
-        transaction = Spending(entry_id, session["id"], expense_id, amount, reasoning)
+        transaction = Spending(entry_id, session["user_id"], expense_id, amount, reasoning)     #Add spending to DB
         db.session.add(transaction)
         db.session.commit()
+
         snap.add_spending(float(amount))
 
         return redirect(url_for("display_entry", entry_id = entry_id))
@@ -434,7 +461,6 @@ def get_user(identification):        #Method to get user by id
 
 def get_expenses(identification):
     return Expenses.query.filter_by(user_id = identification).all()
-
 
 
 

@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>DATE: {{entry.date}}</h1>
-<h1>CURRENT INCOME: {{entry.income}}</h1>
+<h1>CURRENT INCOME: ${{entry.income}}</h1>
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -13,9 +13,8 @@
   {% endif %}
 {% endwith %}
 
-<h1>Enter Income</h1>
 <form action="/add_income/{{entry.id}}" method="POST">
-    <p><input type="number" step="0.01" name="income"></p>
+    <p><input type="number" step="0.01" name="income" placeholder="Enter income"></p>
     <p><button type="submit">Submit</button></p>
 
 </form>
@@ -35,16 +34,17 @@
             {% if snapshot %}
                 <tr>
                     <td>{{snapshot.expense_name}}</td>
-                    <td>${{ snapshot.earnings }}</td>
+                    <td>${{snapshot.earnings}}</td>
                     <td>
                         <form action="/add_spending/{{snapshot.id}}" method="POST">
-                            <p><input type="number" step="0.01" placeholder="${{snapshot.total_spending}}" name="spending"></p> 
+                            <p><input type="number" step="0.01" placeholder="${{snapshot.total_spending}}" name="spending"></p>
+                            <p><input type="text" placeholder="Add Note" name="reasoning"></p> 
                             <button type="submit" class="btn btn-primary">Save</button>
 
                         </form>
 
                     </td>
-                    <td>$$</td>
+                    <td>${{snapshot.earnings - snapshot.total_spending}}</td>
 
                 </tr>
 
