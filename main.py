@@ -22,7 +22,7 @@ class User(db.Model):        #Stores all user info
     pw = db.Column(db.String(25))
 
 
-    def __init__(self, email, name, pw):
+    def __init__(self, email, pw, name):
         self.email = email
         self.name = name
         self.pw = pw
@@ -64,6 +64,7 @@ class Entry(db.Model):        #Stores each entry per user
     
     def add_money(self, money):
         self.income += float(money)
+        self.income = round(self.income, 2)
         db.session.commit()
 
 
@@ -71,14 +72,22 @@ class Spending(db.Model):        #Stores every spending per entry
     id = db.Column(db.Integer, primary_key = True)
     entry_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer)
-    reasoning = db.Column(db.String(100))
+    expense_id = db.Column(db.Integer)
     amount = db.Column(db.Float)
+    reasoning = db.Column(db.String(100), default = "")
 
-    def __init__(self, entry_id, user_id, reasoning, amount):
-        self.entry_id = entry_id
-        self.user_id = user_id
-        self.reasoning = reasoning
-        self.amount = amount
+    def __init__(self, entry_id, user_id, expense_id, amount, reasoning=None):
+        if reasoning is None:
+            self.entry_id = entry_id
+            self.user_id = user_id
+            self.expense_id = expense_id
+            self.reasoning = reasoning
+            self.amount = amount
+        else:
+            self.entry_id = entry_id
+            self.user_id = user_id
+            self.expense_id = expense_id
+            self.amount = amount
 
 
 class Exp_Snap(db.Model):       #Stores a snapshot of the expense
@@ -89,12 +98,19 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
     expense_name = db.Column(db.String)
     expense_percentage = db.Column(db.Float)
     expense_earnings = db.Column(db.Float, default = 0.0)
+    total_spending = db.Column(db.Float, default = 0.0)
+    
     def __init__(self, entry_id, user_id, expense_id, expense_name, expense_percentage):
         self.user_id = user_id
         self.entry_id = entry_id
         self.expense_id = expense_id
         self.expense_name = expense_name
         self.expense_percentage = expense_percentage
+
+    def add_spending(self, amount):
+        self.total_spending += amount
+        self.total_spending = round(self.total_spending, 2)
+        db.session.commit()
 
      
 
@@ -103,6 +119,7 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
 @app.route("/")
 @app.route("/home")
 def home():
+    session.clear()
     return render_template("home.html")
 
 
@@ -138,8 +155,8 @@ def login():
     else:       #User went to login page unconventionally
         if "id" in session:
             return redirect(url_for("stats"))
-
-    return render_template("login.html")
+        else:
+            return render_template("login.html")
 
 
 
@@ -150,8 +167,8 @@ def logout():
     else:
         flash("You're not even logged in lol", "info")
     
-    session.pop("id", None)     #Deletes user ID and name from session
-    session.pop("name", None)
+    session.clear()     #Deletes user ID and name from session
+    
     return redirect(url_for("login"))
 
 
@@ -376,6 +393,25 @@ def add_income(entry_id):
 
 
 #-------------------------------------------------------SPENDING-------------------------------
+
+@app.route("/add_spending/<int:snap_id>", methods = ["POST"])
+def add_spending(snap_id):
+    if "id" in session:
+        amount = float(request.form.get("spending"))
+        reasoning = str(request.form.get("reasoning"))
+        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()
+        expense_id = snap.expense_id
+        entry_id = snap.entry_id
+
+        transaction = Spending(entry_id, session["id"], expense_id, amount, reasoning)
+        db.session.add(transaction)
+        db.session.commit()
+        snap.add_spending(float(amount))
+
+        return redirect(url_for("display_entry", entry_id = entry_id))
+    else:
+        return redirect(url_for("login"))
+
 
 
 #-------------------HELPER METHODS--------------------
