@@ -121,6 +121,7 @@ def login():
             if inputted_pw == user.pw:      #Login Successful
 
                 session["id"] = user.id     #Save user ID to session
+                session["name"] = user.name
                 flash("login worked")
                 return redirect(url_for("stats"))
             
@@ -214,9 +215,12 @@ def delete():        #Deletes User account from DB
 
 
 
-@app.route("/stats", methods=["POST", "GET"])
+@app.route("/stats", methods=["GET"])
 def stats():
-    return render_template("stats.html", name = get_user(session["id"]).name)
+    if "id" in session:
+        return render_template("stats.html", name = get_user(session["id"]).name)
+    else:
+        return render_template("login.html")
     
 
 #--------------------------------------------EXPENSES-------------------------------
