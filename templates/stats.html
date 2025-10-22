@@ -14,6 +14,16 @@
         {% endif %}
     {% endwith %}
 
+{% for info in data %}
+
+    <p>Expense: {{data[info][0]}}</p>
+    <p>Total Earned: {{data[info][1]}}</p>
+    <p>Total Spent: {{data[info][2]}}</p>
+    <p>Total Saved: {{data[info][1] - data[info][2]}}</p>
+    <p>-----------------------------------------------------------------------------------------------------</p>
+
+{% endfor%}
+
 
 
 {% endblock %}

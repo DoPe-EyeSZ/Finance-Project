@@ -54,22 +54,19 @@ class Expenses(db.Model):        #Stores all expense category per user
     def change_percentage(self, new_percent):
         self.percentage = new_percent
         db.session.commit()
-    
-    def calculate_spending(self):
-        for spending in Spending.query.filter_by(expense_id = id).all():
-            amount = spending.amount
-            self.spendings += amount
+
+    def set_earnings(self, amount):
+        self.earnings = amount
         db.session.commit()
 
-    def calculate_earnings(self):
-        for expense in Exp_Snap.query.filter_by(expense_id = id).all():
-            amount = expense.expense_earnings
-            self.earnings += float(amount)
+    def set_spending(self, amount):
+        self.spendings = amount
         db.session.commit()
 
-    def calculate_savings(self):
+    def set_savings(self):
         self.savings = self.earnings - self.spendings
         db.session.commit()
+    
 
 
 
@@ -98,7 +95,7 @@ class Spending(db.Model):        #Stores every spending per entry
     reasoning = db.Column(db.String(100), default = "")
 
     def __init__(self, entry_id, user_id, expense_id, amount, reasoning=None):
-        if reasoning is None:
+        if reasoning:
             self.entry_id = entry_id
             self.user_id = user_id
             self.expense_id = expense_id
@@ -131,6 +128,10 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
     def add_spending(self, amount):
         self.total_spending += amount
         self.total_spending = round(self.total_spending, 2)
+        db.session.commit()
+    
+    def set_earnings(self, amount):
+        self.expense_earnings = amount
         db.session.commit()
 
      
@@ -256,7 +257,25 @@ def delete():        #Deletes User account from DB
 @app.route("/stats", methods=["GET"])
 def stats():
     if "user_id" in session:
-        return render_template("stats.html", name = get_user(session["user_id"]).name)
+        data = {}
+        snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
+
+        for snap in snaps:
+            if snap.expense_id in data:                
+                data[snap.expense_id][1] += snap.expense_earnings
+                data[snap.expense_id][2] += snap.total_spending
+
+            else:       #if expense id is not in data
+                data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending]
+
+        for info in data:
+            expense = Expenses.query.filter_by(id = info).first()
+            expense.set_earnings(data[info][1])
+            expense.set_spending(data[info][2])
+            expense.set_savings()
+            db.session.commit()
+        
+        return render_template("stats.html", name = get_user(session["user_id"]).name, data = data)
     else:
         return render_template("login.html")
     
@@ -366,8 +385,7 @@ def display_entry(entry_id):
         for snapshot in snapshots:      #Calculate earnings under each expense
             earnings = round((entry.income * snapshot.expense_percentage/100), 2)
 
-            snapshot.earnings = earnings
-            db.session.commit() 
+            snapshot.set_earnings(earnings) 
 
         return render_template("display_entry.html", snapshots = snapshots, entry = entry)
     else:
@@ -380,9 +398,14 @@ def delete_entry(entry_id):
     if request.method == "POST":
         entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
         snaps = Exp_Snap.query.filter_by(entry_id = entry_id).all()
+        spendings = Spending.query.filter_by(entry_id = entry_id).all()
 
         for snap in snaps:
             db.session.delete(snap)
+            db.session.commit()
+        
+        for spending in spendings:
+            db.session.delete(spending)
             db.session.commit()
     
         db.session.delete(entry)
@@ -450,8 +473,9 @@ def view():
         user_expense = Expenses.query.filter_by(user_id = user.id).all()
         user_entry = Entry.query.filter_by(user_id = user.id).all()
         user_snapshots = Exp_Snap.query.filter_by(user_id = user.id).all()
+        user_spending = Spending.query.filter_by(user_id = user.id).all()
 
-        info.append({"User": user, "Expenses": user_expense, "Entry": user_entry, "Snapshot": user_snapshots})
+        info.append({"User": user, "Expenses": user_expense, "Entry": user_entry, "Snapshot": user_snapshots, "Spending": user_spending})
 
     return render_template("view.html", info = info)
 

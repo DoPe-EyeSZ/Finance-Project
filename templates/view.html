@@ -23,7 +23,12 @@
         
         <h2>SNAPSHOT DATA</h2>
         {% for snap in data["Snapshot"] %}
-            <p>Expense Name: {{snap.expense_name}} | Expense Percent: {{snap.expense_percentage}}</p>
+            <p>ID: {{snap.id}} | Expense Name: {{snap.expense_name}} | Expense Percent: {{snap.expense_percentage}} | Earnings: {{snap.expense_earnings}} | Spending: {{snap.total_spending}}</p>
+        {% endfor %}
+
+        <h2>SPENDING DATA</h2>
+        {% for spending in data["Spending"] %}
+            <p>Spending: {{spending.amount}} | Reasoning: {{spending.reasoning}}</p>
         {% endfor %}
 
     <p>--------------------------------------------------------</p>

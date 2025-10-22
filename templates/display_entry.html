@@ -34,7 +34,7 @@
             {% if snapshot %}
                 <tr>
                     <td>{{snapshot.expense_name}}</td>
-                    <td>${{snapshot.earnings}}</td>
+                    <td>${{snapshot.expense_earnings}}</td>
                     <td>
                         <form action="/add_spending/{{snapshot.id}}" method="POST">
                             <p><input type="number" step="0.01" placeholder="${{snapshot.total_spending}}" name="spending"></p>
@@ -44,7 +44,7 @@
                         </form>
 
                     </td>
-                    <td>${{snapshot.earnings - snapshot.total_spending}}</td>
+                    <td>${{snapshot.expense_earnings - snapshot.total_spending}}</td>
 
                 </tr>
 
