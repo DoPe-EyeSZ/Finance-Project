@@ -4,7 +4,6 @@
 {% block content %} 
 
 <h1>Hello {{name}}</h1>
-<h2>Here are your stats</h2>
 
 {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -16,7 +15,12 @@
 
 {% for info in data %}
 
-    <p>Expense: {{data[info][0]}}</p>
+    <h2>{{data[info][0]}}</h2>
+    <div class="progress" style="width: 80%; margin: 0 auto;">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 10%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">Savings</div>
+        <div class="progress-bar bg-danger" role="progressbar" style="width: 40%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Spendings</div>
+    </div>
+    
     <p>Total Earned: {{data[info][1]}}</p>
     <p>Total Spent: {{data[info][2]}}</p>
     <p>Total Saved: {{data[info][1] - data[info][2]}}</p>
