@@ -261,7 +261,7 @@ def stats():
         snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
 
         for snap in snaps:
-            if snap.expense_id in data:                
+            if snap.expense_id in data:                #key is the expense id; value is arr[name, earning, spending]
                 data[snap.expense_id][1] += snap.expense_earnings
                 data[snap.expense_id][2] += snap.total_spending
 
@@ -295,7 +295,8 @@ def expenses():
 
     else:
         if "user_id" in session:
-            return render_template("expenses.html", expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all(), status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
+            valid_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
+            return render_template("expenses.html", expenses = valid_expenses, status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
         else:
             return redirect(url_for("login")) 
         
@@ -320,12 +321,15 @@ def delete_expense(expense_id):
         if request.method == "POST":        #Turns status false so users will not see expense
             snap = Exp_Snap.query.filter_by(expense_id = expense_id).all()
             removed_expense = Expenses.query.filter_by(id = expense_id).first()
-            if snap:
+
+            if len(snap)>0:
                 removed_expense.status = False
+                db.session.commit()
                 
             else:
                 db.session.delete(removed_expense)
                 db.session.commit()
+
             return redirect(url_for("expenses"))
     else:
         return redirect(url_for("login"))
@@ -422,12 +426,10 @@ def delete_entry(entry_id):
 def add_income(entry_id):
     if "user_id" in session:
         if request.method == "POST":
-            if calculate_percentage(session["user_id"])[2]:
-                income = float(request.form.get("income"))
-                current_entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
-                current_entry.add_money(income)
-            else:
-                flash("Allocation to Expenses do not add to 100")
+            income = float(request.form.get("income"))
+            current_entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
+            current_entry.add_money(income)
+            
             return redirect(url_for(f"display_entry", entry_id = entry_id))
         
         else:
