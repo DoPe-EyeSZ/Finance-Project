@@ -282,61 +282,66 @@ def stats():
 
 #--------------------------------------------EXPENSES-------------------------------
 @app.route("/expenses", methods = ["POST", "GET"])
-def expenses():                          
-    if request.method == "POST":
-        inputted_expense = request.form["expense_name"]
-        inputted_percentage = float(request.form["percent"])
+def expenses():
+    if check_login():
 
-        expense = Expenses(session["user_id"], inputted_expense.upper(), inputted_percentage)
-        db.session.add(expense)
-        db.session.commit()
+        if request.method == "POST":        #Adds a new expense
+            inputted_expense = request.form["expense_name"]
+            inputted_percentage = float(request.form["percent"])
+            expense = Expenses(session["user_id"], inputted_expense.upper(), inputted_percentage)
+            db.session.add(expense)
+            db.session.commit()
+            return redirect(url_for("expenses"))
 
-        return redirect(url_for("expenses"))
-
-    else:
-        if "user_id" in session:
+        else:       #Displays all expenses that are active
             valid_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
             return render_template("expenses.html", expenses = valid_expenses, status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
-        else:
-            return redirect(url_for("login")) 
+    else:
+        return redirect(url_for("login")) 
         
 
 @app.route("/edit_expense/<expense_id>", methods = ["POST"])     
 def edit_expense(expense_id):
-    if request.method == "POST":
+    if check_login():
 
-        new_name = request.form.get("name")
-        new_percent = request.form.get("percentage")
+        if request.method == "POST":        #Edits an expense
+            new_name = request.form.get("name")
+            new_percent = request.form.get("percentage")
+            old_expense = Expenses.query.filter_by(id = expense_id).first()
+            old_expense.change_name(new_name.upper())
+            old_expense.change_percentage(new_percent)
 
-        old_expense = Expenses.query.filter_by(id = expense_id).first()
-        old_expense.change_name(new_name.upper())
-        old_expense.change_percentage(new_percent)
+        return redirect(url_for("expenses"))
+    
+    else:
+        return redirect(url_for("login")) 
 
-    return redirect(url_for("expenses"))
 
 
 @app.route("/delete_expense/<expense_id>", methods = ["POST"])
 def delete_expense(expense_id):
-    if "user_id" in session:
-        if request.method == "POST":        #Turns status false so users will not see expense
+    if check_login():
+
+        if request.method == "POST":        
             snap = Exp_Snap.query.filter_by(expense_id = expense_id).all()
             removed_expense = Expenses.query.filter_by(id = expense_id).first()
 
-            if len(snap)>0:
+            if len(snap)>0:     #Takes expense from display if it is in use
                 removed_expense.status = False
                 db.session.commit()
                 
-            else:
+            else:       #Permanently deletes expense if not in use
                 db.session.delete(removed_expense)
                 db.session.commit()
 
             return redirect(url_for("expenses"))
+        
     else:
         return redirect(url_for("login"))
 
 
 def calculate_percentage(user_id):
-    expenses = Expenses.query.filter_by(user_id = user_id).all()
+    expenses = Expenses.query.filter_by(user_id = user_id, status = True).all()
     total = 0
     for expense in expenses:
         if expense.status == True:      #Checks if the expense was deleted by user
@@ -351,89 +356,94 @@ def calculate_percentage(user_id):
 #----------------------------------------------Entries
 
 
-@app.route("/entry", methods = ["POST", "GET"])
+@app.route("/entry", methods = ["GET"])
 def entry():
-    if "user_id" in session:
-        if request.method == "GET":
+    if check_login():
+
+        if request.method == "GET":     #Displays all user entries
             return render_template("entry.html", entries = Entry.query.filter_by(user_id = session["user_id"]).all())
     else:
         return redirect(url_for("login"))
         
 
-@app.route("/add_entry", methods = ["POST", "GET"])
+@app.route("/add_entry", methods = ["POST"])
 def add_entry():
-    if request.method == "POST":
-        if calculate_percentage(session["user_id"])[2]:
-            user_id = session["user_id"]     
-            new_entry = Entry(user_id)      #Creates New entry
-            db.session.add(new_entry)
-            
-            expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()      #Retrieve current expenses
-            for expense in expenses:
-                snapshot = Exp_Snap(new_entry.id, session["user_id"], expense.id, expense.name, expense.percentage)
-                db.session.add(snapshot)
-            db.session.commit()
+    if check_login():
 
-            return redirect(url_for("entry"))
-        else:
-            flash("expenses do not add to 100")
-            return redirect(url_for("expenses"))
+        if request.method == "POST":
+            if calculate_percentage(session["user_id"])[2]:     #Only creates new entry if current expenses add to 100%  
+                new_entry = Entry(session["user_id"])   
+                db.session.add(new_entry)
+                expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()      #Retrieve current expenses
+
+                for expense in expenses:        #Saves all current expense data 
+                    snapshot = Exp_Snap(new_entry.id, session["user_id"], expense.id, expense.name, expense.percentage)
+                    db.session.add(snapshot)
+
+                db.session.commit()     #Saves all changes/additions
+
+                return redirect(url_for("entry"))
+            
+            else:       #User expenses don't add to 100%
+                flash("expenses do not add to 100")
+                return redirect(url_for("expenses"))
+    else:
+        return redirect(url_for("login"))
 
 
 @app.route("/display_entry/<entry_id>", methods=["POST", "GET"])
 def display_entry(entry_id):
-    if "user_id" in session:
-        snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()
+    if check_login():
+        snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()        #Gets all data associated w/ requested entry
         entry = Entry.query.filter_by(id = int(entry_id)).first()
         
-        for snapshot in snapshots:      #Calculate earnings under each expense
-            earnings = round((entry.income * snapshot.expense_percentage/100), 2)
-
-            snapshot.set_earnings(earnings) 
-
+        if request.method == "GET":
+            for snapshot in snapshots:      #Calculate expense earnings using entry's total earned
+                earnings = round((entry.income * snapshot.expense_percentage/100), 2)
+                snapshot.set_earnings(earnings)
         return render_template("display_entry.html", snapshots = snapshots, entry = entry)
+    
     else:
         return redirect(url_for("login"))
     
 
 
-@app.route("/delete_entry/<entry_id>", methods=["POST", "GET"])
+@app.route("/delete_entry/<entry_id>", methods=["POST"])
 def delete_entry(entry_id):
-    if request.method == "POST":
-        entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
-        snaps = Exp_Snap.query.filter_by(entry_id = entry_id).all()
-        spendings = Spending.query.filter_by(entry_id = entry_id).all()
+    if check_login():
+        if request.method == "POST":        #Deletes all data assoicated with requested entry
+            entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
+            snaps = Exp_Snap.query.filter_by(entry_id = entry_id).all()
+            spendings = Spending.query.filter_by(entry_id = entry_id).all()
 
-        for snap in snaps:
-            db.session.delete(snap)
-            db.session.commit()
+            for snap in snaps:
+                db.session.delete(snap)
+                db.session.commit()
+            
+            for spending in spendings:
+                db.session.delete(spending)
+                db.session.commit()
         
-        for spending in spendings:
-            db.session.delete(spending)
+            db.session.delete(entry)
             db.session.commit()
-    
-        db.session.delete(entry)
-        db.session.commit()
         return redirect(url_for("entry"))
+    
     else:
-        if "user_id" in session:
-            return redirect(url_for("entry"))
-        else:
-            return redirect(url_for("login"))
+        return redirect(url_for("login"))
 
 
-@app.route("/add_income/<entry_id>", methods = ["POST", "GET"])
+@app.route("/add_income/<entry_id>", methods = ["POST"])
 def add_income(entry_id):
-    if "user_id" in session:
+    if check_login():
         if request.method == "POST":
             income = float(request.form.get("income"))
             current_entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
             current_entry.add_money(income)
-            
-            return redirect(url_for(f"display_entry", entry_id = entry_id))
+            return redirect(url_for("display_entry", entry_id = entry_id))
         
         else:
-            return redirect(url_for("stats"))
+            return redirect(url_for("entry"))
+        
     else:
         return redirect(url_for("login"))
     
@@ -446,21 +456,19 @@ def add_income(entry_id):
 
 @app.route("/add_spending/<int:snap_id>", methods = ["POST"])
 def add_spending(snap_id):
-    if "user_id" in session:
-        amount = float(request.form.get("spending"))        
-        reasoning = str(request.form.get("reasoning"))
+    if check_login():
+        if request.method == "POST":
+            snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      #Gets neccesary data
+            amount = float(request.form.get("spending"))        
+            reasoning = str(request.form.get("reasoning"))
 
-        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()
-        expense_id = snap.expense_id
-        entry_id = snap.entry_id
+            transaction = Spending(snap.entry_id, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
+            db.session.add(transaction)
+            db.session.commit()
 
-        transaction = Spending(entry_id, session["user_id"], expense_id, amount, reasoning)     #Add spending to DB
-        db.session.add(transaction)
-        db.session.commit()
+            snap.add_spending(float(amount))
 
-        snap.add_spending(float(amount))
-
-        return redirect(url_for("display_entry", entry_id = entry_id))
+        return redirect(url_for("display_entry", entry_id = snap.entry_id))
     else:
         return redirect(url_for("login"))
 
@@ -487,6 +495,12 @@ def get_user(identification):        #Method to get user by id
 
 def get_expenses(identification):
     return Expenses.query.filter_by(user_id = identification).all()
+
+def check_login():
+    if "user_id" in session:
+        return True
+    else:
+        return False
 
 
 
