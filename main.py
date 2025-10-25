@@ -161,7 +161,6 @@ def login():
 
                 session["user_id"] = user.id     #Save user ID to session
                 session["name"] = user.name
-                flash("login worked")
                 return redirect(url_for("stats"))
             
             else:     #Email exist but name!=pw
@@ -259,16 +258,28 @@ def stats():
     if "user_id" in session:
         data = {}
         snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
-
+        
         for snap in snaps:
             if snap.expense_id in data:                #key is the expense id; value is arr[name, earning, spending]
-                data[snap.expense_id][1] += snap.expense_earnings
-                data[snap.expense_id][2] += snap.total_spending
+                expense = data[snap.expense_id]
+                expense[1] += snap.expense_earnings
+                expense[2] += snap.total_spending
+
+                spending_percent = round((expense[2]/expense[1]), 2) * 100
+                saving_percent = round(((expense[1] - expense[2])/expense[1]), 2) * 100
+
+                expense[3] = spending_percent
+                expense[4] = saving_percent
+
+                print(f"SAVING: {expense[4]} | SPENDING: {expense[3]}")
 
             else:       #if expense id is not in data
-                data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending]
-
-        for info in data:
+                spending_percent = round((snap.total_spending/snap.expense_earnings), 2) * 100
+                saving_percent = round(((snap.expense_earnings - snap.total_spending)/snap.expense_earnings), 2) * 100
+                data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending, spending_percent, saving_percent]
+        
+        for info in data:       #Updating stats for each expense
+            print(data[info])
             expense = Expenses.query.filter_by(id = info).first()
             expense.set_earnings(data[info][1])
             expense.set_spending(data[info][2])
@@ -276,6 +287,8 @@ def stats():
             db.session.commit()
         
         return render_template("stats.html", name = get_user(session["user_id"]).name, data = data)
+    
+
     else:
         return render_template("login.html")
     
@@ -348,9 +361,9 @@ def calculate_percentage(user_id):
             total += expense.percentage
     
     if total!=100:
-        return [total, "Does not equate to 100%", False]
+        return [total, False]
     else:
-        return [total, "Perfect", True]
+        return [total, True]
 
 
 #----------------------------------------------Entries
@@ -371,7 +384,7 @@ def add_entry():
     if check_login():
 
         if request.method == "POST":
-            if calculate_percentage(session["user_id"])[2]:     #Only creates new entry if current expenses add to 100%  
+            if calculate_percentage(session["user_id"])[1]:     #Only creates new entry if current expenses add to 100%  
                 new_entry = Entry(session["user_id"])   
                 db.session.add(new_entry)
                 expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()      #Retrieve current expenses

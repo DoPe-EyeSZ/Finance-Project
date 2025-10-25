@@ -58,11 +58,14 @@
 </table>
 
 <h1>Summary</h1>
-{% if status[0] != 100 %}
-  <h2>ERROR</h2>
-{% endif %}
 <h2>Percentage: {{status[0]}}</h2>
-<h2>Status: {{status[1]}}</h2>
+{% if status[1] %}
+  <h2>Status: Perfect</h2>
+
+{% else %}
+  <h2>Status: Error</h2>
+{% endif %}
+
 
 {% endblock %}
 
