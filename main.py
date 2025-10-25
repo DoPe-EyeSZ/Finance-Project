@@ -134,6 +134,10 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
         self.expense_earnings = amount
         db.session.commit()
 
+    def get_savings(self):
+        savings = round((self.expense_earnings - self.total_spending), 2)
+        return savings
+
      
 
 
@@ -279,7 +283,6 @@ def stats():
                 data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending, spending_percent, saving_percent]
         
         for info in data:       #Updating stats for each expense
-            print(data[info])
             expense = Expenses.query.filter_by(id = info).first()
             expense.set_earnings(data[info][1])
             expense.set_spending(data[info][2])
