@@ -272,15 +272,17 @@ def stats():
                 spending_percent = round((expense[2]/expense[1]), 2) * 100
                 saving_percent = round(((expense[1] - expense[2])/expense[1]), 2) * 100
 
-                expense[3] = spending_percent
-                expense[4] = saving_percent
+                expense[4] = spending_percent
+                expense[5] = saving_percent
 
-                print(f"SAVING: {expense[4]} | SPENDING: {expense[3]}")
 
-            else:       #if expense id is not in data
-                spending_percent = round((snap.total_spending/snap.expense_earnings), 2) * 100
-                saving_percent = round(((snap.expense_earnings - snap.total_spending)/snap.expense_earnings), 2) * 100
-                data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending, spending_percent, saving_percent]
+            else:       #Adds to data dict
+                if snap.expense_earnings == 0:
+                    data[snap.expense_id] = [snap.expense_name, 0, 0, 0, 0]
+                else:
+                    spending_percent = round((snap.total_spending/snap.expense_earnings), 2) * 100
+                    saving_percent = round(((snap.expense_earnings - snap.total_spending)/snap.expense_earnings), 2) * 100
+                    data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending, snap.get_savings(), spending_percent, saving_percent]
         
         for info in data:       #Updating stats for each expense
             expense = Expenses.query.filter_by(id = info).first()
