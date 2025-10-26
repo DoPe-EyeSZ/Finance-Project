@@ -149,6 +149,11 @@ def home():
     return render_template("home.html")
 
 
+@app.route("/dash")
+def dash():
+    return render_template("dash.html")
+
+
 #------------------------------------------------USER INFO--------------------------------
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -505,19 +510,30 @@ def add_spending(snap_id):
 
 
 #-------------------HELPER METHODS--------------------
-@app.route("/view")        #View all users in the DB
-def view():
+@app.route("/admin")        #Admin page
+def admin():
+    if "user_id" in session:
+        print("reached")
+        user = User.query.filter_by(id = session["user_id"]).first()
+        if user.email == os.getenv("my_email"):
 
-    info = []
-    for user in User.query.all():
-        user_expense = Expenses.query.filter_by(user_id = user.id).all()
-        user_entry = Entry.query.filter_by(user_id = user.id).all()
-        user_snapshots = Exp_Snap.query.filter_by(user_id = user.id).all()
-        user_spending = Spending.query.filter_by(user_id = user.id).all()
+            info = []
+            for user in User.query.all():
+                user_expense = Expenses.query.filter_by(user_id = user.id).all()
+                user_entry = Entry.query.filter_by(user_id = user.id).all()
+                user_snapshots = Exp_Snap.query.filter_by(user_id = user.id).all()
+                user_spending = Spending.query.filter_by(user_id = user.id).all()
 
-        info.append({"User": user, "Expenses": user_expense, "Entry": user_entry, "Snapshot": user_snapshots, "Spending": user_spending})
+                info.append({"User": user, "Expenses": user_expense, "Entry": user_entry, "Snapshot": user_snapshots, "Spending": user_spending})
 
-    return render_template("view.html", info = info)
+            return render_template("admin.html", info = info)
+
+        else:
+            return redirect(url_for("dash"))
+    
+    else:
+        print("reached")
+        return redirect(url_for("login"))
 
 
 def get_user(identification):        #Method to get user by id
