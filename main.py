@@ -264,34 +264,46 @@ def stats():
         snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
         
         for snap in snaps:
-            if snap.expense_id in data:                #key is the expense id; value is arr[name, earning, spending]
+            if snap.expense_id in data:     #Updates data in dict
                 expense = data[snap.expense_id]
                 expense[1] += snap.expense_earnings
                 expense[2] += snap.total_spending
+                expense[3] += snap.get_savings()
 
                 spending_percent = round((expense[2]/expense[1]), 2) * 100
-                saving_percent = round(((expense[1] - expense[2])/expense[1]), 2) * 100
+                saving_percent = round(((expense[1] - expense[2])/expense[1]), 2) * 100 
 
                 expense[4] = spending_percent
                 expense[5] = saving_percent
 
 
-            else:       #Adds to data dict
+            else:
                 if snap.expense_earnings == 0:
                     data[snap.expense_id] = [snap.expense_name, 0, 0, 0, 0]
-                else:
+
+                else:       #Creates new key-value pair 
                     spending_percent = round((snap.total_spending/snap.expense_earnings), 2) * 100
                     saving_percent = round(((snap.expense_earnings - snap.total_spending)/snap.expense_earnings), 2) * 100
-                    data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending, snap.get_savings(), spending_percent, saving_percent]
+                    data[snap.expense_id] = [snap.expense_name, snap.expense_earnings, snap.total_spending, snap.get_savings(), spending_percent, saving_percent]                #key==expense id; value==arr[name, earning, spending, saving%, spending%]
         
+        lifetime_stats = {"Earnings": 0, "Spendings": 0, "Savings": 0}
+
         for info in data:       #Updating stats for each expense
             expense = Expenses.query.filter_by(id = info).first()
+
             expense.set_earnings(data[info][1])
+            lifetime_stats["Earnings"] += data[info][1]
+
             expense.set_spending(data[info][2])
+            lifetime_stats["Spendings"] += data[info][2]
+            
             expense.set_savings()
+            lifetime_stats["Savings"] += data[info][3]
+
+
             db.session.commit()
         
-        return render_template("stats.html", name = get_user(session["user_id"]).name, data = data)
+        return render_template("stats.html", name = get_user(session["user_id"]).name, data = data, lifetime_stats = lifetime_stats)
     
 
     else:

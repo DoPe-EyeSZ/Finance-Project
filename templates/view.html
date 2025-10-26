@@ -13,7 +13,7 @@
         
         <h2>EXPENSE DATA</h2>
         {% for expense in data["Expenses"] %}
-            <p>EXPENSE: {{expense.name}} | Percentage: {{expense.percentage}} | Status: {{expense.status}} | Earnings: {{expense.earnings}}| Spendings: {{expense.spendings}}| Savings: {{expense.savings}}</p>
+            <p>ID: {{expense.id}} | EXPENSE: {{expense.name}} | Percentage: {{expense.percentage}} | Status: {{expense.status}} | Earnings: {{expense.earnings}}| Spendings: {{expense.spendings}}| Savings: {{expense.savings}}</p>
         {% endfor%}
         
         <h2>ENTRY DATA</h2>
@@ -23,7 +23,7 @@
         
         <h2>SNAPSHOT DATA</h2>
         {% for snap in data["Snapshot"] %}
-            <p>ID: {{snap.id}} | Expense Name: {{snap.expense_name}} | Expense Percent: {{snap.expense_percentage}} | Earnings: {{snap.expense_earnings}} | Spending: {{snap.total_spending}}</p>
+            <p>ID: {{snap.expense_id}} | Expense Name: {{snap.expense_name}} | Expense Percent: {{snap.expense_percentage}} | Earnings: {{snap.expense_earnings}} | Spending: {{snap.total_spending}}</p>
         {% endfor %}
 
         <h2>SPENDING DATA</h2>

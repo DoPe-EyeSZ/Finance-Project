@@ -14,6 +14,10 @@
     {% endwith %}
 
 
+<p>{{lifetime_stats["Earnings"]}}</p>
+<p>{{lifetime_stats["Spendings"]}}</p>
+<p>{{lifetime_stats["Savings"]}}</p>
+
 
 
 {% for info in data %}
@@ -24,23 +28,23 @@
     {% set saved = data[info][3]%}
 
     <table class="table">
-    <thead>
-        <tr>
-            <th>Total Earned</th>
-            <th>Total Spent</th>
-            <th>Saved</th>
-        </tr>
-    </thead>
+        <thead>
+            <tr>
+                <th>Total Earned</th>
+                <th>Total Spent</th>
+                <th>Saved</th>
+            </tr>
+        </thead>
 
-    <tbody>
-        <tr>
-            <td>${{earned}}</td>
-            <td>${{spent}}</td>
-            <td>${{saved}}</td>
-        </tr>
-    </tbody>
+        <tbody>
+            <tr>
+                <td>${{earned}}</td>
+                <td>${{spent}}</td>
+                <td>${{saved}}</td>
+            </tr>
+        </tbody>
 
-</table>
+    </table>
 
     
     {% if earned == 0 %}
