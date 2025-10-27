@@ -124,7 +124,6 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
     def add_spending(self, amount):
         self.total_spending += amount
         self.total_spending = round(self.total_spending, 2)
-        db.session.commit()
     
     def set_earnings(self, amount):
         self.expense_earnings = amount
@@ -215,8 +214,9 @@ def sign_up():
         else:        #Email does not exist, so new user "row" is created
             usr = User(inputted_email, inputted_pw, inputted_name)
             db.session.add(usr)
-            db.session.commit()
             session["user_id"] = usr.id
+            
+            db.session.commit()
             return redirect(url_for("stats"))
         
     else:        #User just clicks on signup button
@@ -480,10 +480,10 @@ def add_spending(snap_id):
 
             transaction = Spending(snap.entry_id, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
             db.session.add(transaction)
-            db.session.commit()
 
             snap.add_spending(float(amount))
 
+        db.session.commit()
         return redirect(url_for("display_entry", entry_id = snap.entry_id))
     else:
         return redirect(url_for("login"))
