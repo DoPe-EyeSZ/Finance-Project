@@ -14,9 +14,9 @@
     {% endwith %}
 
 
-<p>{{lifetime_stats["Earnings"]}}</p>
-<p>{{lifetime_stats["Spendings"]}}</p>
-<p>{{lifetime_stats["Savings"]}}</p>
+<p>Total Earnings: {{lifetime_stats["Earnings"]}}</p>
+<p>Total Spent: {{lifetime_stats["Spendings"]}}</p>
+<p>Total Savings: {{lifetime_stats["Savings"]}}</p>
 
 
 
@@ -49,9 +49,10 @@
     
     {% if earned == 0 %}
 
-        <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
+        <p>><div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
             <div class="progress-bar " role="progressbar" style="width: 100%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">N/A</div>
         </div>
+        </p
 
     {% elif spent>=earned %}
 
