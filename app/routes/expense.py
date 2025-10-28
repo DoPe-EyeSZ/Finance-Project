@@ -23,7 +23,7 @@ def expenses():
             valid_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
             return render_template("expenses.html", expenses = valid_expenses, status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
     else:
-        return redirect(url_for("expense.login")) 
+        return redirect(url_for("user.login")) 
         
 
 @expense.route("/edit_expense/<expense_id>", methods = ["POST"])     
@@ -41,7 +41,7 @@ def edit_expense(expense_id):
         return redirect(url_for("expense.expenses"))
     
     else:
-        return redirect(url_for("expense.login")) 
+        return redirect(url_for("user.login")) 
 
 
 
@@ -63,7 +63,7 @@ def delete_expense(expense_id):
             return redirect(url_for("expense.expenses"))
         
     else:
-        return redirect(url_for("expense.login"))
+        return redirect(url_for("user.login"))
 
 
 def calculate_percentage(user_id):

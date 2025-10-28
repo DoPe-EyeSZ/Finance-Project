@@ -15,7 +15,7 @@ def all_entry():
         if request.method == "GET":     #Displays all user entries
             return render_template("entry.html", entries = Entry.query.filter_by(user_id = session["user_id"]).all())
     else:
-        return redirect(url_for("entry.login"))
+        return redirect(url_for("user.login"))
         
 
 @entry.route("/add_entry", methods = ["POST"])
@@ -40,7 +40,7 @@ def add_entry():
                 flash("expenses do not add to 100")
                 return redirect(url_for("entry.expenses"))
     else:
-        return redirect(url_for("entry.login"))
+        return redirect(url_for("user.login"))
 
 
 @entry.route("/display_entry/<entry_id>", methods=["POST", "GET"])
@@ -58,7 +58,7 @@ def display_entry(entry_id):
         return render_template("display_entry.html", snapshots = snapshots, entry = entry)
     
     else:
-        return redirect(url_for("entry.login"))
+        return redirect(url_for("user.login"))
     
 
 
@@ -75,7 +75,7 @@ def delete_entry(entry_id):
         return redirect(url_for("entry.entry"))
     
     else:
-        return redirect(url_for("entry.login"))
+        return redirect(url_for("user.login"))
 
 
 @entry.route("/add_income/<entry_id>", methods = ["POST"])
@@ -91,4 +91,4 @@ def add_income(entry_id):
             return redirect(url_for("entry.entry"))
         
     else:
-        return redirect(url_for("entry.login"))
+        return redirect(url_for("user.login"))

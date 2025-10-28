@@ -40,7 +40,7 @@ def admin():
             return redirect(url_for("main.dash"))
     
     else:
-        return redirect(url_for("main.login"))
+        return redirect(url_for("user.login"))
 
 
 @user.route("/login", methods=["POST", "GET"])
@@ -188,7 +188,7 @@ def stats():
             lifetime_stats["Savings"] += data[info][3]
 
         db.session.commit()
-        return render_template("stats.html", name = helper.get_user(session["user_id"]).name, data = data, lifetime_stats = lifetime_stats)
+        return render_template("stats.html", user = helper.get_user(session["user_id"]), data = data, lifetime_stats = lifetime_stats)
     
 
     else:

@@ -22,4 +22,4 @@ def add_spending(snap_id):
         db.session.commit()
         return redirect(url_for("entry.display_entry", entry_id = snap.entry_id))
     else:
-        return redirect(url_for("spending.login"))
+        return redirect(url_for("user.login"))
