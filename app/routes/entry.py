@@ -66,13 +66,13 @@ def display_entry(entry_id):
 def delete_entry(entry_id):
     if helper.check_login():
         if request.method == "POST":        #Deletes all data assoicated with requested entry
-            entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
+            entry = Entry.query.filter_by(id = int(entry_id)).first()
             snaps = Exp_Snap.query.filter_by(entry_id = entry_id).delete()
             spendings = Spending.query.filter_by(entry_id = entry_id).delete()
         
             db.session.delete(entry)
             db.session.commit()
-        return redirect(url_for("entry.entry"))
+        return redirect(url_for("entry.all_entry"))
     
     else:
         return redirect(url_for("user.login"))
@@ -85,10 +85,11 @@ def add_income(entry_id):
             income = float(request.form.get("income"))
             current_entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
             current_entry.add_money(income)
+            db.session.commit()
             return redirect(url_for("entry.display_entry", entry_id = entry_id))
         
         else:
-            return redirect(url_for("entry.entry"))
+            return redirect(url_for("entry.all_entry"))
         
     else:
         return redirect(url_for("user.login"))

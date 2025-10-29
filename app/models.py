@@ -60,7 +60,6 @@ class Entry(db.Model):        #Stores each entry per user
     def add_money(self, money):
         self.income += float(money)
         self.income = round(self.income, 2)
-        db.session.commit()
 
 
 class Spending(db.Model):        #Stores every spending per entry
