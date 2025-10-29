@@ -1,38 +1,109 @@
 {% extends "budget_base.html"%}
 {% block title %}VIEW ALL DATA {% endblock %}
 
-{% block content %} 
-    <h1>VIEW OF ALL DATA</h1>
-    {% for data in info %}
+{% block content %}
+<style>
+    .data-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2em;
+    }
+    
+    .data-block {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 8px;
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
+    
+    .data-item {
+        background: white;
+        padding: 12px;
+        margin: 8px 0;
+        border-left: 4px solid #3498db;
+        border-radius: 4px;
+    }
+    
+    .data-item p {
+        margin: 5px 0;
+        color: #555;
+    }
+    
+    .divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(to right, #3498db, #2ecc71);
+        margin: 40px 0;
+    }
+    
+    .label {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+</style>
 
+<div class="data-container">
+    <h1>VIEW OF ALL DATA</h1>
+    
+    {% for data in info %}
+    <div class="data-block">
         <h2>USER DATA</h2>
-        <p>User name: {{data["User"].name}}</p>
-        <p>User email: {{data["User"].email}}</p>
-        <p>User pw: {{data["User"].pw}}</p>
-        <p>User Expenses:</p>
+        <div class="data-item">
+            <p><span class="label">User name:</span> {{data["User"].name}}</p>
+            <p><span class="label">User email:</span> {{data["User"].email}}</p>
+            <p><span class="label">User pw:</span> {{data["User"].pw}}</p>
+        </div>
         
         <h2>EXPENSE DATA</h2>
         {% for expense in data["Expenses"] %}
-            <p>ID: {{expense.id}} | EXPENSE: {{expense.name}} | Percentage: {{expense.percentage}} | Status: {{expense.status}} | Earnings: {{expense.earnings}}| Spendings: {{expense.spendings}}| Savings: {{expense.savings}}</p>
+        <div class="data-item">
+            <p><span class="label">ID:</span> {{expense.id}} | <span class="label">EXPENSE:</span> {{expense.name}} | <span class="label">Percentage:</span> {{expense.percentage}}% | <span class="label">Status:</span> {{expense.status}}</p>
+            <p><span class="label">Earnings:</span> ${{expense.earnings}} | <span class="label">Spendings:</span> ${{expense.spendings}} | <span class="label">Savings:</span> ${{expense.savings}}</p>
+        </div>
         {% endfor%}
         
         <h2>ENTRY DATA</h2>
         {% for entry in data["Entry"] %}
-            <p>Date: {{entry.date}} | Income: {{entry.income}}</p>
+        <div class="data-item">
+            <p><span class="label">Date:</span> {{entry.date}} | <span class="label">Income:</span> ${{entry.income}}</p>
+        </div>
         {% endfor%}
         
         <h2>SNAPSHOT DATA</h2>
         {% for snap in data["Snapshot"] %}
-            <p>ID: {{snap.expense_id}} | Expense Name: {{snap.expense_name}} | Expense Percent: {{snap.expense_percentage}} | Earnings: {{snap.expense_earnings}} | Spending: {{snap.total_spending}}</p>
+        <div class="data-item">
+            <p><span class="label">ID:</span> {{snap.expense_id}} | <span class="label">Expense Name:</span> {{snap.expense_name}} | <span class="label">Expense Percent:</span> {{snap.expense_percentage}}%</p>
+            <p><span class="label">Earnings:</span> ${{snap.expense_earnings}} | <span class="label">Spending:</span> ${{snap.total_spending}}</p>
+        </div>
         {% endfor %}
 
         <h2>SPENDING DATA</h2>
         {% for spending in data["Spending"] %}
-            <p>Spending: {{spending.amount}} | Reasoning: {{spending.reasoning}}</p>
+        <div class="data-item">
+            <p><span class="label">Spending:</span> ${{spending.amount}} | <span class="label">Reasoning:</span> {{spending.reasoning}}</p>
+        </div>
         {% endfor %}
-
-    <p>--------------------------------------------------------</p>
+    </div>
+    
+    <hr class="divider">
     {% endfor %}
-
+</div>
 
 {% endblock %}
