@@ -38,11 +38,15 @@ class Expenses(db.Model):        #Stores all expense category per user
     def set_earnings(self, amount):
         self.earnings = amount
 
+    def add_earnings(self, amount):
+        self.earnings +=amount
+
     def set_spending(self, amount):
         self.spendings = amount
 
     def set_savings(self):
         self.savings = self.earnings - self.spendings
+    
     
 
 

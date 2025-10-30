@@ -71,6 +71,25 @@ def delete_expense(expense_id):
         
     else:
         return redirect(url_for("user.login"))
+    
+
+@expense.route("/deposit", methods = ["POST"])
+def deposit():
+    
+    if helper.check_login():
+        expense_id = request.form.get("expense_id")
+        amount = request.form.get("amount")
+
+        target_expense = Expenses.query.filter_by(id = int(expense_id)).first()
+        print(f"before: {target_expense.earnings}")
+        target_expense.add_earnings(float(amount))
+        print(f"after: {target_expense.earnings}")
+        
+        db.session.commit()
+        return redirect(url_for("user.stats"))
+
+    else:
+        return redirect(url_for("user.login"))
 
 
 def calculate_percentage(user_id):

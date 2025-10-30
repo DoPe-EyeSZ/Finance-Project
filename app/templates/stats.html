@@ -18,8 +18,22 @@
 <p>Total Spent: {{lifetime_stats["Spendings"]}}</p>
 <p>Total Savings: {{lifetime_stats["Savings"]}}</p>
 
+<h2>Deposit</h2>
+<form action="/deposit" method="POST">
+    <select name="expense_id" required>
+        <option value="">Select Expense</option>
+        {% for info in data %}
+            <option value="{{info}}">{{data[info][0]}}</option>
+        {% endfor %}
+    </select>
+
+    <input type="number" step="0.01" name="amount" placeholder="Amount to Deposit">
+    <button type="submit">Deposit</button>
+
+</form>
 
 
+<h1>Expense Stats:</h1>
 {% for info in data %}
 
     <h2>{{data[info][0]}}</h2>

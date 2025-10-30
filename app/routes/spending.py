@@ -20,6 +20,6 @@ def add_spending(snap_id):
             snap.add_spending(float(amount))
 
         db.session.commit()
-        return redirect(url_for("entry.display_entry", entry_id = snap.entry_id))
+        return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
     else:
         return redirect(url_for("user.login"))
