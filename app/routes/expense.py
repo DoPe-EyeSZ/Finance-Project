@@ -7,7 +7,7 @@ from app import db
 expense = Blueprint("expense", __name__, template_folder="templates")
 
 
-@expense.route("/display_expenses", methods = ["GET"])
+@expense.route("/expenses", methods = ["GET"])
 def expenses():
     if helper.check_login():
         valid_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()

@@ -28,7 +28,7 @@
                 
                     <tr>
                         <td>{{entry.date}}</td>
-                        <form action="/display_entry/{{entry.id}}" method="POST">
+                        <form action="{{url_for('entry.view_entry', entry_id = entry.id)}}" method="POST">
                             <td><button type="submit" class="btn btn-success">View</button> <button type="submit" class="btn btn-danger" formaction="delete_entry/{{entry.id}}"> Delete </button></td>
                         </form>
                     </tr>

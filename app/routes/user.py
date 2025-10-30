@@ -14,7 +14,7 @@ def home():
     return render_template("home.html")
 
 
-@user.route("/display_dash")
+@user.route("/dash")
 def dash():
     return render_template("dash.html")
 
@@ -140,7 +140,7 @@ def delete():        #Deletes User account from DB
 
 
 
-@user.route("/display_stats", methods=["GET"])
+@user.route("/stats", methods=["GET"])
 def stats():
     if "user_id" in session:
         data = {}

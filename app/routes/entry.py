@@ -8,7 +8,7 @@ from app import db
 entry = Blueprint("entry", __name__, template_folder="templates")
 
 
-@entry.route("/display_entries", methods = ["GET"])
+@entry.route("/entry", methods = ["GET"])
 def all_entry():
     if helper.check_login():
 
@@ -43,8 +43,8 @@ def add_entry():
         return redirect(url_for("user.login"))
 
 
-@entry.route("/display_entry/<entry_id>", methods=["POST", "GET"])
-def display_entry(entry_id):
+@entry.route("/entry/view_entry/<entry_id>", methods=["POST", "GET"])
+def view_entry(entry_id):
     if helper.check_login():
         snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()        #Gets all data associated w/ requested entry
         entry = Entry.query.filter_by(id = int(entry_id)).first()
@@ -55,7 +55,7 @@ def display_entry(entry_id):
                 snapshot.set_earnings(earnings)
             
         db.session.commit()
-        return render_template("display_entry.html", snapshots = snapshots, entry = entry)
+        return render_template("view_entry.html", snapshots = snapshots, entry = entry)
     
     else:
         return redirect(url_for("user.login"))
@@ -86,7 +86,7 @@ def add_income(entry_id):
             current_entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
             current_entry.add_money(income)
             db.session.commit()
-            return redirect(url_for("entry.display_entry", entry_id = entry_id))
+            return redirect(url_for("entry.view_entry", entry_id = entry_id))
         
         else:
             return redirect(url_for("entry.all_entry"))
