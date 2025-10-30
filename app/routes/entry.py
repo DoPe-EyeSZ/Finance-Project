@@ -8,7 +8,7 @@ from app import db
 entry = Blueprint("entry", __name__, template_folder="templates")
 
 
-@entry.route("/entry", methods = ["GET"])
+@entry.route("/display_entries", methods = ["GET"])
 def all_entry():
     if helper.check_login():
 
