@@ -7,8 +7,18 @@ from app import db
 expense = Blueprint("expense", __name__, template_folder="templates")
 
 
-@expense.route("/expenses", methods = ["POST", "GET"])
+@expense.route("/display_expenses", methods = ["GET"])
 def expenses():
+    if helper.check_login():
+        valid_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
+        return render_template("expenses.html", expenses = valid_expenses, status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
+    
+    else:
+        return redirect(url_for("user.login")) 
+        
+
+@expense.route("/add_expense", methods = ["POST"])
+def add_expense():
     if helper.check_login():
 
         if request.method == "POST":        #Adds a new expense
@@ -17,14 +27,11 @@ def expenses():
             expense = Expenses(session["user_id"], inputted_expense.upper(), inputted_percentage)
             db.session.add(expense)
             db.session.commit()
-            return redirect(url_for("expense.expenses"))
 
-        else:       #Displays all expenses that are active
-            valid_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
-            return render_template("expenses.html", expenses = valid_expenses, status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
+        return redirect(url_for("expense.expenses"))
+    
     else:
-        return redirect(url_for("user.login")) 
-        
+        return redirect(url_for("user.login"))
 
 @expense.route("/edit_expense/<expense_id>", methods = ["POST"])     
 def edit_expense(expense_id):
