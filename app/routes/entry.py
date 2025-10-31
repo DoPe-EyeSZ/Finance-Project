@@ -38,7 +38,7 @@ def add_entry():
             
             else:       #User expenses don't add to 100%
                 flash("expenses do not add to 100")
-                return redirect(url_for("entry.expenses"))
+                return redirect(url_for("expense.expenses"))
     else:
         return redirect(url_for("user.login"))
 

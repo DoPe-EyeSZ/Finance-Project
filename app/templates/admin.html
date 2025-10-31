@@ -75,7 +75,7 @@
         {% for expense in data["Expenses"] %}
         <div class="data-item">
             <p><span class="label">ID:</span> {{expense.id}} | <span class="label">EXPENSE:</span> {{expense.name}} | <span class="label">Percentage:</span> {{expense.percentage}}% | <span class="label">Status:</span> {{expense.status}}</p>
-            <p><span class="label">Earnings:</span> ${{expense.earnings}} | <span class="label">Spendings:</span> ${{expense.spendings}} | <span class="label">Savings:</span> ${{expense.savings}}</p>
+            <p><span class="label">Earnings:</span> ${{expense.earnings}} | <span class="label">Spendings:</span> ${{expense.spendings}} | <span class="label">Savings:</span> ${{expense.savings}} | <span class="label">Deposits:</span> ${{expense.deposit}}</p>
         </div>
         {% endfor%}
         

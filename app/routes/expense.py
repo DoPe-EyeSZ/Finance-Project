@@ -80,11 +80,10 @@ def deposit():
         expense_id = request.form.get("expense_id")
         amount = request.form.get("amount")
 
-        target_expense = Expenses.query.filter_by(id = int(expense_id)).first()
-        print(f"before: {target_expense.earnings}")
-        target_expense.add_earnings(float(amount))
-        print(f"after: {target_expense.earnings}")
-        
+        expense = Expenses.query.filter_by(id = int(expense_id)).first()        #FIGUREOUT WHY NOT COMMITING CHANGES
+
+        expense.add_deposit(float(amount))
+
         db.session.commit()
         return redirect(url_for("user.stats"))
 
