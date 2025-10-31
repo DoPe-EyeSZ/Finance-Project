@@ -68,7 +68,7 @@ def login():
         else:     #Email does not exist
 
             flash("email no exist")
-            return render_template("login.html")
+            return redirect(url_for("user.sign_up"))
 
     else:       #User went to login page unconventionally
         if "user_id" in session:
@@ -108,9 +108,11 @@ def sign_up():
         else:        #Email does not exist, so new user "row" is created
             usr = User(inputted_email, inputted_pw, inputted_name)
             db.session.add(usr)
+            db.session.commit()
+            
             session["user_id"] = usr.id
 
-            db.session.commit()
+        
             return redirect(url_for("user.dash"))
         
     else:        #User just clicks on signup button
@@ -176,11 +178,17 @@ def stats():
             saving = float(balance - spending)
             snap_data[expense_id]["saving"] = saving
 
-            saving_percent = round((saving/balance)*100, 2)
+            if balance != 0:
+                saving_percent = round((saving/balance)*100, 2)
+                spending_percent = round((spending/balance)*100, 2)
+                
+            else:
+                saving_percent = 0
+                spending_percent = 0
+                
+            snap_data[expense_id]["spending_percent"] = spending_percent
             snap_data[expense_id]["saving_percent"] = saving_percent
 
-            spending_percent = round((spending/balance)*100, 2)
-            snap_data[expense_id]["spending_percent"] = spending_percent
 
             
             #Setting overview stats
