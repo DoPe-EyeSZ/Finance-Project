@@ -3,6 +3,7 @@ from app.models import User, Expenses, Entry, Spending, Exp_Snap
 from app import helper
 import os
 from app import db
+import time
 
 user = Blueprint("user", __name__, template_folder="templates")
 
@@ -144,39 +145,59 @@ def delete():        #Deletes User account from DB
 
 @user.route("/stats", methods=["GET"])
 def stats():
+    start = time.time()
     if "user_id" in session:
-        snap_data = {}
+        active_expenses = {}
+        inactive_expenses = {}
         snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
+
+        expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
+        expenses_ID = {expense.id: expense for expense in expenses}
         
         for snap in snaps:      #Gathering snapshot data
-            if snap.expense_id in snap_data:     #Updates data in dict
-                expense = snap_data[snap.expense_id]
-                expense["earning"] += snap.expense_earnings
-                expense["spending"] += snap.total_spending
+
+            expense = expenses_ID[snap.expense_id]
+
+            if expense.status:      #Checks to see if expense is not deleted
+
+                if snap.expense_id in active_expenses:     #Updates data in dict
+                    expense = active_expenses[snap.expense_id]
+                    expense["earning"] += snap.expense_earnings
+                    expense["spending"] += snap.total_spending
+                    
+                else:       #Creates new key-val pair [name, earnings, spending]
+                    active_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending}             
+            
+            else:
+
+                if snap.expense_id in inactive_expenses:
+                    expense = inactive_expenses[snap.expense_id]
+                    expense["earning"] += snap.expense_earnings
+                    expense["spending"] += snap.total_spending
                 
-            else:       #Creates new key-val pair [name, earnings, spending]
-                snap_data[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending}             
-        
-
-
+                else:
+                    inactive_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending}             
+            
+        print(active_expenses)
+        print(inactive_expenses)
         overview_stats = {"Balance": 0.0, "Earnings": 0.0, "Deposits": 0.0, "Spendings": 0.0, "Savings": 0.0}      #Gather's user overview
 
-        for expense_id in snap_data:       #Updating stats for each expense
+        for expense_id in active_expenses:       #Updating stats for each expense
             expense = Expenses.query.filter_by(id = expense_id).first()
 
             
-            earnings = snap_data[expense_id]["earning"]
+            earnings = active_expenses[expense_id]["earning"]
 
-            spending = snap_data[expense_id]["spending"]
+            spending = active_expenses[expense_id]["spending"]
 
             deposit = float(expense.deposit)
-            snap_data[expense_id]["deposit"] = deposit
+            active_expenses[expense_id]["deposit"] = deposit
 
             balance = float(deposit + earnings)
-            snap_data[expense_id]["balance"] = balance
+            active_expenses[expense_id]["balance"] = balance
 
             saving = float(balance - spending)
-            snap_data[expense_id]["saving"] = saving
+            active_expenses[expense_id]["saving"] = saving
 
             if balance != 0:
                 saving_percent = round((saving/balance)*100, 2)
@@ -186,8 +207,8 @@ def stats():
                 saving_percent = 0
                 spending_percent = 0
                 
-            snap_data[expense_id]["spending_percent"] = spending_percent
-            snap_data[expense_id]["saving_percent"] = saving_percent
+            active_expenses[expense_id]["spending_percent"] = spending_percent
+            active_expenses[expense_id]["saving_percent"] = saving_percent
 
 
             
@@ -209,8 +230,12 @@ def stats():
 
 
         db.session.commit()
-        return render_template("stats.html", user = helper.get_user(session["user_id"]), snap_data = snap_data, lifetime_stats = overview_stats)
+        end = time.time()
+        print(end-start)
+        return render_template("stats.html", user = helper.get_user(session["user_id"]), snap_data = active_expenses, lifetime_stats = overview_stats)
     
 
     else:
         return render_template("login.html")
+    
+

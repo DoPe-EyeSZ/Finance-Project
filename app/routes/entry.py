@@ -67,11 +67,21 @@ def delete_entry(entry_id):
     if helper.check_login():
         if request.method == "POST":        #Deletes all data assoicated with requested entry
             entry = Entry.query.filter_by(id = int(entry_id)).first()
-            snaps = Exp_Snap.query.filter_by(entry_id = entry_id).delete()
             spendings = Spending.query.filter_by(entry_id = entry_id).delete()
-        
+            snaps = Exp_Snap.query.filter_by(entry_id = entry_id).delete()
             db.session.delete(entry)
             db.session.commit()
+
+
+            expenses = Expenses.query.filter_by(user_id = session["user_id"], status = False).all()
+            for expense in expenses:
+                remaining_snaps = Exp_Snap.query.filter_by(expense_id = expense.id).count()
+                if remaining_snaps ==0:
+                    db.session.delete(expense)
+                    db.session.commit()
+            
+        
+            
         return redirect(url_for("entry.all_entry"))
     
     else:
