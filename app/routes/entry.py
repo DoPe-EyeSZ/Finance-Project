@@ -73,6 +73,7 @@ def delete_entry(entry_id):
             db.session.commit()
 
 
+            #If a deleted expense does not hold user data then permanently delete expense
             expenses = Expenses.query.filter_by(user_id = session["user_id"], status = False).all()
             for expense in expenses:
                 remaining_snaps = Exp_Snap.query.filter_by(expense_id = expense.id).count()

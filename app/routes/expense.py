@@ -56,13 +56,14 @@ def edit_expense(expense_id):
 def delete_expense(expense_id):
     if helper.check_login():
         if request.method == "POST":        
-            snap = Exp_Snap.query.filter_by(expense_id = expense_id).all()
+            snap_count = Exp_Snap.query.filter_by(expense_id = expense_id).count()
             removed_expense = Expenses.query.filter_by(id = expense_id).first()
 
-            if len(snap)>0:     #Takes expense from display if it is in use
+            #If expense still holds user data, then don't display; Otherwise permanently delete expense
+            if snap_count>0:    
                 removed_expense.status = False
                 
-            else:       #Permanently deletes expense if not in use
+            else:       
                 db.session.delete(removed_expense)
 
 

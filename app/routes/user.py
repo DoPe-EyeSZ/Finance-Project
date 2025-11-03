@@ -149,6 +149,7 @@ def stats():
     if "user_id" in session:
         active_expenses = {}
         inactive_expenses = {}
+        
         snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
 
         expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
@@ -178,26 +179,35 @@ def stats():
                 else:
                     inactive_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending}             
             
-        print(active_expenses)
-        print(inactive_expenses)
+
         overview_stats = {"Balance": 0.0, "Earnings": 0.0, "Deposits": 0.0, "Spendings": 0.0, "Savings": 0.0}      #Gather's user overview
 
-        for expense_id in active_expenses:       #Updating stats for each expense
+        #Combines all the expense id's in a list to update for overview_stats
+        all_expense_id = list(active_expenses.keys()) + list(inactive_expenses.keys())
+
+        for expense_id in all_expense_id:       #Updating overview stats 
             expense = Expenses.query.filter_by(id = expense_id).first()
-
             
-            earnings = active_expenses[expense_id]["earning"]
+            #Picks which dictionary to use
+            expense_dict = None
 
-            spending = active_expenses[expense_id]["spending"]
+            if expense_id in active_expenses:
+                expense_dict = active_expenses
+            else:
+                expense_dict = inactive_expenses
+            
+            earnings = expense_dict[expense_id]["earning"]
+
+            spending = expense_dict[expense_id]["spending"]
 
             deposit = float(expense.deposit)
-            active_expenses[expense_id]["deposit"] = deposit
+            expense_dict[expense_id]["deposit"] = deposit
 
             balance = float(deposit + earnings)
-            active_expenses[expense_id]["balance"] = balance
+            expense_dict[expense_id]["balance"] = balance
 
             saving = float(balance - spending)
-            active_expenses[expense_id]["saving"] = saving
+            expense_dict[expense_id]["saving"] = saving
 
             if balance != 0:
                 saving_percent = round((saving/balance)*100, 2)
@@ -207,8 +217,8 @@ def stats():
                 saving_percent = 0
                 spending_percent = 0
                 
-            active_expenses[expense_id]["spending_percent"] = spending_percent
-            active_expenses[expense_id]["saving_percent"] = saving_percent
+            expense_dict[expense_id]["spending_percent"] = spending_percent
+            expense_dict[expense_id]["saving_percent"] = saving_percent
 
 
             
@@ -228,11 +238,16 @@ def stats():
             overview_stats["Savings"] += saving
 
 
+        print(active_expenses)
+        print("-------------------------------")
+        print(inactive_expenses)
+        print("-------------------------------")
+        print(overview_stats)
 
         db.session.commit()
         end = time.time()
         print(end-start)
-        return render_template("stats.html", user = helper.get_user(session["user_id"]), snap_data = active_expenses, lifetime_stats = overview_stats)
+        return render_template("stats.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats)
     
 
     else:
