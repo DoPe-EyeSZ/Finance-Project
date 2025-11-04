@@ -202,12 +202,15 @@ def stats():
 
             deposit = float(expense.deposit)
             expense_dict[expense_id]["deposit"] = deposit
+            expense.deposit = deposit
 
             balance = float(deposit + earnings)
             expense_dict[expense_id]["balance"] = balance
+            expense.balance = balance
 
             saving = float(balance - spending)
             expense_dict[expense_id]["saving"] = saving
+            expense.savings = saving
 
             if balance != 0:
                 saving_percent = round((saving/balance)*100, 2)
@@ -238,15 +241,8 @@ def stats():
             overview_stats["Savings"] += saving
 
 
-        print(active_expenses)
-        print("-------------------------------")
-        print(inactive_expenses)
-        print("-------------------------------")
-        print(overview_stats)
 
         db.session.commit()
-        end = time.time()
-        print(end-start)
         return render_template("stats.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats)
     
 
