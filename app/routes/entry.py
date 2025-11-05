@@ -53,18 +53,14 @@ def view_entry(entry_id):
         expenses_ids = [snapshot.expense_id for snapshot in snapshots]
         expenses = Expenses.query.filter(Expenses.id.in_(expenses_ids)).all()
         
-        expense_dict = {}       #Links expense's id to the expense
         est_balance = {}        #Links the expense's total savings (amount able to spend) to the snapshot of the expense
         if request.method == "GET":
 
-            for expense in expenses:
-                expense_dict[expense.id] = expense
 
             for snapshot in snapshots:      #Calculate expense earnings using entry's total earned
                 earnings = round((entry.income * snapshot.expense_percentage/100), 2)
-                expense = expense_dict[snapshot.expense_id]
                 snapshot.set_earnings(earnings)
-                savings = helper.calc_balance(snapshot.expense_id)      #Calculates the total savings to send to front
+                savings = helper.calc_savings(snapshot.expense_id)      #Calculates the total savings to send to front
 
                 est_balance[snapshot] = savings
 

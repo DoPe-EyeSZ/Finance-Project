@@ -16,7 +16,7 @@ def get_expenses(identification):
 def check_login():
     return "user_id" in session
 
-def calc_balance(expense_id):
+def calc_savings(expense_id):
     snaps = Exp_Snap.query.filter_by(expense_id = expense_id).all()
     expense = Expenses.query.filter_by(id = expense_id).first()
     earnings = expense.deposit
