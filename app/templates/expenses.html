@@ -86,7 +86,7 @@
     {% for inactive_expenses in inactive_expenses%}
       {% if inactive_expenses %}
         <tr>
-          <form action="#" method = "POST">
+          <form action="restore_expense/{{inactive_expenses.id}}" method = "POST">
             <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
             <td>{{inactive_expenses.name}}</td>
             <td>{{inactive_expenses.percentage}}</td>

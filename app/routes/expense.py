@@ -92,6 +92,14 @@ def deposit():
 
     else:
         return redirect(url_for("user.login"))
+    
+
+@expense.route("/restore_expense/<expense_id>", methods = ["POST"])
+def restore_expense(expense_id):
+    restored_expense = Expenses.query.filter_by(id = int(expense_id)).first()
+    restored_expense.status = True
+    db.session.commit()
+    return redirect(url_for("expense.expenses"))
 
 
 def calculate_percentage(user_id):
