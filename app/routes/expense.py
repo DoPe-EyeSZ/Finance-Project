@@ -10,8 +10,9 @@ expense = Blueprint("expense", __name__, template_folder="templates")
 @expense.route("/expenses", methods = ["GET"])
 def expenses():
     if helper.check_login():
-        valid_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
-        return render_template("expenses.html", expenses = valid_expenses, status = calculate_percentage(session["user_id"]))        #only shows expenses not deleted by user
+        active_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
+        inactive_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = False).all()
+        return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = calculate_percentage(session["user_id"]))        #Shows all expenses
     
     else:
         return redirect(url_for("user.login")) 

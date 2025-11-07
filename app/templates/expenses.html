@@ -14,8 +14,18 @@
 {% endwith %}
 
 
-<h1>Expenses</h1>
 
+<h1>Summary</h1>
+<h2>Percentage: {{status[0]}}</h2>
+{% if status[1] %}
+  <h2>Status: Perfect</h2>
+
+{% else %}
+  <h2>Status: Error</h2>
+{% endif %}
+
+
+<h1>Active Expenses</h1>
 <table class="table">
   <thead>
     <tr>
@@ -27,16 +37,16 @@
   </thead>
   <tbody>
 
-    {% for expense in expenses%}
-      {% if expense %}
+    {% for active_expenses in active_expenses%}
+      {% if active_expenses %}
         <tr>
-          <form action="/edit_expense/{{expense.id}}" method = "POST">
+          <form action="/edit_expense/{{active_expenses.id}}" method = "POST">
             <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
-            <td><input type="text" name="name" value="{{expense.name}}"></td>
-            <td><input type="number" name="percentage" value="{{expense.percentage}}"></td>
+            <td><input type="text" name="name" value="{{active_expenses.name}}"></td>
+            <td><input type="number" name="percentage" value="{{active_expenses.percentage}}"></td>
             <td>
                 <button type="submit" class="btn btn-success">Save</button> 
-                <button class="btn btn-danger" formaction="/delete_expense/{{expense.id}}" onclick="return confirm('Deleted expenses cannot be recovered. Are you sure you want to delete this expense?')">Delete</button>
+                <button class="btn btn-danger" formaction="/delete_expense/{{active_expenses.id}}" onclick="return confirm('Deleted expenses cannot be recovered. Are you sure you want to delete this expense?')">Archive</button>
             </td>
           </form>
         </tr>
@@ -60,14 +70,39 @@
   </tbody>
 </table>
 
-<h1>Summary</h1>
-<h2>Percentage: {{status[0]}}</h2>
-{% if status[1] %}
-  <h2>Status: Perfect</h2>
 
-{% else %}
-  <h2>Status: Error</h2>
-{% endif %}
+<h1>Archived Expenses</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"> # </th>
+      <th scope="col" data-field="expense" data-sortable="true" data-align="center">Expense</th>
+      <th scope="col" data-field="percent" data-sortable="true" data-align="center">Percentage</th>
+      <th scope="col"> Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for inactive_expenses in inactive_expenses%}
+      {% if inactive_expenses %}
+        <tr>
+          <form action="#" method = "POST">
+            <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
+            <td>{{inactive_expenses.name}}</td>
+            <td>{{inactive_expenses.percentage}}</td>
+            <td>
+                <button type="submit" class="btn btn-success">Restore</button> 
+                <button class="btn btn-danger" formaction="#">Delete</button>
+            </td>
+          </form>
+        </tr>
+      {% endif %}
+    {% endfor %}
+
+  </tbody>
+</table>
+
+
 
 
 {% endblock %}
