@@ -53,8 +53,8 @@ def edit_expense(expense_id):
 
 
 
-@expense.route("/delete_expense/<expense_id>", methods = ["POST"])
-def delete_expense(expense_id):
+@expense.route("/archive_expense/<expense_id>", methods = ["POST"])
+def archive_expense(expense_id):
     if helper.check_login():
         if request.method == "POST":        
             snap_count = Exp_Snap.query.filter_by(expense_id = expense_id).count()
@@ -66,6 +66,7 @@ def delete_expense(expense_id):
                 
             else:       
                 db.session.delete(removed_expense)
+                flash("there does not seem to be data for this expense")
 
 
             db.session.commit()
