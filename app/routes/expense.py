@@ -10,8 +10,17 @@ expense = Blueprint("expense", __name__, template_folder="templates")
 @expense.route("/expenses", methods = ["GET"])
 def expenses():
     if helper.check_login():
-        active_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = True).all()
-        inactive_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = False).all()
+        active_expenses = {}
+        inactive_expenses = {}
+        expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
+
+        for expense in expenses:
+            if expense.status == True:
+                active_expenses[expense] = helper.calc_savings(expense.id)
+            else:
+                inactive_expenses[expense] = helper.calc_savings(expense.id)
+    
+
         return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = calculate_percentage(session["user_id"]))        #Shows all expenses
     
     else:
@@ -88,7 +97,7 @@ def deposit():
         expense.add_deposit(float(amount))
 
         db.session.commit()
-        return redirect(url_for("user.stats"))
+        return redirect(url_for("expense.expenses"))
 
     else:
         return redirect(url_for("user.login"))

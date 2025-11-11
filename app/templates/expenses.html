@@ -25,74 +25,100 @@
 {% endif %}
 
 
+<h1>Deposit</h1>
+    <form action="/deposit" method="POST">
+        <select name="expense_id" required>
+            <option value="">Select Expense</option>
+            {% for expense in active_expenses %}
+                <option value="{{expense.id}}">{{expense.name}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="number" step="0.01" name="amount" placeholder="Amount to Deposit" min="0">
+        <button type="submit">Deposit</button>
+
+    </form>
+
+
+<h1>Reallocate Funds</h1>
+
+
+
+{% if active_expenses %}
 <h1>Active Expenses</h1>
 <table class="table">
   <thead>
     <tr>
-      <th scope="col"> # </th>
-      <th scope="col" data-field="expense" data-sortable="true" data-align="center">Expense</th>
-      <th scope="col" data-field="percent" data-sortable="true" data-align="center">Percentage</th>
-      <th scope="col"> Actions</th>
+      <th> # </th>
+      <th>Expense</th>
+      <th>Percentage</th>
+      <th>Available Cash</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
 
-    {% for active_expenses in active_expenses%}
-      {% if active_expenses %}
+    {% for active_expense in active_expenses%}
         <tr>
-          <form action="/edit_expense/{{active_expenses.id}}" method = "POST">
+          <form action="/edit_expense/{{active_expense.id}}" method = "POST">
             <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
-            <td><input type="text" name="name" value="{{active_expenses.name}}"></td>
-            <td><input type="number" name="percentage" value="{{active_expenses.percentage}}"></td>
+            <td><input type="text" name="name" value="{{active_expense.name}}"></td>
+            <td><input type="number" name="percentage" value="{{active_expense.percentage}}"></td>
+            <td>{{active_expenses[active_expense]}}</td>
             <td>
                 <button type="submit" class="btn btn-success">Save</button> 
-                <button class="btn btn-danger" formaction="/archive_expense/{{active_expenses.id}}" >Archive</button>
+                <button class="btn btn-danger" formaction="/archive_expense/{{active_expense.id}}" >Archive</button>
             </td>
           </form>
         </tr>
-      {% endif %}
     {% endfor %}
     <tr>
       <form action="/add_expense" method="POST">
 
         <td><p>+</p></td>
 
-        <td><input type="text" name="expense_name" required></td><p>
+          <td><input type="text" name="expense_name" required></td><p>
 
-        <td><input type="number" name="percent" required></td>
+          <td><input type="number" name="percent" required></td>
 
-        <td><button type="submit" class="btn btn-primary">Add</button></td>
+          <td></td>
+
+          <td><button type="submit" class="btn btn-primary">Add</button></td>
 
 
-      </form>
-    </tr>
+        </form>
+      </tr>
 
-  </tbody>
-</table>
+    </tbody>
+  </table>
+{% endif %}
+
+
 
 {% if inactive_expenses %}
   <h1>Archived Expenses</h1>
   <table class="table">
     <thead>
       <tr>
-        <th scope="col"> # </th>
-        <th scope="col" data-field="expense" data-sortable="true" data-align="center">Expense</th>
-        <th scope="col" data-field="percent" data-sortable="true" data-align="center">Percentage</th>
-        <th scope="col"> Actions</th>
+        <th> # </th>
+        <th>Expense</th>
+        <th>Percentage</th>
+        <th>Available Cash</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
 
-      {% for inactive_expenses in inactive_expenses%}
+      {% for inactive_expense in inactive_expenses%}
         {% if inactive_expenses %}
           <tr>
-            <form action="restore_expense/{{inactive_expenses.id}}" method = "POST">
+            <form action="restore_expense/{{inactive_expense.id}}" method = "POST">
               <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
-              <td>{{inactive_expenses.name}}</td>
-              <td>{{inactive_expenses.percentage}}</td>
+              <td>{{inactive_expense.name}}</td>
+              <td>{{inactive_expense.percentage}}</td>
+              <td>{{inactive_expenses[inactive_expense]}}</td>
               <td>
                   <button type="submit" class="btn btn-success">Restore</button> 
-                  <button class="btn btn-danger" formaction="#" onclick="return confirm('Deleted expenses cannot be recovered. Are you sure you want to delete this expense?')">Permanently Delete</button>
               </td>
             </form>
           </tr>
