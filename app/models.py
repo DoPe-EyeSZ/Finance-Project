@@ -74,18 +74,22 @@ class Spending(db.Model):        #Stores every spending per entry
     entry_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer)
     expense_id = db.Column(db.Integer)
+    expense_name = db.Column(db.String)
     amount = db.Column(db.Float)
     reasoning = db.Column(db.String(100), default = "")
+    date = db.Column(db.Integer, default = date.today())
 
-    def __init__(self, entry_id, user_id, expense_id, amount, reasoning=None):
+    def __init__(self, entry_id, expense_name, user_id, expense_id, amount, reasoning=None):
         if reasoning:
             self.entry_id = entry_id
+            self.expense_name = expense_name
             self.user_id = user_id
             self.expense_id = expense_id
             self.reasoning = reasoning
             self.amount = amount
         else:
             self.entry_id = entry_id
+            self.expense_name = expense_name
             self.user_id = user_id
             self.expense_id = expense_id
             self.amount = amount

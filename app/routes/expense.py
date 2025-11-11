@@ -12,6 +12,7 @@ def expenses():
     if helper.check_login():
         active_expenses = {}
         inactive_expenses = {}
+        all_expenses = {}
         expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
 
         for expense in expenses:
@@ -19,9 +20,11 @@ def expenses():
                 active_expenses[expense] = helper.calc_savings(expense.id)
             else:
                 inactive_expenses[expense] = helper.calc_savings(expense.id)
+
+            all_expenses[expense] = helper.calc_savings(expense.id)
     
 
-        return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = calculate_percentage(session["user_id"]))        #Shows all expenses
+        return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = calculate_percentage(session["user_id"]), all_expenses = all_expenses)        #Shows all expenses
     
     else:
         return redirect(url_for("user.login")) 

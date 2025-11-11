@@ -55,7 +55,7 @@ def view_entry(entry_id):
         
         est_balance = {}        #Links the expense's total savings (amount able to spend) to the snapshot of the expense
         if request.method == "GET":
-
+            
 
             for snapshot in snapshots:      #Calculate expense earnings using entry's total earned
                 earnings = round((entry.income * snapshot.expense_percentage/100), 2)
@@ -64,10 +64,10 @@ def view_entry(entry_id):
 
                 est_balance[snapshot] = savings
 
-                
+            spending = Spending.query.filter_by(entry_id = entry_id).all()
 
             db.session.commit()
-            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance)
+            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending)
         else:
             return redirect(url_for("entry.all_entry"))
     

@@ -14,7 +14,7 @@ def add_spending(snap_id):
             amount = float(request.form.get("spending"))        
             reasoning = str(request.form.get("reasoning"))
 
-            transaction = Spending(snap.entry_id, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
+            transaction = Spending(snap.entry_id, snap.expense_name, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
             db.session.add(transaction)
 
             snap.add_spending(float(amount))

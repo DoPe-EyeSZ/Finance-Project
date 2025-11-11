@@ -57,7 +57,34 @@
 </table>
 
 
+<h1>Spending Log</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Expense</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Reasoning</th>
+        </tr>
+        
+    </thead>
 
+    <tbody>
+        {% for spent in spending %}
+            <tr>
+                <td>{{spent.expense_name}}</td>
+                <td>{{spent.date}}</td>
+                <td>{{spent.amount}}</td>
+                {% if reasoning %}
+                    <td>{{spent.reasoning}}</td>
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
 
 
 
