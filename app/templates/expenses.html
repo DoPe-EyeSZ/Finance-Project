@@ -46,7 +46,7 @@
             <td><input type="number" name="percentage" value="{{active_expenses.percentage}}"></td>
             <td>
                 <button type="submit" class="btn btn-success">Save</button> 
-                <button class="btn btn-danger" formaction="/archive_expense/{{active_expenses.id}}" onclick="return confirm('Deleted expenses cannot be recovered. Are you sure you want to delete this expense?')">Archive</button>
+                <button class="btn btn-danger" formaction="/archive_expense/{{active_expenses.id}}" >Archive</button>
             </td>
           </form>
         </tr>
@@ -70,37 +70,38 @@
   </tbody>
 </table>
 
+{% if inactive_expenses %}
+  <h1>Archived Expenses</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"> # </th>
+        <th scope="col" data-field="expense" data-sortable="true" data-align="center">Expense</th>
+        <th scope="col" data-field="percent" data-sortable="true" data-align="center">Percentage</th>
+        <th scope="col"> Actions</th>
+      </tr>
+    </thead>
+    <tbody>
 
-<h1>Archived Expenses</h1>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col"> # </th>
-      <th scope="col" data-field="expense" data-sortable="true" data-align="center">Expense</th>
-      <th scope="col" data-field="percent" data-sortable="true" data-align="center">Percentage</th>
-      <th scope="col"> Actions</th>
-    </tr>
-  </thead>
-  <tbody>
+      {% for inactive_expenses in inactive_expenses%}
+        {% if inactive_expenses %}
+          <tr>
+            <form action="restore_expense/{{inactive_expenses.id}}" method = "POST">
+              <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
+              <td>{{inactive_expenses.name}}</td>
+              <td>{{inactive_expenses.percentage}}</td>
+              <td>
+                  <button type="submit" class="btn btn-success">Restore</button> 
+                  <button class="btn btn-danger" formaction="#" onclick="return confirm('Deleted expenses cannot be recovered. Are you sure you want to delete this expense?')">Permanently Delete</button>
+              </td>
+            </form>
+          </tr>
+        {% endif %}
+      {% endfor %}
 
-    {% for inactive_expenses in inactive_expenses%}
-      {% if inactive_expenses %}
-        <tr>
-          <form action="restore_expense/{{inactive_expenses.id}}" method = "POST">
-            <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
-            <td>{{inactive_expenses.name}}</td>
-            <td>{{inactive_expenses.percentage}}</td>
-            <td>
-                <button type="submit" class="btn btn-success">Restore</button> 
-                <button class="btn btn-danger" formaction="#">Delete</button>
-            </td>
-          </form>
-        </tr>
-      {% endif %}
-    {% endfor %}
-
-  </tbody>
-</table>
+    </tbody>
+  </table>
+{% endif %}
 
 
 

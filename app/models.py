@@ -19,7 +19,8 @@ class Expenses(db.Model):        #Stores all expense category per user
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     name = db.Column(db.String(25))
     percentage = db.Column(db.Float)
-    status = db.Column(db.Boolean, default = True)
+    status = db.Column(db.Boolean, default = True)      #Archive Status
+    deleted = db.Column(db.Boolean, default = False)
     savings = db.Column(db.Float, default = 0.0) 
     earnings = db.Column(db.Float, default = 0.0)
     spendings = db.Column(db.Float, default = 0.0)
