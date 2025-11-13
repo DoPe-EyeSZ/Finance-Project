@@ -60,10 +60,14 @@
         
         {% if earned == 0 %}
 
-            <p><div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
-                <div class="progress-bar " role="progressbar" style="width: 100%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">N/A</div>
+            <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
+                <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    style="width: 100%">
+                    N/A
+                </div>
             </div>
-            </p
+
 
         {% elif spent >=earned %}
 
@@ -71,7 +75,11 @@
                 <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Spent: 100%</div>
             </div>
 
-            <h2>SPENDING TOO MUCH! CHILLLLLL</h2>
+        {% elif saved == 0 %}
+
+            <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
+                <div class="progress-bar " role="progressbar" style="width: 100%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">Saved: 0%</div>
+            </div>
 
         {% else %}
             <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
@@ -125,23 +133,33 @@
         </table>
 
         
-        {% if earned == 0%}
+        {% if earned == 0 %}
 
-            <p><div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
-                <div class="progress-bar " role="progressbar" style="width: 100%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">N/A</div>
+            <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
+                <div class="progress-bar bg-secondary progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    style="width: 100%">
+                    N/A
+                </div>
             </div>
-            </p
 
-        {% elif spent>=earned %}
+
+        {% elif spent >=earned %}
 
             <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
                 <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Spent: 100%</div>
             </div>
 
+        {% elif saved == 0 %}
+
+            <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
+                <div class="progress-bar " role="progressbar" style="width: 100%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">Saved: 0%</div>
+            </div>
+
         {% else %}
             <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
-                <div class="progress-bar bg-danger" role="progressbar" style="width: {{inactive_expenses[expense_id]['spending_percent']}}%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Spent: {{inactive_expenses[expense_id]['spending_percent']}}%</div>
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{inactive_expenses[expense_id]['saving_percent']}}%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">Saved: {{inactive_expenses[expense_id]['saving_percent']}}%</div>
+                <div class="progress-bar bg-danger" role="progressbar" style="width: {{active_expenses[expense_id]['spending_percent']}}%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Spent: {{active_expenses[expense_id]['spending_percent']}}%</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{active_expenses[expense_id]['saving_percent']}}%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">Saved: {{active_expenses[expense_id]['saving_percent']}}%</div>
             </div>
 
         {% endif %}
