@@ -40,7 +40,7 @@
                     <td>
                         <form action="/add_spending/{{snapshot.id}}" method="POST">
                             <p><input type="number" step="0.01" placeholder="Total Spent: ${{snapshot.total_spending}}" name="spending" required></p>
-                            <p><input type="text" placeholder="Add Note" name="reasoning"></p> 
+                            <p><input type="text" placeholder="Add Note" name="reasoning" required></p> 
                             <button type="submit" class="btn btn-primary">Save</button>
 
                         </form>
@@ -72,21 +72,21 @@
 
     <tbody>
         {% for spent in spending %}
-            <tr>
-                <td>{{spent.expense_name}}</td>
-                <td>{{spent.date}}</td>
-                <td>{{spent.amount}}</td>
-                {% if spent.reasoning %}
+            <form action="">
+                <tr>
+                    <td>{{spent.expense_name}}</td>
+                    <td>{{spent.date}}</td>
+                    <td><input type="number" min="0" placeholder="${{spent.amount}}" name="amount"></td>
                     <td>{{spent.reasoning}}</td>
-                {% else %}
-                    <td>N/A</td>
-                {% endif %}
-                <td>
-                    <form action="/delete_spending/{{spent.id}}" method="POST">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
+                    <td>
+                        <form action="/delete_spending/{{spent.id}}" method="POST">
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </td>
+                </tr>
+            </form>
+                
         {% endfor %}
     </tbody>
 
