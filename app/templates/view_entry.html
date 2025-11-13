@@ -72,20 +72,23 @@
 
     <tbody>
         {% for spent in spending %}
-            <form action="">
                 <tr>
                     <td>{{spent.expense_name}}</td>
                     <td>{{spent.date}}</td>
-                    <td><input type="number" min="0" placeholder="${{spent.amount}}" name="amount"></td>
+                    <form action="/edit_spending/{{spent.id}}" method="POST">
+                        <td><input type="number" min="0" placeholder="${{spent.amount}}" name="amount" required>
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </td>
+                    </form>
+                    
                     <td>{{spent.reasoning}}</td>
                     <td>
                         <form action="/delete_spending/{{spent.id}}" method="POST">
                             <button class="btn btn-danger" type="submit">Delete</button>
                         </form>
-                        <button class="btn btn-primary" type="submit">Save</button>
+                        
                     </td>
                 </tr>
-            </form>
                 
         {% endfor %}
     </tbody>
