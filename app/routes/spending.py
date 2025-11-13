@@ -23,3 +23,22 @@ def add_spending(snap_id):
         return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
     else:
         return redirect(url_for("user.login"))
+    
+
+
+@spending.route("/delete_spending/<spending_id>", methods = ["POST"])
+def delete_spending(spending_id):
+    if helper.check_login():
+        spending = Spending.query.filter_by(id = spending_id).first()
+        snap = Exp_Snap.query.filter_by(entry_id = spending.entry_id, expense_id = spending.expense_id).first()
+        entry_id = spending.entry_id
+
+        if request.method == "POST":
+            amount_added = -(spending.amount)
+            snap.add_spending(amount_added)
+            db.session.delete(spending)
+            db.session.commit()
+
+        return redirect(url_for("entry.view_entry", entry_id = entry_id))
+    else:
+        return redirect(url_for("user.login"))

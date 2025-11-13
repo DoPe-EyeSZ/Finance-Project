@@ -65,6 +65,7 @@
             <th>Date</th>
             <th>Amount</th>
             <th>Reasoning</th>
+            <th>Action</th>
         </tr>
         
     </thead>
@@ -80,6 +81,11 @@
                 {% else %}
                     <td>N/A</td>
                 {% endif %}
+                <td>
+                    <form action="/delete_spending/{{spent.id}}" method="POST">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </tbody>
