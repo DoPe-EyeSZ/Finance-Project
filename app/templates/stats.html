@@ -16,7 +16,7 @@
 {% if active_expenses or inactive_expenses %}
     <p>Total Balance: {{lifetime_stats["Balance"]}}</p>
     <p>Total Earnings: {{lifetime_stats["Earnings"]}}</p>
-    <p>Total Deposits: {{lifetime_stats["Deposits"]}}</p>
+    <p>Total Transferred: {{lifetime_stats["Transferred"]}}</p>
     <p>Total Spent: {{lifetime_stats["Spendings"]}}</p>
     <p>Total Savings: {{lifetime_stats["Savings"]}}</p>
 
@@ -32,14 +32,14 @@
         {% set spent = active_expenses[expense_id]["spending"]%}
         {% set saved = active_expenses[expense_id]["saving"]%}
         {% set balance = active_expenses[expense_id]["balance"]%}
-        {% set deposit = active_expenses[expense_id]["deposit"]%}
+        {% set transferred = active_expenses[expense_id]["transferred"]%}
 
         <table class="table">
             <thead>
                 <tr>
                     <th>Total Balance</th>
                     <th> Earned</th>
-                    <th> Deposited</th>
+                    <th> Transferred</th>
                     <th> Spent</th>
                     <th> Remaining</th>
                 </tr>
@@ -49,7 +49,7 @@
                 <tr>
                     <td>${{balance}}</td>
                     <td>${{earned}}</td>
-                    <td>${{deposit}}</td>
+                    <td>${{transferred}}</td>
                     <td>${{spent}}</td>
                     <td>${{saved}}</td>
                 </tr>
@@ -96,14 +96,14 @@
         {% set spent = inactive_expenses[expense_id]["spending"]%}
         {% set saved = inactive_expenses[expense_id]["saving"]%}
         {% set balance = inactive_expenses[expense_id]["balance"]%}
-        {% set deposit = inactive_expenses[expense_id]["deposit"]%}
+        {% set transferred = inactive_expenses[expense_id]["transferred"]%}
 
         <table class="table">
             <thead>
                 <tr>
                     <th>Total Balance</th>
                     <th> Earned</th>
-                    <th> Deposited</th>
+                    <th> Transferred</th>
                     <th> Spent</th>
                     <th> Remaining</th>
                 </tr>
@@ -114,7 +114,7 @@
                     <form action="#" method="POST">
                         <td>${{balance}}</td>
                         <td>${{earned}}</td>
-                        <td>${{deposit}}</td>
+                        <td>${{transferred}}</td>
                         <td>${{spent}}</td>
                         <td>${{saved}}</td>
                     </form>
@@ -125,7 +125,7 @@
         </table>
 
         
-        {% if earned == 0 %}
+        {% if earned == 0%}
 
             <p><div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
                 <div class="progress-bar " role="progressbar" style="width: 100%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">N/A</div>
@@ -138,8 +138,6 @@
                 <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Spent: 100%</div>
             </div>
 
-            <h2>SPENDING TOO MUCH! CHILLLLLL</h2>
-
         {% else %}
             <div class="progress" style="width: 95%; margin: 0 auto; height: 40px; font-size: 18px;">
                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{inactive_expenses[expense_id]['spending_percent']}}%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">Spent: {{inactive_expenses[expense_id]['spending_percent']}}%</div>
@@ -150,6 +148,34 @@
 
     {% endfor%}
 
+{% endif %}
+
+{% if spending %}
+    <h1>Spending Log</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Expense</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Reasoning</th>
+            </tr>
+            
+        </thead>
+
+        <tbody>
+            {% for spent in spending %}
+                    <tr>
+                        <td>{{spent.expense_name}}</td>
+                        <td>{{spent.date}}</td>
+                        <td>{{spent.amount}}</td>
+                        <td>{{spent.reasoning}}</td>
+                    </tr>
+                    
+            {% endfor %}
+        </tbody>
+
+    </table>
 {% endif %}
 
 {% endblock %}

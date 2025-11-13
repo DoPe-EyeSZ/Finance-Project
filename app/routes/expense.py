@@ -88,8 +88,8 @@ def archive_expense(expense_id):
         return redirect(url_for("user.login"))
     
 
-@expense.route("/deposit", methods = ["POST"])
-def deposit():
+@expense.route("/transfer", methods = ["POST"])
+def transfer():
     
     if helper.check_login():
         expense_id = request.form.get("expense_id")
@@ -97,7 +97,7 @@ def deposit():
 
         expense = Expenses.query.filter_by(id = int(expense_id)).first()        #FIGUREOUT WHY NOT COMMITING CHANGES
 
-        expense.add_deposit(float(amount))
+        expense.transfer_in(float(amount))
 
         db.session.commit()
         return redirect(url_for("expense.expenses"))
@@ -125,3 +125,24 @@ def calculate_percentage(user_id):
         return [total, False]
     else:
         return [total, True]
+    
+
+@expense.route("/reallocate", methods = ["POST"])
+def reallocate():
+    if helper.check_login():
+        if request.method == "POST":
+            from_expense = Expenses.query.filter_by(id = int(request.form.get("from_expense"))).first()
+            to_expense = Expenses.query.filter_by(id = int(request.form.get("to_expense"))).first()
+            amount = float(request.form.get("amount"))
+
+            if helper.calc_savings(int(request.form.get("from_expense"))) >= amount:
+                from_expense.transferred -= amount
+                to_expense.transferred += amount
+                db.session.commit()
+
+            else:
+                flash("reallocation amount is too much")
+            
+        return redirect(url_for("expense.expenses"))
+    else:
+        return redirect(url_for("user.login"))

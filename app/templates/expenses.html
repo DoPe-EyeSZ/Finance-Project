@@ -25,8 +25,8 @@
 {% endif %}
 
 {% if active_expenses %}
-<h1>Deposit</h1>
-    <form action="/deposit" method="POST">
+<h1>Transfer</h1>
+    <form action="/transfer" method="POST">
         <select name="expense_id" required>
             <option value="">Select Expense</option>
             {% for expense in active_expenses %}
@@ -34,11 +34,36 @@
             {% endfor %}
         </select>
 
-        <input type="number" step="0.01" name="amount" placeholder="Amount to Deposit" min="0">
-        <button type="submit">Deposit</button>
+        <input type="number" step="0.01" name="amount" placeholder="Amount to Transfer" min="0">
+        <button type="submit">Transfer</button>
 
     </form>
   {% endif %}
+
+  <h1>Reallocate</h1>
+    <form action="/reallocate" method="POST">
+      {% set ns = namespace(max=0) %}
+        <select name="from_expense" required>
+            <option value="">Select Expense</option>
+            {% for expense in all_expenses %}
+                <option value="{{expense.id}}">{{expense.name}}</option>
+                {% set ns.max = all_expenses[expense] %}
+            {% endfor %}
+        </select>
+
+        <h3>to</h3>
+
+        <select name="to_expense" required>
+            <option value="">Select Expense</option>
+            {% for expense in all_expenses %}
+                <option value="{{expense.id}}">{{expense.name}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="number" step="0.01" name="amount" placeholder="Amount to Transfer" min="0">
+        <button type="submit">Transfer</button>
+
+    </form>
 
 
 

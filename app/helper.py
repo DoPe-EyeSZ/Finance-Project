@@ -19,7 +19,7 @@ def check_login():
 def calc_savings(expense_id):
     snaps = Exp_Snap.query.filter_by(expense_id = expense_id).all()
     expense = Expenses.query.filter_by(id = expense_id).first()
-    earnings = expense.deposit
+    earnings = expense.transferred
     spending = 0
     for snap in snaps:
         earnings += snap.expense_earnings

@@ -3,7 +3,15 @@
 
 {% block content %}
 <h1>DATE: {{entry.date}}</h1>
-<h1>CURRENT INCOME: ${{entry.income}}</h1>
+
+{% set ns = namespace(total_spent=0) %}
+
+{% for spent in spending %}
+    {% set ns.total_spent = ns.total_spent + spent.amount %}
+{% endfor %}
+
+<h1>CURRENT INCOME: ${{ entry.income }}</h1>
+<h1>TOTAL SPENT: ${{ ns.total_spent }}</h1>
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}

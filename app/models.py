@@ -24,7 +24,7 @@ class Expenses(db.Model):        #Stores all expense category per user
     savings = db.Column(db.Float, default = 0.0) 
     earnings = db.Column(db.Float, default = 0.0)
     spendings = db.Column(db.Float, default = 0.0)
-    deposit = db.Column(db.Float, default = 0.0)
+    transferred = db.Column(db.Float, default = 0.0)
     balance = db.Column(db.Float, default = 0.0)
 
     def __init__(self, user_id, name, percentage):
@@ -39,10 +39,10 @@ class Expenses(db.Model):        #Stores all expense category per user
         self.percentage = new_percent
 
     def set_earnings(self, amount):
-        self.earnings = amount + self.deposit
+        self.earnings = amount + self.transferred
 
-    def add_deposit(self, amount):
-        self.deposit += amount
+    def transfer_in(self, amount):
+        self.transferred += amount
 
     def set_spending(self, amount):
         self.spendings = amount

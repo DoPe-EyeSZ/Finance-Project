@@ -145,7 +145,6 @@ def delete():        #Deletes User account from DB
 
 @user.route("/stats", methods=["GET"])
 def stats():
-    start = time.time()
     if "user_id" in session:
         active_expenses = {}
         inactive_expenses = {}
@@ -180,7 +179,7 @@ def stats():
                     inactive_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending}             
             
 
-        overview_stats = {"Balance": 0.0, "Earnings": 0.0, "Deposits": 0.0, "Spendings": 0.0, "Savings": 0.0}      #Gather's user overview
+        overview_stats = {"Balance": 0.0, "Earnings": 0.0, "Transferred": 0.0, "Spendings": 0.0, "Savings": 0.0}      #Gather's user overview
 
         #Combines all the expense id's in a list to update for overview_stats
         all_expense_id = list(active_expenses.keys()) + list(inactive_expenses.keys())
@@ -200,11 +199,11 @@ def stats():
 
             spending = expense_dict[expense_id]["spending"]
 
-            deposit = float(expense.deposit)
-            expense_dict[expense_id]["deposit"] = deposit
-            expense.deposit = deposit
+            transferred = float(expense.transferred)
+            expense_dict[expense_id]["transferred"] = transferred
+            expense.transferred = transferred
 
-            balance = float(deposit + earnings)
+            balance = float(transferred + earnings)
             expense_dict[expense_id]["balance"] = balance
             expense.balance = balance
 
@@ -232,7 +231,7 @@ def stats():
             overview_stats["Earnings"] += earnings
             expense.set_earnings(earnings)
             
-            overview_stats["Deposits"] += deposit
+            overview_stats["Transferred"] += transferred
             
             overview_stats["Spendings"] += spending
             expense.set_spending(spending)
@@ -243,7 +242,8 @@ def stats():
 
 
         db.session.commit()
-        return render_template("stats.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats)
+        spending = Spending.query.filter_by(user_id = session["user_id"]).all()
+        return render_template("stats.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending)
     
 
     else:
