@@ -1,160 +1,164 @@
 {% extends "budget_base.html"%}
 {% block title %} Manage Expenses {% endblock %}
 
+
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<div class="expense-container">
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for msg in messages %}
-          <div class="flash-message">{{msg}}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
 
-    <h1 class="main-title">SUMMARY</h1>
-    
-    <div class="status-block">
-        <h2>Percentage: {{status[0]}}%</h2>
-        {% if status[1] %}
-          <h2>Status: Perfect ✓</h2>
-        {% else %}
-          <h2>Status: Error ✗</h2>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <p>{{msg}}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+
+
+<h1>Summary</h1>
+<h2>Percentage: {{status[0]}}</h2>
+{% if status[1] %}
+  <h2>Status: Perfect</h2>
+
+{% else %}
+  <h2>Status: Error</h2>
+{% endif %}
+
+{% if active_expenses %}
+<h1>Transfer</h1>
+    <form action="/transfer" method="POST">
+        <select name="expense_id" required>
+            <option value="">Select Expense</option>
+            {% for expense in active_expenses %}
+                <option value="{{expense.id}}">{{expense.name}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="number" step="0.01" name="amount" placeholder="Amount to Transfer" min="0">
+        <button type="submit">Transfer</button>
+
+    </form>
+  {% endif %}
+
+  <h1>Reallocate</h1>
+    <form action="/reallocate" method="POST">
+      {% set ns = namespace(max=0) %}
+        <select name="from_expense" required>
+            <option value="">Select Expense</option>
+            {% for expense in all_expenses %}
+                <option value="{{expense.id}}">{{expense.name}}</option>
+                {% set ns.max = all_expenses[expense] %}
+            {% endfor %}
+        </select>
+
+        <h3>to</h3>
+
+        <select name="to_expense" required>
+            <option value="">Select Expense</option>
+            {% for expense in all_expenses %}
+                <option value="{{expense.id}}">{{expense.name}}</option>
+            {% endfor %}
+        </select>
+
+        <input type="number" step="0.01" name="amount" placeholder="Amount to Transfer" min="0">
+        <button type="submit">Transfer</button>
+
+    </form>
+
+
+
+
+
+
+<h1>Active Expenses</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th> # </th>
+      <th>Expense</th>
+      <th>Percentage</th>
+      <th>Available Cash</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for active_expense in active_expenses%}
+        <tr>
+          <form action="/edit_expense/{{active_expense.id}}" method = "POST">
+            <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
+            <td><input type="text" name="name" value="{{active_expense.name}}"></td>
+            <td><input type="number" name="percentage" value="{{active_expense.percentage}}"></td>
+            <td>{{active_expenses[active_expense]}}</td>
+            <td>
+                <button type="submit" class="btn btn-success">Save</button> 
+                <button class="btn btn-danger" formaction="/archive_expense/{{active_expense.id}}" >Archive</button>
+            </td>
+          </form>
+        </tr>
+    {% endfor %}
+    <tr>
+      <form action="/add_expense" method="POST">
+
+        <td><p>+</p></td>
+
+          <td><input type="text" name="expense_name" required></td><p>
+
+          <td><input type="number" name="percent" required></td>
+
+          <td></td>
+
+          <td><button type="submit" class="btn btn-primary">Add</button></td>
+
+
+        </form>
+      </tr>
+
+    </tbody>
+  </table>
+
+
+
+
+{% if inactive_expenses %}
+  <h1>Archived Expenses</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th> # </th>
+        <th>Expense</th>
+        <th>Percentage</th>
+        <th>Available Cash</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for inactive_expense in inactive_expenses%}
+        {% if inactive_expenses %}
+          <tr>
+            <form action="restore_expense/{{inactive_expense.id}}" method = "POST">
+              <td data-align="center" name="row_id" value="{{loop.index}}">{{loop.index}}</td>
+              <td>{{inactive_expense.name}}</td>
+              <td>{{inactive_expense.percentage}}</td>
+              <td>{{inactive_expenses[inactive_expense]}}</td>
+              <td>
+                  <button type="submit" class="btn btn-success">Restore</button> 
+              </td>
+            </form>
+          </tr>
         {% endif %}
-    </div>
+      {% endfor %}
 
-    {% if active_expenses %}
-    <h1 class="section-title">Transfer</h1>
-    <div class="form-section">
-        <form action="/transfer" method="POST" class="inline-form">
-            <select name="expense_id" required>
-                <option value="">Select Expense</option>
-                {% for expense in active_expenses %}
-                    <option value="{{expense.id}}">{{expense.name}}</option>
-                {% endfor %}
-            </select>
+    </tbody>
+  </table>
+{% endif %}
 
-            <div class="input-wrapper">
-                <span class="currency-symbol">$</span>
-                <input type="number" step="0.01" name="amount" placeholder="Amount" min="0" required>
-            </div>
 
-            <button type="submit" class="form-btn">Transfer</button>
-        </form>
-    </div>
-    {% endif %}
 
-    <h1 class="section-title">Reallocate</h1>
-    <div class="form-section">
-        <form action="/reallocate" method="POST" class="inline-form">
-            {% set ns = namespace(max=0) %}
-            <select name="from_expense" required>
-                <option value="">From Expense</option>
-                {% for expense in all_expenses %}
-                    <option value="{{expense.id}}">{{expense.name}}</option>
-                    {% set ns.max = all_expenses[expense] %}
-                {% endfor %}
-            </select>
-
-            <span class="arrow">→</span>
-
-            <select name="to_expense" required>
-                <option value="">To Expense</option>
-                {% for expense in all_expenses %}
-                    <option value="{{expense.id}}">{{expense.name}}</option>
-                {% endfor %}
-            </select>
-
-            <div class="input-wrapper">
-                <span class="currency-symbol">$</span>
-                <input type="number" step="0.01" name="amount" placeholder="Amount" min="0" required>
-            </div>
-
-            <button type="submit" class="form-btn">Transfer</button>
-        </form>
-    </div>
-
-    <h1 class="section-title">Active Expenses</h1>
-    <table class="expense-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Expense</th>
-                <th>Percentage</th>
-                <th>Available Cash</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for active_expense in active_expenses %}
-            <tr>
-                <form action="/edit_expense/{{active_expense.id}}" method="POST">
-                    <td>{{loop.index}}</td>
-                    <td><input type="text" name="name" value="{{active_expense.name}}" class="table-input"></td>
-                    <td>
-                        <div class="percent-wrapper">
-                            <input type="number" name="percentage" value="{{active_expense.percentage}}" class="table-input percent-input">
-                            <span class="percent-symbol">%</span>
-                        </div>
-                    </td>
-                    <td class="cash-cell">${{active_expenses[active_expense]}}</td>
-                    <td>
-                        <button type="submit" class="btn btn-success btn-sm">Save</button>
-                        <button class="btn btn-danger btn-sm" formaction="/archive_expense/{{active_expense.id}}">Archive</button>
-                    </td>
-                </form>
-            </tr>
-            {% endfor %}
-            <tr class="add-row">
-                <form action="/add_expense" method="POST">
-                    <td>+</td>
-                    <td><input type="text" name="expense_name" placeholder="New Expense" class="table-input" required></td>
-                    <td>
-                        <div class="percent-wrapper">
-                            <input type="number" name="percent" placeholder="%" class="table-input percent-input" required>
-                            <span class="percent-symbol">%</span>
-                        </div>
-                    </td>
-                    <td></td>
-                    <td><button type="submit" class="btn btn-primary btn-sm">Add</button></td>
-                </form>
-            </tr>
-        </tbody>
-    </table>
-
-    {% if inactive_expenses %}
-    <h1 class="section-title">Archived Expenses</h1>
-    <table class="expense-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Expense</th>
-                <th>Percentage</th>
-                <th>Available Cash</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for inactive_expense in inactive_expenses %}
-            <tr>
-                <form action="restore_expense/{{inactive_expense.id}}" method="POST">
-                    <td>{{loop.index}}</td>
-                    <td>{{inactive_expense.name}}</td>
-                    <td>{{inactive_expense.percentage}}%</td>
-                    <td class="cash-cell">${{inactive_expenses[inactive_expense]}}</td>
-                    <td>
-                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
-                    </td>
-                </form>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-</div>
 
 {% endblock %}
 
-{% block scripts %}
+{% block scripts%}
+
 {% endblock %}
