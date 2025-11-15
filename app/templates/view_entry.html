@@ -47,7 +47,7 @@
                     <td>${{est_balance[snapshot]}}</td>
                     <td>
                         <form action="/add_spending/{{snapshot.id}}" method="POST">
-                            <p><input type="number" step="0.01" placeholder="Total Spent: ${{snapshot.total_spending}}" name="spending" required></p>
+                            <p><input type="number" step="0.01" placeholder="Available Cash: ${{est_balance[snapshot]}}" name="spending" required></p>
                             <p><input type="text" placeholder="Add Note" name="reasoning" required></p> 
                             <button type="submit" class="btn btn-primary">Save</button>
 
@@ -64,45 +64,45 @@
 
 </table>
 
+{% if spending %}
+    <h1>Spending Log</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Expense</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Reasoning</th>
+                <th>Action</th>
+            </tr>
+            
+        </thead>
 
-<h1>Spending Log</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Expense</th>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Reasoning</th>
-            <th>Action</th>
-        </tr>
-        
-    </thead>
-
-    <tbody>
-        {% for spent in spending %}
-                <tr>
-                    <td>{{spent.expense_name}}</td>
-                    <td>{{spent.date}}</td>
-                    <form action="/edit_spending/{{spent.id}}" method="POST">
-                        <td><input type="number" min="0" placeholder="${{spent.amount}}" name="amount" required>
-                            <button class="btn btn-primary" type="submit">Save</button>
-                        </td>
-                    </form>
-                    
-                    <td>{{spent.reasoning}}</td>
-                    <td>
-                        <form action="/delete_spending/{{spent.id}}" method="POST">
-                            <button class="btn btn-danger" type="submit">Delete</button>
+        <tbody>
+            {% for spent in spending %}
+                    <tr>
+                        <td>{{spent.expense_name}}</td>
+                        <td>{{spent.date}}</td>
+                        <form action="/edit_spending/{{spent.id}}" method="POST">
+                            <td><input type="number" min="0" placeholder="${{spent.amount}}" name="amount" required>
+                                <button class="btn btn-primary" type="submit">Save</button>
+                            </td>
                         </form>
                         
-                    </td>
-                </tr>
-                
-        {% endfor %}
-    </tbody>
+                        <td>{{spent.reasoning}}</td>
+                        <td>
+                            <form action="/delete_spending/{{spent.id}}" method="POST">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                            
+                        </td>
+                    </tr>
+                    
+            {% endfor %}
+        </tbody>
 
-</table>
-
+    </table>
+{% endif %}
 
 
 

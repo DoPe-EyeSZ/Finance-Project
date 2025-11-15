@@ -9,7 +9,7 @@ db = SQLAlchemy()
 def create_app():
     load_dotenv()
 
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="../static", template_folder="templates")
     app.secret_key = os.getenv("secret_key")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///budget.db"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

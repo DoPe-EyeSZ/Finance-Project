@@ -7,48 +7,114 @@
 
     {% block css %}
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+      <style>
+        .navbar {
+          background-color: #1a1c22 !important;
+          border-bottom: 2px solid #2d6cdf;
+        }
+
+        .navbar-brand {
+          color: #dbe9ff !important;
+          font-weight: bold;
+          font-size: 1.5em;
+          letter-spacing: 1px;
+        }
+
+        .navbar-nav {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .navbar-nav .nav-link {
+          color: #a7c4ff !important;
+          padding: 8px 16px;
+          border-radius: 6px;
+          transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+          background: #23262d;
+          color: #dbe9ff !important;
+        }
+
+        .nav-right {
+          margin-left: auto;
+          display: flex;
+          gap: 10px;
+        }
+
+        .nav-link.logout {
+          color: #ff6b6b !important;
+          border: 1px solid #ff6b6b;
+        }
+
+        .nav-link.logout:hover {
+          background: #ff6b6b;
+          color: #ffffff !important;
+        }
+
+        .nav-link.delete {
+          color: #ff3333 !important;
+          border: 1px solid #ff3333;
+          font-weight: 600;
+        }
+
+        .nav-link.delete:hover {
+          background: #ff3333;
+          color: #ffffff !important;
+        }
+
+        .navbar-toggler {
+          border-color: #2d6cdf;
+        }
+
+        .navbar-toggler-icon {
+          filter: invert(1);
+        }
+      </style>
     {% endblock %}
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
         <a class="navbar-brand" href="#">BUDGET</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+          <ul class="navbar-nav">
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/dash">Dashboard</a>
+              <a class="nav-link" href="/dash">Dashboard</a>
             </li>
 
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/stats">Stats</a>
+              <a class="nav-link" href="/stats">Stats</a>
             </li>
 
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/expenses">Manage Expenses</a>
+              <a class="nav-link" href="/expenses">Manage Expenses</a>
             </li>
 
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/entry">Entries</a>
+              <a class="nav-link" href="/entry">Entries</a>
             </li>
 
-            <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-            </li>
+            <div class="nav-right">
+              <li class="nav-item">
+                <a class="nav-link logout" href="/logout">Logout</a>
+              </li>
 
-            <li class="nav-item">
-            <a class="nav-link" href="/delete">Delete Account</a>
-            </li>
-
-        </ul>
+              <li class="nav-item">
+                <a class="nav-link delete" href="/delete">Delete Account</a>
+              </li>
+            </div>
+          </ul>
         </div>
-    </div>
+      </div>
     </nav>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
+    
     {% block content%}
 
     {% endblock%}
