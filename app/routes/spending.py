@@ -9,14 +9,14 @@ spending = Blueprint("spending", __name__, template_folder="templates")
 @spending.route("/add_spending/<int:snap_id>", methods = ["POST"])
 def add_spending(snap_id):
     if helper.check_login():
+
+        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      #Gets neccesary data
+        amount = float(request.form.get("spending"))        
+        reasoning = str(request.form.get("reasoning"))
         if request.method == "POST":
-            snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      #Gets neccesary data
-            amount = float(request.form.get("spending"))        
-            reasoning = str(request.form.get("reasoning"))
 
             transaction = Spending(snap.entry_id, snap.expense_name, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
             db.session.add(transaction)
-
             snap.add_spending(float(amount))
 
         db.session.commit()
