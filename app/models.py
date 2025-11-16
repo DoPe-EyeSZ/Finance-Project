@@ -76,6 +76,7 @@ class Spending(db.Model):        #Stores every spending per entry
     expense_id = db.Column(db.Integer)
     expense_name = db.Column(db.String)
     amount = db.Column(db.Float)
+    credit_status = db.Column(db.Boolean, default = False)
     reasoning = db.Column(db.String(100), default = "")
     date = db.Column(db.Integer, default = date.today())
 
@@ -104,6 +105,7 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
     expense_percentage = db.Column(db.Float)
     expense_earnings = db.Column(db.Float, default = 0.0)
     total_spending = db.Column(db.Float, default = 0.0)
+    credit_balance = db.Column(db.Float, default = 0.0)
     
     def __init__(self, entry_id, user_id, expense_id, expense_name, expense_percentage):
         self.user_id = user_id
@@ -115,6 +117,10 @@ class Exp_Snap(db.Model):       #Stores a snapshot of the expense
     def add_spending(self, amount):
         self.total_spending += amount
         self.total_spending = round(self.total_spending, 2)
+
+    def add_credit(self, amount):
+        self.credit_balance += amount
+        self.credit_balance = round(self.credit_balance, 2)
     
     def set_earnings(self, amount):
         self.expense_earnings = amount

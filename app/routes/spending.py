@@ -23,7 +23,7 @@ def add_spending(snap_id):
         return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
     else:
         return redirect(url_for("user.login"))
-    
+
 
 @spending.route("/edit_spending/<spending_id>", methods = ["POST"])
 def edit_spending(spending_id):
@@ -52,11 +52,49 @@ def delete_spending(spending_id):
         entry_id = spending.entry_id
 
         if request.method == "POST":
-            amount_added = -(spending.amount)
-            snap.add_spending(amount_added)
+            if not spending.credit_status:
+                amount_added = -(spending.amount)
+                snap.add_spending(amount_added)
+
             db.session.delete(spending)
             db.session.commit()
 
         return redirect(url_for("entry.view_entry", entry_id = entry_id))
+    else:
+        return redirect(url_for("user.login"))
+    
+
+@spending.route("/add_credit/<int:snap_id>", methods = ["POST"])
+def add_credit(snap_id):
+    if helper.check_login():
+
+        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      #Gets neccesary data
+        amount = float(request.form.get("spending"))        
+        reasoning = str(request.form.get("reasoning"))
+        if request.method == "POST":
+
+            transaction = Spending(snap.entry_id, snap.expense_name, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
+            transaction.credit_status = True
+            snap.add_credit(amount)
+            db.session.add(transaction)
+
+        db.session.commit()
+        return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
+    else:
+        return redirect(url_for("user.login"))
+
+@spending.route("/pay_credit/<spending_id>", methods = ["POST"])
+def pay_credit(spending_id):
+    if helper.check_login():
+        credit_spending = Spending.query.filter_by(id = int(spending_id)).first()
+        snap = Exp_Snap.query.filter_by(entry_id = credit_spending.entry_id, expense_id = credit_spending.expense_id).first()
+
+        if request.method == "POST":
+            print(credit_spending.credit_status)
+            credit_spending.credit_status = False
+            print(credit_spending.credit_status)
+            snap.add_spending(float(credit_spending.amount))
+        db.session.commit()
+        return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
     else:
         return redirect(url_for("user.login"))

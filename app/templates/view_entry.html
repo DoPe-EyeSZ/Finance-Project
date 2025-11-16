@@ -7,7 +7,9 @@
 {% set ns = namespace(total_spent=0) %}
 
 {% for spent in spending %}
-    {% set ns.total_spent = ns.total_spent + spent.amount %}
+    {% if not spent.credit_status %}
+        {% set ns.total_spent = ns.total_spent + spent.amount %}
+    {% endif %}
 {% endfor %}
 
 <h1>CURRENT INCOME: ${{ entry.income }}</h1>
@@ -47,9 +49,10 @@
                     <td>${{est_balance[snapshot]}}</td>
                     <td>
                         <form action="/add_spending/{{snapshot.id}}" method="POST">
-                            <p><input type="number" step="0.01" placeholder="Available Cash: ${{est_balance[snapshot]}}" name="spending" required></p>
+                            <p><input type="number" step="0.01" placeholder="Total Spent: ${{snapshot.total_spending}}" name="spending" required></p>
                             <p><input type="text" placeholder="Add Note" name="reasoning" required></p> 
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Debit</button> 
+                            <button type="submit" class="btn btn-primary" formaction="/add_credit/{{snapshot.id}}">Credit</button>
 
                         </form>
 
@@ -93,6 +96,10 @@
                         <td>
                             <form action="/delete_spending/{{spent.id}}" method="POST">
                                 <button class="btn btn-danger" type="submit">Delete</button>
+                                {% if spent.credit_status %}
+                                    <button class="btn btn-success" type="submit" formaction="/pay_credit/{{spent.id}}">Pay Credit Balance</button>
+
+                                {% endif %}
                             </form>
                             
                         </td>
