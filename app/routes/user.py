@@ -244,11 +244,6 @@ def stats():
         db.session.commit()
         spending = Spending.query.filter_by(user_id = session["user_id"]).all()
 
-        for key, value in active_expenses.items():
-            print(f"ACTIVE EXPENSE:{key} to {value}")
-
-        for key, value in inactive_expenses.items():
-            print(f"INACTIVE EXPENSE:{key} to {value}")
 
 
         return render_template("stats.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending)
