@@ -164,9 +164,10 @@ def stats():
                     expense = active_expenses[snap.expense_id]
                     expense["earning"] += snap.expense_earnings
                     expense["spending"] += snap.total_spending
+                    expense["credit_balance"] += snap.credit_balance
                     
                 else:       #Creates new key-val pair [name, earnings, spending]
-                    active_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending}             
+                    active_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending, "credit_balance": snap.credit_balance}             
             
             else:
 
@@ -174,12 +175,13 @@ def stats():
                     expense = inactive_expenses[snap.expense_id]
                     expense["earning"] += snap.expense_earnings
                     expense["spending"] += snap.total_spending
+                    expense["credit_balance"] += snap.credit_balance
                 
                 else:
-                    inactive_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending}             
+                    inactive_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending, "credit_balance": snap.credit_balance}             
             
 
-        overview_stats = {"Balance": 0.0, "Earnings": 0.0, "Transferred": 0.0, "Spendings": 0.0, "Savings": 0.0}      #Gather's user overview
+        overview_stats = {"Balance": 0.0, "Earnings": 0.0, "Transferred": 0.0, "Spendings": 0.0, "Savings": 0.0, "Credit_Balance": 0.0}      #Gather's user overview
 
         #Combines all the expense id's in a list to update for overview_stats
         all_expense_id = list(active_expenses.keys()) + list(inactive_expenses.keys())
@@ -195,6 +197,8 @@ def stats():
             else:
                 expense_dict = inactive_expenses
             
+
+            #Deriving other forms of data from the spending/earning 
             earnings = expense_dict[expense_id]["earning"]
 
             spending = expense_dict[expense_id]["spending"]
@@ -238,6 +242,9 @@ def stats():
             
             expense.set_savings()
             overview_stats["Savings"] += saving
+
+            expense.credit_balance += expense_dict[expense_id]["credit_balance"]
+            overview_stats["Credit_Balance"] += expense_dict[expense_id]["credit_balance"]
 
 
 

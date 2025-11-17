@@ -2,27 +2,158 @@
 {% block title%} DASHBOARD {% endblock%}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for msg in messages %}
-      <p>{{msg}}</p>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+<div class="expense-container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash-message">{{msg}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
+    <h1 class="main-title">Welcome to Budget Tracker</h1>
+    
+    <div class="welcome-subtitle">Your personal finance management system</div>
 
+    <div class="dashboard-grid">
+        <!-- Quick Actions -->
+        <div class="dashboard-section quick-actions-section">
+            <h2 class="dashboard-section-title">Quick Actions</h2>
+            <div class="action-cards">
+                <a href="/entry" class="action-card primary">
+                    <div class="action-icon">📝</div>
+                    <div class="action-title">Add Entry</div>
+                    <div class="action-desc">Record new income</div>
+                </a>
+                <a href="/expenses" class="action-card secondary">
+                    <div class="action-icon">💰</div>
+                    <div class="action-title">Manage Expenses</div>
+                    <div class="action-desc">Set up categories</div>
+                </a>
+                <a href="/stats" class="action-card tertiary">
+                    <div class="action-icon">📊</div>
+                    <div class="action-title">View Stats</div>
+                    <div class="action-desc">See your progress</div>
+                </a>
+            </div>
+        </div>
 
+        <!-- Why Budget? -->
+        <div class="dashboard-section">
+            <h2 class="dashboard-section-title">Why Budget?</h2>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-icon">✓</span>
+                    <div>
+                        <strong>Track Every Dollar</strong>
+                        <p>Know exactly where your money goes each month</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">✓</span>
+                    <div>
+                        <strong>Build Savings Automatically</strong>
+                        <p>Allocate percentages to different goals and watch them grow</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">✓</span>
+                    <div>
+                        <strong>Stay in Control</strong>
+                        <p>Never wonder "where did my money go?" again</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">✓</span>
+                    <div>
+                        <strong>Plan Ahead</strong>
+                        <p>Make informed decisions about future purchases</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<h1>put other stuff here</h1>
-<h2>do later</h2>
+        <!-- How It Works -->
+        <div class="dashboard-section full-width">
+            <h2 class="dashboard-section-title">How It Works</h2>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Create Expenses</h3>
+                        <p>Set up categories like Rent, Food, Savings, Entertainment. Assign each a percentage of your income.</p>
+                        <div class="step-example">Example: Savings 20%, Rent 30%, Food 15%</div>
+                    </div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Add Income Entries</h3>
+                        <p>When you get paid, create a new entry. Your income automatically splits across your expense categories.</p>
+                        <div class="step-example">$1000 income = $200 to Savings, $300 to Rent...</div>
+                    </div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Track Spending</h3>
+                        <p>Log purchases from each category. See exactly how much you have left to spend.</p>
+                        <div class="step-example">Spent $50 on groceries? Log it under Food.</div>
+                    </div>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Monitor Progress</h3>
+                        <p>Check your stats to see spending patterns, total savings, and stay on track.</p>
+                        <div class="step-example">View charts, compare months, celebrate wins!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Pro Tips -->
+        <div class="dashboard-section">
+            <h2 class="dashboard-section-title">Pro Tips</h2>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <span class="tip-icon">💡</span>
+                    <p><strong>Start Simple:</strong> Begin with 3-5 main expense categories</p>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">💡</span>
+                    <p><strong>Make Saving Automatic:</strong> Treat savings as a non-negotiable expense</p>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">💡</span>
+                    <p><strong>Check Weekly:</strong> Quick reviews help you stay aware and adjust</p>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">💡</span>
+                    <p><strong>Use Transfer:</strong> Move money between categories when needs change</p>
+                </div>
+            </div>
+        </div>
 
-
-
+        <!-- Get Started -->
+        <div class="dashboard-section cta-section">
+            <h2 class="dashboard-section-title">Ready to Get Started?</h2>
+            <p class="cta-text">Take control of your finances in three easy steps:</p>
+            <div class="cta-buttons">
+                <a href="/expenses" class="cta-button primary-cta">1. Set Up Expenses</a>
+                <a href="/entry" class="cta-button secondary-cta">2. Add Your First Entry</a>
+                <a href="/stats" class="cta-button tertiary-cta">3. Check Your Stats</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
 {% block scripts%}
-
 {% endblock %}

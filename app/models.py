@@ -26,6 +26,7 @@ class Expenses(db.Model):        #Stores all expense category per user
     spendings = db.Column(db.Float, default = 0.0)
     transferred = db.Column(db.Float, default = 0.0)
     balance = db.Column(db.Float, default = 0.0)
+    credit_balance = db.Column(db.Float, default = 0.0)
 
     def __init__(self, user_id, name, percentage):
         self.user_id = user_id
