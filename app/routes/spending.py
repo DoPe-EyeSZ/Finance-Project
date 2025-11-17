@@ -83,6 +83,7 @@ def add_credit(snap_id):
     else:
         return redirect(url_for("user.login"))
 
+
 @spending.route("/pay_credit/<spending_id>", methods = ["POST"])
 def pay_credit(spending_id):
     if helper.check_login():
@@ -90,10 +91,11 @@ def pay_credit(spending_id):
         snap = Exp_Snap.query.filter_by(entry_id = credit_spending.entry_id, expense_id = credit_spending.expense_id).first()
 
         if request.method == "POST":
-            print(credit_spending.credit_status)
+            amount = float(credit_spending.amount)
             credit_spending.credit_status = False
-            print(credit_spending.credit_status)
-            snap.add_spending(float(credit_spending.amount))
+            snap.add_spending(amount)
+            snap.credit_balance -= amount
+            
         db.session.commit()
         return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
     else:
