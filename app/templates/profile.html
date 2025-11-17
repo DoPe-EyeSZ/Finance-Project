@@ -1,0 +1,22 @@
+{% extends "budget_base.html" %}
+{% block title%} Profile {% endblock%}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash-message">{{msg}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+
+    <p>Username: {{user.name}}</p>
+    <p>Email: {{user.email}}</p>
+    <p>You've made {{entry_count}} lifetime entries entries </p>
+{% endblock %}
+
+{% block scripts%}
+{% endblock %}

@@ -1002,3 +1002,52 @@ h2 {
         transform: scale(1.05);
     }
 }
+
+/* Empty State */
+.empty-state {
+    background: #1a1c22;
+    border-radius: 16px;
+    padding: 60px 40px;
+    text-align: center;
+    margin: 50px auto;
+    max-width: 600px;
+    border: 2px dashed #2d6cdf;
+}
+
+.empty-icon {
+    font-size: 5em;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.empty-title {
+    color: #dbe9ff;
+    font-size: 2em;
+    margin-bottom: 15px;
+    border: none;
+}
+
+.empty-text {
+    color: #a7c4ff;
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.empty-cta {
+    display: inline-block;
+    background: #2d6cdf;
+    color: white;
+    padding: 15px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+}
+
+.empty-cta:hover {
+    background: #1f5bb8;
+    transform: scale(1.05);
+    color: white;
+}

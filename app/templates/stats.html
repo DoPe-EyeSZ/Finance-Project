@@ -1,5 +1,5 @@
 {% extends "budget_base.html"%}
-{% block title %}Stats Page{% endblock %}
+{% block title %}Statistics{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -227,6 +227,15 @@
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
+
+    {% if not active_expense and not inactive_expense %}
+    <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <h2 class="empty-title">No Expenses Yet</h2>
+        <p class="empty-text">You haven't created any expense categories yet. Create your first expense to start tracking your budget!</p>
+        <a href="/expenses" class="empty-cta">Create Your First Expense</a>
+    </div>
     {% endif %}
 </div>
 

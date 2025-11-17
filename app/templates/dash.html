@@ -1,5 +1,5 @@
 {% extends "budget_base.html" %}
-{% block title%} DASHBOARD {% endblock%}
+{% block title%} Dashboard {% endblock%}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -13,9 +13,11 @@
       {% endif %}
     {% endwith %}
 
-    <h1 class="main-title">Welcome to Budget Tracker</h1>
+    <h1 class="main-title">Welcome to Part Time Finance Tracker (PTFT) </h1>
     
     <div class="welcome-subtitle">Your personal finance management system</div>
+    
+    <div class="time-badge">⏱️ Less than 5 minutes a day to stay on track</div>
 
     <div class="dashboard-grid">
         <!-- Quick Actions -->
@@ -42,34 +44,37 @@
 
         <!-- Why Budget? -->
         <div class="dashboard-section">
-            <h2 class="dashboard-section-title">Why Budget?</h2>
+            <h2 class="dashboard-section-title">Why This Budget Tracker?</h2>
+            <div class="mission-statement">
+                <p><strong>Built for shift based workers.</strong> If your income isn't always steady, then traditional budgeting can be hard. Your income changes every paycheck—so your budget should too.</p>
+            </div>
             <div class="info-list">
                 <div class="info-item">
                     <span class="info-icon">✓</span>
                     <div>
+                        <strong>Adapts to Your Income</strong>
+                        <p>Each paycheck splits automatically based on percentages, not fixed amounts</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">✓</span>
+                    <div>
                         <strong>Track Every Dollar</strong>
-                        <p>Know exactly where your money goes each month</p>
+                        <p>Know exactly where your money goes, even when paychecks vary</p>
                     </div>
                 </div>
                 <div class="info-item">
                     <span class="info-icon">✓</span>
                     <div>
                         <strong>Build Savings Automatically</strong>
-                        <p>Allocate percentages to different goals and watch them grow</p>
+                        <p>Save a consistent percentage, whether you earn $500 or $1500</p>
                     </div>
                 </div>
                 <div class="info-item">
                     <span class="info-icon">✓</span>
                     <div>
                         <strong>Stay in Control</strong>
-                        <p>Never wonder "where did my money go?" again</p>
-                    </div>
-                </div>
-                <div class="info-item">
-                    <span class="info-icon">✓</span>
-                    <div>
-                        <strong>Plan Ahead</strong>
-                        <p>Make informed decisions about future purchases</p>
+                        <p>Never wonder where your money went again</p>
                     </div>
                 </div>
             </div>
@@ -84,7 +89,7 @@
                     <div class="step-content">
                         <h3>Create Expenses</h3>
                         <p>Set up categories like Rent, Food, Savings, Entertainment. Assign each a percentage of your income.</p>
-                        <div class="step-example">Example: Savings 20%, Rent 30%, Food 15%</div>
+                        <div class="step-example">Example: Bills 50%, Going Out 30%, Savings 20%</div>
                     </div>
                 </div>
                 <div class="step-arrow">→</div>
@@ -93,7 +98,7 @@
                     <div class="step-content">
                         <h3>Add Income Entries</h3>
                         <p>When you get paid, create a new entry. Your income automatically splits across your expense categories.</p>
-                        <div class="step-example">$1000 income = $200 to Savings, $300 to Rent...</div>
+                        <div class="step-example">$1000 income = $500 to Bills, $300 to Going Out...</div>
                     </div>
                 </div>
                 <div class="step-arrow">→</div>
@@ -102,7 +107,7 @@
                     <div class="step-content">
                         <h3>Track Spending</h3>
                         <p>Log purchases from each category. See exactly how much you have left to spend.</p>
-                        <div class="step-example">Spent $50 on groceries? Log it under Food.</div>
+                        <div class="step-example">Spent $50 on dining? Log it under Going Out.</div>
                     </div>
                 </div>
                 <div class="step-arrow">→</div>
@@ -110,8 +115,8 @@
                     <div class="step-number">4</div>
                     <div class="step-content">
                         <h3>Monitor Progress</h3>
-                        <p>Check your stats to see spending patterns, total savings, and stay on track.</p>
-                        <div class="step-example">View charts, compare months, celebrate wins!</div>
+                        <p>Check your stats to see spending patterns, savings, and stay on track.</p>
+                        <div class="step-example">View charts, compare logs!</div>
                     </div>
                 </div>
             </div>

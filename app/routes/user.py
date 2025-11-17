@@ -260,3 +260,13 @@ def stats():
         return render_template("login.html")
     
 
+@user.route("/profile", methods = ["GET"])
+def profile():
+    if helper.check_login():
+        user = User.query.filter_by(id = session["user_id"]).first()
+        entry_count = Entry.query.filter_by(user_id = session["user_id"]).count()
+        return render_template("profile.html", user = user, entry_count = entry_count)
+    else:
+        return redirect(url_for("user.login"))
+    
+

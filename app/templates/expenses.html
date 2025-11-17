@@ -35,7 +35,7 @@
                 <button type="submit" class="form-btn">Transfer</button>
             </form>
         </div>
-        {% endif %}
+        
 
         <div class="function-section">
             <h2 class="function-title">Transfer</h2>
@@ -66,8 +66,9 @@
                 <button type="submit" class="form-btn">Transfer</button>
             </form>
         </div>
+      {% endif %}  
     </div>
-
+  
     <h1 class="section-title">Active Expenses</h1>
     
     <div class="status-display-compact {% if status[1] %}status-perfect{% else %}status-error{% endif %}">
