@@ -34,7 +34,7 @@ def add_entry():
 
                 db.session.commit()     #Saves all changes/additions
 
-                return redirect(url_for("entry.all_entry"))
+                return redirect(url_for("entry.view_entry", entry_id = new_entry.id))
             
             else:       #User expenses don't add to 100%
                 flash("expenses do not add to 100")

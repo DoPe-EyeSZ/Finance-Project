@@ -229,12 +229,12 @@
     </table>
     {% endif %}
 
-    {% if not active_expense and not inactive_expense %}
+    {% if not all_expense_id %}
     <div class="empty-state">
         <div class="empty-icon">📊</div>
-        <h2 class="empty-title">No Expenses Yet</h2>
-        <p class="empty-text">You haven't created any expense categories yet. Create your first expense to start tracking your budget!</p>
-        <a href="/expenses" class="empty-cta">Create Your First Expense</a>
+        <h2 class="empty-title">No Entries Yet</h2>
+        <p class="empty-text">You haven't created an entry yet. Create your first entry to start tracking your budget!</p>
+        <a href="/entry" class="empty-cta">Create Your First Entry</a>
     </div>
     {% endif %}
 </div>
