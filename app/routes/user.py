@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template, request, session, flash
+from flask import Blueprint, redirect, url_for, render_template, request, session, flash, jsonify
 from app.models import User, Expenses, Entry, Spending, Exp_Snap
 from app import helper
 import os
@@ -310,4 +310,35 @@ def edit_profile():
 
     else:
         return redirect(url_for("user.login"))
+    
+
+
+@user.route("/chart_data")
+def chart_data():
+    if helper.check_login():
+        entries = Entry.query.filter_by(user_id = session["user_id"]).all()
+        entry_num = []
+        count = 1
+
+        for entry in entries:
+            entry_num.append(count)
+            count+=1
+
+        income = [entry.income for entry in entries]
+        print(income)
+        print(entry_num)
+
+        data = {
+            "entry_num": entry_num,
+            "income": income
+        }
+
+        return jsonify(data)
+    
+    else:
+        return redirect(url_for("user.login"))
+    
+@user.route("/charts")
+def charts():
+    return render_template("z_test.html")
 

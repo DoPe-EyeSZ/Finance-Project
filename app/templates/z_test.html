@@ -1,0 +1,51 @@
+{% extends "budget_base.html" %}
+{% block title%} Entries {% endblock%}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash-message">{{msg}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+
+    <div id = "chart"></div>
+
+    <form method="POST" action="/update_date">
+        <label for="date">Choose a date:</label>
+        <input type="date" id="date" name="date" required>
+    <button type="submit">Submit</button>
+</form>
+
+
+{% endblock %}
+
+
+
+{% block scripts%}
+    <script>
+        fetch("/chart_data").then(response => response.json()).then(data=> {
+            const trace = {
+                x:data.entry_num,
+                y:data.income,
+                type:"scatter",
+                mode:"lines+markers",
+                name:"Transactions"
+            };
+
+            const layout = {
+                title: "Test",
+                xaxis: {title: "Entry Num"},
+                yaxis: {title: "Amount"}
+            };
+
+            Plotly.newPlot("chart", [trace], layout)
+        });
+
+    </script>
+
+{% endblock %}
