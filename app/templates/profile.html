@@ -4,6 +4,7 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
+<div class="expense-container">
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for msg in messages %}
@@ -12,10 +13,43 @@
       {% endif %}
     {% endwith %}
 
+    <h1 class="main-title">Your Profile</h1>
 
-    <p>Username: {{user.name}}</p>
-    <p>Email: {{user.email}}</p>
-    <p>You've made {{entry_count}} lifetime entries entries </p>
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-icon">👤</div>
+            
+            <div class="profile-info-section">
+                <div class="profile-info-item">
+                    <span class="profile-label">Username</span>
+                    <span class="profile-value">{{user.name}}</span>
+                </div>
+                
+                <div class="profile-info-item">
+                    <span class="profile-label">Email</span>
+                    <span class="profile-value">{{user.email}}</span>
+                </div>
+                
+                <div class="profile-info-item">
+                    <span class="profile-label">Lifetime Entries</span>
+                    <span class="profile-value highlight">{{entry_count}}</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <a href="{{url_for('user.update_user')}}" class="profile-btn primary">
+                    <span class="btn-icon">✏️</span>
+                    Update Profile
+                </a>
+                <a class="profile-btn danger" href="/delete" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost.')">
+                    <span class="btn-icon">🗑️</span>
+                    Delete Account
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block scripts%}

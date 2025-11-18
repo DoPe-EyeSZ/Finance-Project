@@ -270,3 +270,44 @@ def profile():
         return redirect(url_for("user.login"))
     
 
+@user.route("/update_user")
+def update_user():
+    if helper.check_login():
+        return redirect(url_for("user.edit_profile"))
+
+    else:
+        return redirect(url_for("user.login"))
+    
+
+@user.route("/profile/edit_profile", methods = ["POST", "GET"])
+def edit_profile():
+    if helper.check_login():
+        user = User.query.filter_by(id = session["user_id"]).first()
+        if request.method == "GET":
+            return render_template("edit_profile.html", user = user)
+        else:
+            if request.form.get("curr_pw") == user.pw:
+                new_pw = request.form.get("new_pw")
+                new_name = request.form.get("new_name")
+                new_email = request.form.get("new_email")
+
+                if new_pw:
+                    user.pw = new_pw
+
+                if new_name:
+                    user.name = new_name
+
+                if new_email:
+                    user.email = new_email
+
+                db.session.commit()
+                flash("update successfull")
+                return redirect(url_for("user.profile"))
+            else:
+                flash("password does not match")
+                return redirect(url_for("user.edit_profile"))
+            
+
+    else:
+        return redirect(url_for("user.login"))
+
