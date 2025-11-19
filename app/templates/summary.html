@@ -83,44 +83,6 @@
                 </tr>
             </tbody>
         </table>
-
-        {% if earned == 0 %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" style="width: 100%">
-                N/A
-            </div>
-        </div>
-        {% elif spent >= earned %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%">
-                Spent: 100%
-            </div>
-        </div>
-        {% elif saved == 0 %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            <div class="progress-bar bg-primary" role="progressbar" style="width: 100%">
-                Saved: 0%
-            </div>
-        </div>
-        {% else %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            {% if active_expenses[expense_id]['spending_percent'] > 10 %}
-            <div class="progress-bar bg-danger" role="progressbar" style="width: {{active_expenses[expense_id]['spending_percent']}}%">
-                Spent: {{active_expenses[expense_id]['spending_percent']}}%
-            </div>
-            {% else %}
-            <div class="progress-bar bg-danger" role="progressbar" style="width: {{active_expenses[expense_id]['spending_percent']}}%"></div>
-            {% endif %}
-            
-            {% if active_expenses[expense_id]['saving_percent'] > 10 %}
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{active_expenses[expense_id]['saving_percent']}}%">
-                Saved: {{active_expenses[expense_id]['saving_percent']}}%
-            </div>
-            {% else %}
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{active_expenses[expense_id]['saving_percent']}}%"></div>
-            {% endif %}
-        </div>
-        {% endif %}
     </div>
     {% endfor %}
     </div>
@@ -162,44 +124,6 @@
                 </tr>
             </tbody>
         </table>
-
-        {% if earned == 0 %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" style="width: 100%">
-                N/A
-            </div>
-        </div>
-        {% elif spent >= earned %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            <div class="progress-bar bg-danger" role="progressbar" style="width: 100%">
-                Spent: 100%
-            </div>
-        </div>
-        {% elif saved == 0 %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            <div class="progress-bar bg-primary" role="progressbar" style="width: 100%">
-                Saved: 0%
-            </div>
-        </div>
-        {% else %}
-        <div class="progress" style="height: 40px; font-size: 1.1em; margin-top: 20px;">
-            {% if inactive_expenses[expense_id]['spending_percent'] > 10 %}
-            <div class="progress-bar bg-danger" role="progressbar" style="width: {{inactive_expenses[expense_id]['spending_percent']}}%">
-                Spent: {{inactive_expenses[expense_id]['spending_percent']}}%
-            </div>
-            {% else %}
-            <div class="progress-bar bg-danger" role="progressbar" style="width: {{inactive_expenses[expense_id]['spending_percent']}}%"></div>
-            {% endif %}
-            
-            {% if inactive_expenses[expense_id]['saving_percent'] > 10 %}
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{inactive_expenses[expense_id]['saving_percent']}}%">
-                Saved: {{inactive_expenses[expense_id]['saving_percent']}}%
-            </div>
-            {% else %}
-            <div class="progress-bar bg-success" role="progressbar" style="width: {{inactive_expenses[expense_id]['saving_percent']}}%"></div>
-            {% endif %}
-        </div>
-        {% endif %}
     </div>
     {% endfor %}
     </div>
