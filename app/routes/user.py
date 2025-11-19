@@ -8,6 +8,11 @@ import time
 user = Blueprint("user", __name__, template_folder="templates", static_folder="static.style.css")
 
 
+@user.route("/")
+@user.route("/welcome")
+def welcome():
+    return render_template("welcome.html")
+
 @user.route("/home")
 def home():
     return render_template("home.html")

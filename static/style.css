@@ -69,9 +69,8 @@ h2 {
 }
 
 .navbar-nav {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
+    gap: 10px;  /* This keeps them together with spacing */
 }
 
 .navbar-nav .nav-link {
@@ -1337,4 +1336,119 @@ h2 {
 .auth-link:hover {
     color: #5fb878;
     text-decoration: underline;
+}
+
+
+/* ===================================
+   LANDING PAGE STYLES
+   =================================== */
+.landing-hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #1a1c22 0%, #23262d 100%);
+    border-radius: 20px;
+    margin-bottom: 60px;
+    box-shadow: 0 0 40px rgba(45, 108, 223, 0.2);
+}
+
+.hero-title {
+    color: #dbe9ff;
+    font-size: 4em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.hero-subtitle {
+    color: #a7c4ff;
+    font-size: 1.5em;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.hero-btn {
+    padding: 18px 40px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.3em;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.hero-btn.primary {
+    background: #2d6cdf;
+    color: white;
+    box-shadow: 0 4px 15px rgba(45, 108, 223, 0.4);
+}
+
+.hero-btn.primary:hover {
+    background: #1f5bb8;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(45, 108, 223, 0.5);
+}
+
+.hero-btn.secondary {
+    background: transparent;
+    color: #a7c4ff;
+    border: 2px solid #2d6cdf;
+}
+
+.hero-btn.secondary:hover {
+    background: #23262d;
+    color: #dbe9ff;
+    transform: translateY(-3px);
+}
+
+/* Who Section */
+.who-section {
+    background: linear-gradient(135deg, #1a1c22 0%, #23262d 100%);
+}
+
+.who-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.who-card {
+    background: #23262d;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    border: 1px solid #2a2d34;
+    transition: all 0.3s ease;
+}
+
+.who-card:hover {
+    transform: translateY(-5px);
+    border-color: #2d6cdf;
+    box-shadow: 0 8px 20px rgba(45, 108, 223, 0.2);
+}
+
+.who-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.who-card h3 {
+    color: #dbe9ff;
+    font-size: 1.3em;
+    margin-bottom: 10px;
+}
+
+.who-card p {
+    color: #a7c4ff;
+    font-size: 0.95em;
+    line-height: 1.5;
 }
