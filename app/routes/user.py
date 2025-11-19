@@ -319,13 +319,27 @@ def chart_data():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
         spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
 
-        dates = [entry.date for entry in entries]
+        dates_income = [entry.date for entry in entries]
         income = [entry.income for entry in entries]
+
+        dates_spending = []
+        for spending in spendings:
+            if spending.date in dates_spending:
+                pass
+            else:
+                dates_spending.append(spending.date)
+        
         spending = [spending.amount for spending in spendings]
 
+        print(dates_spending)
+        print(spending)
+        print(dates_income)
+        print(income)
+
         data = {
-            "dates": dates,
+            "dates_income": dates_income,
             "income": income,
+            "dates_spending": dates_spending,
             "spending":spending
         }
 

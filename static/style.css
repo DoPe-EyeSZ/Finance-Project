@@ -1191,3 +1191,18 @@ h2 {
     border-color: #2d6cdf;
     box-shadow: 0 0 10px rgba(45, 108, 223, 0.2);
 }
+
+
+.chart-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 30px;
+        margin: 20px auto;
+        max-width: 1200px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+    }
+    
+    #chart {
+        border-radius: 8px;
+    }
