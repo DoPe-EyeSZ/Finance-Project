@@ -2,7 +2,6 @@
 {% block title %}Statistics{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <div class="expense-container">
     {% with messages = get_flashed_messages() %}
@@ -28,21 +27,22 @@
                 <div class="stat-label-main">Total Earnings</div>
                 <div class="stat-value-main earnings">${{lifetime_stats["Earnings"]}}</div>
             </div>
-            <div class="stat-card-main">
-                <div class="stat-label-main">Total Transferred</div>
-                <div class="stat-value-main">${{lifetime_stats["Transferred"]}}</div>
-            </div>
+            
             <div class="stat-card-main">
                 <div class="stat-label-main">Total Spent</div>
                 <div class="stat-value-main spent">${{lifetime_stats["Spendings"]}}</div>
             </div>
             <div class="stat-card-main">
-                <div class="stat-label-main">Total Savings</div>
-                <div class="stat-value-main savings">${{lifetime_stats["Savings"]}}</div>
-            </div>
-            <div class="stat-card-main">
                 <div class="stat-label-main">Total Credit Balance</div>
                 <div class="stat-value-main">${{lifetime_stats["Credit_Balance"]}}</div>
+            </div>
+            <div class="stat-card-main">
+                <div class="stat-label-main">Deposited</div>
+                <div class="stat-value-main">${{lifetime_stats["Transferred"]}}</div>
+            </div>
+            <div class="stat-card-main">
+                <div class="stat-label-main">Total Savings</div>
+                <div class="stat-value-main savings">${{lifetime_stats["Savings"]}}</div>
             </div>
         </div>
     </div>
@@ -66,9 +66,9 @@
                 <tr>
                     <th>Total Balance</th>
                     <th>Earned</th>
-                    <th>Transferred</th>
                     <th>Spent</th>
                     <th>Credit Balance</th>
+                    <th>Deposited</th>
                     <th>Remaining</th>
                 </tr>
             </thead>
@@ -76,9 +76,9 @@
                 <tr>
                     <td class="balance-cell">${{balance}}</td>
                     <td class="earnings-cell">${{earned}}</td>
-                    <td>${{transferred}}</td>
                     <td class="spent-cell">${{spent}}</td>
                     <td>${{credit_balance}}</td>
+                    <td>${{transferred}}</td>
                     <td class="savings-cell">${{saved}}</td>
                 </tr>
             </tbody>
@@ -87,6 +87,8 @@
     {% endfor %}
     </div>
     {% endif %}
+
+
 
     {% if inactive_expenses %}
     <hr class="section-divider">
@@ -107,9 +109,9 @@
                 <tr>
                     <th>Total Balance</th>
                     <th>Earned</th>
-                    <th>Transferred</th>
                     <th>Spent</th>
                     <th>Credit Balance</th>
+                    <th>Deposited</th>
                     <th>Remaining</th>
                 </tr>
             </thead>
@@ -117,9 +119,9 @@
                 <tr>
                     <td class="balance-cell">${{balance}}</td>
                     <td class="earnings-cell">${{earned}}</td>
-                    <td>${{transferred}}</td>
                     <td class="spent-cell">${{spent}}</td>
                     <td>${{credit_balance}}</td>
+                    <td>${{transferred}}</td>
                     <td class="savings-cell">${{saved}}</td>
                 </tr>
             </tbody>
