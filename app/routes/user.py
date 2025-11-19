@@ -317,19 +317,11 @@ def edit_profile():
 def chart_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
-        entry_num = []
-        count = 1
-
-        for entry in entries:
-            entry_num.append(count)
-            count+=1
-
+        dates = [entry.date for entry in entries]
         income = [entry.income for entry in entries]
-        print(income)
-        print(entry_num)
 
         data = {
-            "entry_num": entry_num,
+            "dates": dates,
             "income": income
         }
 

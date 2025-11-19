@@ -15,11 +15,6 @@
 
     <div id = "chart"></div>
 
-    <form method="POST" action="/update_date">
-        <label for="date">Choose a date:</label>
-        <input type="date" id="date" name="date" required>
-    <button type="submit">Submit</button>
-</form>
 
 
 {% endblock %}
@@ -30,20 +25,30 @@
     <script>
         fetch("/chart_data").then(response => response.json()).then(data=> {
             const trace = {
-                x:data.entry_num,
-                y:data.income,
-                type:"scatter",
-                mode:"lines+markers",
-                name:"Transactions"
+                x: data.dates,
+                y: data.income,
+                type: "scatter",
+                mode: "lines+markers",
+                name: "Income",
+                line: {
+                    color: '#00cc66',  // Green line
+                    width: 3
+                },
+                marker: {
+                    color: '#00cc66',  // Green markers
+                    size: 8
+                },
+                text: data.income.map(val => `$${val}`),  // Show income values
+                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'  // Display on hover
             };
 
             const layout = {
-                title: "Test",
-                xaxis: {title: "Entry Num"},
-                yaxis: {title: "Amount"}
+                title: "Income Over Time",
+                xaxis: {title: "Dates"},
+                yaxis: {title: "Income ($)"}
             };
 
-            Plotly.newPlot("chart", [trace], layout)
+            Plotly.newPlot("chart", [trace], layout);
         });
 
     </script>

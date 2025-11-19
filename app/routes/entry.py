@@ -48,10 +48,6 @@ def view_entry(entry_id):
     if helper.check_login():
         snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()        #Gets all data associated w/ requested entry
         entry = Entry.query.filter_by(id = int(entry_id)).first()
-
-        #Retrieve all expenses the snapshots are assoicated to
-        expenses_ids = [snapshot.expense_id for snapshot in snapshots]
-        expenses = Expenses.query.filter(Expenses.id.in_(expenses_ids)).all()
         
         est_balance = {}        #Links the expense's total savings (amount able to spend) to the snapshot of the expense
         if request.method == "GET":
@@ -62,12 +58,16 @@ def view_entry(entry_id):
                 snapshot.set_earnings(earnings)
                 savings = helper.calc_savings(snapshot.expense_id)      #Calculates the total savings to send to front
 
-                est_balance[snapshot] = savings
+                est_balance[snapshot] = round(savings,2)
 
             spending = Spending.query.filter_by(entry_id = entry_id).all()
+            total_spent = 0
+            for spend in spending:
+                total_spent += spend.amount
+            net_earnings = round(entry.income - total_spent, 2)
 
             db.session.commit()
-            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending)
+            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending, net_earnings = net_earnings)
         else:
             return redirect(url_for("entry.all_entry"))
     
