@@ -331,10 +331,7 @@ def chart_data():
         
         spending = [spending.amount for spending in spendings]
 
-        print(dates_spending)
-        print(spending)
-        print(dates_income)
-        print(income)
+
 
         data = {
             "dates_income": dates_income,
