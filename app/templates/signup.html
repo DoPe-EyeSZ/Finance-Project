@@ -1,27 +1,51 @@
 {% extends "base.html"%}
 {% block title %}Sign Up{% endblock %}
 
-{% block content %} 
-<h1>This is the Sign Up</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages%}
-                <p>{{message}}</p>
-            {% endfor%}
-        {% endif %}
-    {% endwith %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<form action="#" method="POST">
-    <p>Please Enter your email</p>
-    <p><input type="email" name="email"></p>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">✨</div>
+            <h1 class="auth-title">Get Started</h1>
+            <p class="auth-subtitle">Create your account and take control of your finances</p>
+        </div>
 
-    <p>Please Enter you name</p>
-    <p><input type="text" name="name"></p>
-    
-    <p>Please enter your password</p>
-    <p><input type="password" name="pw"></p>
-    <p><input type="submit" value="submit"></p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="flash-message">{{message}}</div>
+                {% endfor%}
+            {% endif %}
+        {% endwith %}
 
-</form>
+        <form action="#" method="POST" class="auth-form">
+            <div class="auth-input-group">
+                <label for="name" class="auth-label">Name</label>
+                <input type="text" name="name" id="name" placeholder="Your full name" class="auth-input" required>
+            </div>
+
+            <div class="auth-input-group">
+                <label for="email" class="auth-label">Email</label>
+                <input type="email" name="email" id="email" placeholder="your@email.com" class="auth-input" required>
+            </div>
+
+            <div class="auth-input-group">
+                <label for="pw" class="auth-label">Password</label>
+                <input type="password" name="pw" id="pw" placeholder="Create a strong password" class="auth-input" required>
+            </div>
+
+            <button type="submit" class="auth-btn">
+                <span class="btn-icon">→</span>
+                Create Account
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="/login" class="auth-link">Log in here</a></p>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

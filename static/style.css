@@ -1206,3 +1206,135 @@ h2 {
     #chart {
         border-radius: 8px;
     }
+
+
+/* ===================================
+   AUTH PAGES (Login/Signup)
+   =================================== */
+.auth-container {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.auth-card {
+    background: #1a1c22;
+    border-radius: 20px;
+    padding: 50px 60px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 0 40px rgba(45, 108, 223, 0.3), 0 8px 30px rgba(0,0,0,0.6);
+    border: 2px solid #2d6cdf;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.auth-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+.auth-title {
+    color: #dbe9ff;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.auth-subtitle {
+    color: #a7c4ff;
+    font-size: 1.1em;
+    margin: 0;
+}
+
+.auth-form {
+    margin-top: 30px;
+}
+
+.auth-input-group {
+    margin-bottom: 25px;
+}
+
+.auth-label {
+    display: block;
+    color: #a7c4ff;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auth-input {
+    width: 100%;
+    background: #23262d;
+    color: #dbe9ff;
+    border: 2px solid #2a2d34;
+    border-radius: 10px;
+    padding: 15px 20px;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: #2d6cdf;
+    box-shadow: 0 0 20px rgba(45, 108, 223, 0.3);
+}
+
+.auth-input::placeholder {
+    color: #6c757d;
+}
+
+.auth-btn {
+    width: 100%;
+    background: #2d6cdf;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 18px;
+    font-size: 1.3em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.auth-btn:hover {
+    background: #1f5bb8;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(45, 108, 223, 0.4);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #2a2d34;
+}
+
+.auth-footer p {
+    color: #a7c4ff;
+    margin: 0;
+}
+
+.auth-link {
+    color: #2d6cdf;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.auth-link:hover {
+    color: #5fb878;
+    text-decoration: underline;
+}

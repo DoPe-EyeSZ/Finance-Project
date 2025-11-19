@@ -1,25 +1,46 @@
 {% extends "base.html"%}
 {% block title %}Login{% endblock %}
 
-{% block content %} 
-<h1>This is the Login</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages%}
-                <p>{{message}}</p>
-            {% endfor%}
-        {% endif %}
-    {% endwith %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<form action="#" method="POST">
-    <p>Please Enter your email</p>
-    <p><input type="email" name="email"></p>
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">🔐</div>
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Log in to manage your budget</p>
+        </div>
 
-    <p>Please enter your password</p>
-    <p><input type="password" name="pw"></p>
-    
-    <p><input type="submit" value="submit"></p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages%}
+                    <div class="flash-message">{{message}}</div>
+                {% endfor%}
+            {% endif %}
+        {% endwith %}
 
-</form>
+        <form action="#" method="POST" class="auth-form">
+            <div class="auth-input-group">
+                <label for="email" class="auth-label">Email</label>
+                <input type="email" name="email" id="email" placeholder="your@email.com" class="auth-input" required>
+            </div>
+
+            <div class="auth-input-group">
+                <label for="pw" class="auth-label">Password</label>
+                <input type="password" name="pw" id="pw" placeholder="Enter your password" class="auth-input" required>
+            </div>
+
+            <button type="submit" class="auth-btn">
+                <span class="btn-icon">→</span>
+                Log In
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="/signup" class="auth-link">Sign up here</a></p>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
