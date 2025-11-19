@@ -317,12 +317,16 @@ def edit_profile():
 def chart_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
+        spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
+
         dates = [entry.date for entry in entries]
         income = [entry.income for entry in entries]
+        spending = [spending.amount for spending in spendings]
 
         data = {
             "dates": dates,
-            "income": income
+            "income": income,
+            "spending":spending
         }
 
         return jsonify(data)
