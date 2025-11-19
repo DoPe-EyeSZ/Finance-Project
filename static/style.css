@@ -1155,8 +1155,8 @@ h2 {
     color: #e0e0e0;
     border: 2px solid #2d6cdf;
     border-radius: 8px;
-    padding: 12px 15px;
-    font-size: 1.2em;
+    padding: 8px 12px;
+    font-size: 0.5em;
     font-weight: bold;
 }
 
@@ -1164,6 +1164,11 @@ h2 {
     outline: none;
     border-color: #2d6cdf;
     box-shadow: 0 0 15px rgba(45, 108, 223, 0.3);
+}
+
+.inline-date-form .btn {
+    font-size: 0.4em;
+    padding: 8px 16px;
 }
 
 .inline-date-form-table {
