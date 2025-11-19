@@ -345,5 +345,5 @@ def chart_data():
     
 @user.route("/charts")
 def charts():
-    return render_template("z_test.html")
+    return render_template("charts.html")
 

@@ -13,9 +13,6 @@
     {% endwith %}
 
 
-    <div class="chart-container">
-        <div id="chart"></div>
-    </div>
 
 
 
@@ -24,54 +21,6 @@
 
 
 {% block scripts%}
-    <script>
-        fetch("/chart_data").then(response => response.json()).then(data=> {
-            const income = {
-                x: data.dates_income,
-                y: data.income,
-                type: "scatter",
-                mode: "lines+markers",
-                name: "Income",
-                line: {
-                    color: '#5fb878',  // Green line
-                    width: 3
-                },
-                marker: {
-                    color: '#5fb878',  // Green markers
-                    size: 8
-                },
-                text: data.income.map(val => `$${val}`),  // Show income values
-                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'  // Display on hover
-            };
-
-            const spending = {
-                x: data.dates_spending,
-                y: data.spending,
-                type: "scatter",
-                mode: "lines+markers",
-                name: "Spending",
-                line: {
-                    color:"#e87373",
-                    width: 3
-                },
-                marker: {
-                    color: "#e87373",
-                    size: 8
-                },
-                text: data.spending.map(val => `$${val}`),  // Show income values
-                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'  // Display on hover
-            };
-            
-
-            const layout = {
-                title: "Income/Spending Over Time",
-                xaxis: {title: "Dates"},
-                yaxis: {title: "Cash ($)"}
-            };
-
-            Plotly.newPlot("chart", [income, spending], layout);
-        });
-
-    </script>
+    
 
 {% endblock %}
