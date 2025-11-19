@@ -8,16 +8,9 @@ import time
 user = Blueprint("user", __name__, template_folder="templates", static_folder="static.style.css")
 
 
-@user.route("/")
 @user.route("/home")
 def home():
-
     return render_template("home.html")
-
-
-@user.route("/dash")
-def dash():
-    return render_template("dash.html")
 
 
 @user.route("/admin")        #Admin page
@@ -38,7 +31,7 @@ def admin():
             return render_template("admin.html", info = info)
 
         else:
-            return redirect(url_for("main.dash"))
+            return redirect(url_for("user.home"))
     
     else:
         return redirect(url_for("user.login"))
@@ -59,7 +52,7 @@ def login():
 
                 session["user_id"] = user.id     #Save user ID to session
                 session["name"] = user.name
-                return redirect(url_for("user.dash"))
+                return redirect(url_for("user.home"))
             
             else:     #Email exist but name!=pw
 
@@ -73,7 +66,7 @@ def login():
 
     else:       #User went to login page unconventionally
         if "user_id" in session:
-            return redirect(url_for("user.dash"))
+            return redirect(url_for("user.home"))
         else:
             return render_template("login.html")
 
@@ -114,7 +107,7 @@ def sign_up():
             session["user_id"] = usr.id
 
         
-            return redirect(url_for("user.dash"))
+            return redirect(url_for("user.home"))
         
     else:        #User just clicks on signup button
         return render_template("signup.html")
