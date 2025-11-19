@@ -1136,3 +1136,53 @@ h2 {
     border-radius: 20px;
     padding: 60px 50px;
     box-shadow: 0 0
+}
+
+
+/* Date Editor Styles */
+.date-editor {
+    text-align: center;
+}
+
+.inline-date-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.date-input-title {
+    background: #23262d;
+    color: #e0e0e0;
+    border: 2px solid #2d6cdf;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.date-input-title:focus {
+    outline: none;
+    border-color: #2d6cdf;
+    box-shadow: 0 0 15px rgba(45, 108, 223, 0.3);
+}
+
+.inline-date-form-table {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-input-table {
+    background: #23262d;
+    color: #e0e0e0;
+    border: 1px solid #2d6cdf;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 0.9em;
+}
+
+.date-input-table:focus {
+    outline: none;
+    border-color: #2d6cdf;
+    box-shadow: 0 0 10px rgba(45, 108, 223, 0.2);
+}

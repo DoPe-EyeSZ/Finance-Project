@@ -110,7 +110,7 @@ def update_transaction_date(spending_id):
             new_date = request.form.get("new_date")
             spending.date = new_date
             db.session.commit()
-            return redirect(url_for("entry.view_entry", entry_id = spending.entry_id))
+            return redirect(url_for("entry.view_entry", entry_id = int(spending.entry_id)))
     
     else:
         return redirect(url_for("user.login"))

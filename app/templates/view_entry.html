@@ -12,10 +12,15 @@
         {% endif %}
     {% endfor %}
 
-    <form action="/update_date/{{entry.id}}" method="POST">
-        <h1 class="main-title">DATE:<input type="date" value="{{entry.date}}" name="new_date"> </h1>
-        <button type="submit">save</button>
-    </form>
+    <div class="date-editor">
+        <h1 class="main-title">
+            <form action="/update_date/{{entry.id}}" method="POST" class="inline-date-form">
+                <span>DATE:</span>
+                <input type="date" value="{{entry.date}}" name="new_date" class="date-input-title">
+                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+            </form>
+        </h1>
+    </div>
 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -34,9 +39,9 @@
             <div class="entry-stat-label">Total Spent</div>
             <div class="entry-stat-value">${{ ns.total_spent }}</div>
         </div>
-        <div>
-            <div>Net Earnings</div>
-            <div>${{entry.income - ns.total_spent}}</div>
+        <div class="entry-stat {% if entry.income - ns.total_spent >= 0 %}income{% else %}spent{% endif %}">
+            <div class="entry-stat-label">Net Earnings</div>
+            <div class="entry-stat-value">${{entry.income - ns.total_spent}}</div>
         </div>
     </div>
 
@@ -107,10 +112,10 @@
             <tr>
                 <td>{{spent.expense_name}}</td>
                 <td>
-                    <form action="{{url_for('update_transaction_date', spending_id = spent.id)}}">
-                        <input type="date" value="{{spent.date}}" name="new_date"> <button type="submit"> save</button>
+                    <form action="/update_transaction_date/{{spent.id}}" method="POST" class="inline-date-form-table">
+                        <input type="date" value="{{spent.date}}" name="new_date" class="date-input-table">
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </form>
-                    
                 </td>
                 <td>
                     <form action="/edit_spending/{{spent.id}}" method="POST" class="inline-edit-form">
