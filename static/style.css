@@ -499,7 +499,7 @@ h2 {
 }
 
 .balance-cell {
-    color: #dbe9ff;
+    color: #dbe9ff !important;
     font-weight: 600;
 }
 
