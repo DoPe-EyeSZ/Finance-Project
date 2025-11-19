@@ -118,3 +118,16 @@ def add_income(entry_id):
         
     else:
         return redirect(url_for("user.login"))
+    
+
+@entry.route("/update_date/<entry_id>", methods = ["POST"])
+def update_date(entry_id):
+    if helper.check_login():
+        entry = Entry.query.filter_by(id = int(entry_id)).first()
+        if request.method == "POST":
+            new_date = request.form.get("new_date")
+            entry.date = new_date
+            db.session.commit()
+            return redirect(url_for("entry.view_entry", entry_id = entry_id))
+    else:
+        return redirect(url_for("user.login"))
