@@ -1452,3 +1452,141 @@ h2 {
     font-size: 0.95em;
     line-height: 1.5;
 }
+
+
+
+/* ===================================
+   EDIT PROFILE PAGE STYLES (COMPLETE)
+   =================================== */
+.edit-profile-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.edit-profile-card {
+    background: #1a1c22;
+    border-radius: 20px;
+    padding: 60px 50px;
+    box-shadow: 0 0 40px rgba(45, 108, 223, 0.3), 0 8px 30px rgba(0,0,0,0.6);
+    border: 2px solid #2d6cdf;
+    text-align: center;
+}
+
+.edit-icon {
+    font-size: 5em;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.edit-profile-form {
+    text-align: left;
+}
+
+.form-group-large {
+    margin-bottom: 30px;
+}
+
+.form-group-large.required-field {
+    background: #23262d;
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 4px solid #2d6cdf;
+}
+
+.form-label-large {
+    display: block;
+    color: #a7c4ff;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.required-star {
+    color: #ff3333;
+    font-size: 1.2em;
+}
+
+.form-input-large {
+    width: 100%;
+    background: #23262d;
+    color: #dbe9ff;
+    border: 2px solid #2a2d34;
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+}
+
+.form-input-large:focus {
+    outline: none;
+    border-color: #2d6cdf;
+    box-shadow: 0 0 20px rgba(45, 108, 223, 0.3);
+}
+
+.form-input-large::placeholder {
+    color: #6c757d;
+}
+
+.form-hint {
+    display: block;
+    color: #a7c4ff;
+    font-size: 0.95em;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+.form-divider {
+    height: 2px;
+    background: linear-gradient(to right, #2d6cdf, #1f9d6a);
+    margin: 40px 0;
+    opacity: 0.5;
+}
+
+.form-actions-large {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.form-btn-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 40px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.form-btn-large.primary {
+    background: #2d6cdf;
+    color: white;
+    border-color: #2d6cdf;
+}
+
+.form-btn-large.primary:hover {
+    background: #1f5bb8;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(45, 108, 223, 0.4);
+    color: white;
+}
+
+.form-btn-large.secondary {
+    background: transparent;
+    color: #a7c4ff;
+    border-color: #2a2d34;
+}
+
+.form-btn-large.secondary:hover {
+    background: #23262d;
+    border-color: #2d6cdf;
+    transform: translateY(-3px);
+    color: #dbe9ff;
+}

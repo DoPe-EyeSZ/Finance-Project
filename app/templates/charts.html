@@ -24,7 +24,7 @@
 
 {% block scripts%}
     <script>
-        fetch("/chart_data").then(response => response.json()).then(data=> {
+        fetch("/spending_income_data").then(response => response.json()).then(data=> {
             const income = {
                 x: data.dates_income,
                 y: data.income,
@@ -68,7 +68,7 @@
                 yaxis: {title: "Cash ($)"}
             };
 
-            Plotly.newPlot("chart", [income, spending], layout);
+            Plotly.newPlot("chart", [income, spending], layout, {displayModeBar: false});
         });
 
     </script>

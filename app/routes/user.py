@@ -209,7 +209,7 @@ def summary():
             expense_dict[expense_id]["balance"] = balance
             expense.balance = balance
 
-            saving = float(balance - spending)
+            saving = round(float(balance - spending), 2)
             expense_dict[expense_id]["saving"] = saving
             expense.savings = saving
 
@@ -239,7 +239,7 @@ def summary():
             expense.set_spending(spending)
             
             expense.set_savings()
-            overview_stats["Savings"] += saving
+            overview_stats["Savings"] += round(saving,2)
 
             expense.credit_balance += expense_dict[expense_id]["credit_balance"]
             overview_stats["Credit_Balance"] += expense_dict[expense_id]["credit_balance"]
@@ -248,7 +248,6 @@ def summary():
 
         db.session.commit()
         spending = Spending.query.filter_by(user_id = session["user_id"]).all()
-
 
 
         return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending, all_expense_id = all_expense_id)
@@ -311,7 +310,9 @@ def edit_profile():
     
 
 
-@user.route("/chart_data")
+
+#Used for retrieving data for plots
+@user.route("/spending_income_data")
 def chart_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
@@ -342,6 +343,8 @@ def chart_data():
     
     else:
         return redirect(url_for("user.login"))
+    
+
     
 @user.route("/charts")
 def charts():
