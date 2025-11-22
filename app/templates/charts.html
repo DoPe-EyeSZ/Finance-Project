@@ -16,6 +16,10 @@
         <div id="chart"></div>
     </div>
 
+    <div class="chart-container">
+        <div id="expense_bar"></div>
+    </div>
+
 
 
 {% endblock %}
@@ -71,6 +75,50 @@
             Plotly.newPlot("chart", [income, spending], layout, {displayModeBar: false});
         });
 
+
+
+        fetch("/all_expense_data").then(response => response.json()).then(data=>{
+            const earned = {
+                x: data.expenses,
+                y: data.total_earned,
+                name: "Total Earnings",
+                type: "bar",
+                orientation: 'v',
+                marker: {
+                    color: "#5fb878"
+                }
+            };
+
+            const spending = {
+                x: data.expenses,
+                y: data.total_spent,
+                name: "Total Spending",
+                type: "bar",
+                orientation: 'v',
+                marker:{
+                    color: "#e87373"
+                }
+                
+            };
+
+            const savings = {
+                x: data.expenses,
+                y: data.total_saved,
+                name: "Total Savings",
+                type: "bar",
+                orientation: 'v',
+                marker:{
+                    color: "#147CC6"
+                }
+            };
+
+            const layout = {
+                barmode: "group",
+                title: "Expense Overview"
+            };
+
+            Plotly.newPlot("expense_bar", [earned, spending, savings], layout, {displayModeBar: false})
+        })
     </script>
 
 {% endblock %}

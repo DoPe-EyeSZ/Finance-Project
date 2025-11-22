@@ -250,6 +250,19 @@ def summary():
         spending = Spending.query.filter_by(user_id = session["user_id"]).all()
 
 
+
+        for expense in expenses:    
+            print(expense.name)
+            print(expense.percentage)
+            print(expense.status)
+            print(expense.deleted)
+            print(expense.savings)
+            print(expense.earnings)
+            print(expense.spendings)
+            print(expense.transferred)
+            print(expense.balance)
+            print(expense.credit_balance)
+
         return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending, all_expense_id = all_expense_id)
     
 
@@ -313,7 +326,7 @@ def edit_profile():
 
 #Used for retrieving data for plots
 @user.route("/spending_income_data")
-def chart_data():
+def get_spending_income_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
         spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
@@ -345,8 +358,46 @@ def chart_data():
         return redirect(url_for("user.login"))
     
 
+
+@user.route("/all_expense_data")
+def get_all_expense_data():
+    if helper.check_login():
+        expenses = []
+        spending = []
+        earnings = []
+        savings = []
+
+        all_expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
+
+        for expense in all_expenses:
+            expenses.append(expense.name)
+            spending.append(expense.spendings)
+            earnings.append(expense.earnings)
+            savings.append(expense.savings)
+
+
+        data = {
+            "expenses": expenses,
+            "total_spent": spending,
+            "total_earned": earnings,
+            "total_saved": savings
+        }
+
+        print(data)
+        return jsonify(data)
+    else:
+        return redirect(url_for("user.login"))
     
-@user.route("/charts")
+
+
+
+@user.route("/charts", methods = ["POST", "GET"])
 def charts():
-    return render_template("charts.html")
+    if helper.check_login():
+        if request.method == "POST":
+            return render_template("charts.html")
+        else:
+            return redirect(url_for("user.summary"))
+    else:
+        return redirect(url_for("user.login"))
 

@@ -13,7 +13,10 @@
     {% endwith %}
 
     <h1 class="main-title">Hello {{user.name}}</h1>
-    <a href="{{url_for('user.charts')}}" class="btn btn-primary">charts</a>
+    <form action="{{ url_for('user.charts') }}" method="POST">
+        <button class="btn btn-primary" type="submit">charts</button>
+    </form>
+
 
     {% if active_expenses or inactive_expenses %}
     <div class="lifetime-stats-section">
