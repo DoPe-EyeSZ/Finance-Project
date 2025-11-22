@@ -83,10 +83,10 @@
                 y: data.total_earned,
                 name: "Total Earnings",
                 type: "bar",
-                orientation: 'v',
-                marker: {
-                    color: "#5fb878"
-                }
+                marker: { color: "#5fb878" },
+                text: data.total_earned.map(val => `$${val}`),
+                textposition: "auto",
+                hoverinfo: "none"
             };
 
             const spending = {
@@ -94,11 +94,10 @@
                 y: data.total_spent,
                 name: "Total Spending",
                 type: "bar",
-                orientation: 'v',
-                marker:{
-                    color: "#e87373"
-                }
-                
+                marker: { color: "#e87373" },
+                text: data.total_spent.map(val => `$${val}`),
+                textposition: "auto",
+                hoverinfo: "none"
             };
 
             const savings = {
@@ -106,11 +105,12 @@
                 y: data.total_saved,
                 name: "Total Savings",
                 type: "bar",
-                orientation: 'v',
-                marker:{
-                    color: "#147CC6"
-                }
+                marker: { color: "#147CC6" },
+                text: data.total_saved.map(val => `$${val}`),
+                textposition: "auto",
+                hoverinfo: "none"
             };
+
 
             const layout = {
                 barmode: "group",
@@ -118,7 +118,7 @@
             };
 
             Plotly.newPlot("expense_bar", [earned, spending, savings], layout, {displayModeBar: false})
-        })
+        });
     </script>
 
 {% endblock %}
