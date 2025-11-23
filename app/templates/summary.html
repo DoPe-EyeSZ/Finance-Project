@@ -13,10 +13,19 @@
     {% endwith %}
 
     <h1 class="main-title">Hello {{user.name}}</h1>
-    <form action="{{ url_for('user.charts') }}" method="POST">
-        <button class="btn btn-primary" type="submit">charts</button>
-    </form>
 
+    <!-- Chart Button Section -->
+    <div class="chart-button-section">
+        <form action="{{ url_for('user.charts') }}" method="POST">
+            <button class="chart-button" type="submit">
+                <span class="chart-icon">📊</span>
+                <span class="chart-text">
+                    <span class="chart-title">View Interactive Charts</span>
+                    <span class="chart-desc">Visualize your budget data</span>
+                </span>
+            </button>
+        </form>
+    </div>
 
     {% if active_expenses or inactive_expenses %}
     <div class="lifetime-stats-section">
@@ -90,8 +99,6 @@
     {% endfor %}
     </div>
     {% endif %}
-
-
 
     {% if inactive_expenses %}
     <hr class="section-divider">
