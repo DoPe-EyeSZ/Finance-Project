@@ -239,29 +239,17 @@ def summary():
             expense.set_spending(spending)
             
             expense.set_savings()
-            overview_stats["Savings"] += round(saving,2)
+            overview_stats["Savings"] += saving
 
             expense.credit_balance += expense_dict[expense_id]["credit_balance"]
             overview_stats["Credit_Balance"] += expense_dict[expense_id]["credit_balance"]
 
 
-
+        overview_stats["Savings"] = round(overview_stats["Savings"],2)
         db.session.commit()
+        
         spending = Spending.query.filter_by(user_id = session["user_id"]).all()
 
-
-
-        for expense in expenses:    
-            print(expense.name)
-            print(expense.percentage)
-            print(expense.status)
-            print(expense.deleted)
-            print(expense.savings)
-            print(expense.earnings)
-            print(expense.spendings)
-            print(expense.transferred)
-            print(expense.balance)
-            print(expense.credit_balance)
 
         return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending, all_expense_id = all_expense_id)
     
