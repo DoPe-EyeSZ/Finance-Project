@@ -245,7 +245,8 @@ def summary():
             overview_stats["Credit_Balance"] += expense_dict[expense_id]["credit_balance"]
 
 
-        overview_stats["Savings"] = round(overview_stats["Savings"],2)
+        for stat in overview_stats:
+            overview_stats[stat] = round(overview_stats[stat], 2)
         db.session.commit()
         
         spending = Spending.query.filter_by(user_id = session["user_id"]).all()
@@ -359,9 +360,9 @@ def get_all_expense_data():
 
         for expense in all_expenses:
             expenses.append(expense.name)
-            spending.append(expense.spendings)
-            earnings.append(expense.earnings)
-            savings.append(expense.savings)
+            spending.append(round(expense.spendings, 2))
+            earnings.append(round(expense.earnings, 2))
+            savings.append(round(expense.savings, 2))
 
 
         data = {
