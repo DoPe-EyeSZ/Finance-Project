@@ -198,19 +198,21 @@ def summary():
 
             #Deriving other forms of data from the spending/earning 
             earnings = expense_dict[expense_id]["earning"]
+            expense_dict[expense_id]["earning"] = round(earnings, 2)
 
             spending = expense_dict[expense_id]["spending"]
+            expense_dict[expense_id]["spending"] = round(spending, 2)
 
             transferred = float(expense.transferred)
-            expense_dict[expense_id]["transferred"] = transferred
+            expense_dict[expense_id]["transferred"] = round(transferred, 2)
             expense.transferred = transferred
 
             balance = float(transferred + earnings)
-            expense_dict[expense_id]["balance"] = balance
+            expense_dict[expense_id]["balance"] = round(balance, 2)
             expense.balance = balance
 
             saving = round(float(balance - spending), 2)
-            expense_dict[expense_id]["saving"] = saving
+            expense_dict[expense_id]["saving"] = round(saving, 2)
             expense.savings = saving
 
             if balance != 0:
@@ -247,6 +249,7 @@ def summary():
 
         for stat in overview_stats:
             overview_stats[stat] = round(overview_stats[stat], 2)
+
         db.session.commit()
         
         spending = Spending.query.filter_by(user_id = session["user_id"]).all()
