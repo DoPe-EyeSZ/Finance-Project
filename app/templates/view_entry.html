@@ -79,7 +79,7 @@
                                 <span class="currency-symbol-small">$</span>
                                 <input type="number" step="0.01" placeholder="Spent: {{snapshot.total_spending}}" name="spending" required>
                             </div>
-                            <input type="text" placeholder="Add Note" name="reasoning" class="note-input" required>
+                            <input type="text" placeholder="Add Note" name="reasoning" class="note-input">
                         </div>
                         <div class="spending-buttons">
                             <button type="submit" class="btn btn-success btn-sm">Debit</button>
@@ -125,7 +125,16 @@
                         <button class="btn btn-success btn-sm" type="submit">Save</button>
                     </form>
                 </td>
-                <td>{{spent.reasoning}}</td>
+                    <td>
+                        <form action="/edit_reasoning/{{spent.id}}" method="POST" class="inline-edit-form">
+                            <div class="input-wrapper-small">
+                                <input type="text" placeholder="{{spent.reasoning}}" name="reasoning" required>
+                            </div>
+                            <button class="btn btn-success" type="submit">Save</button>
+                            
+                        </form>
+                    </td>
+                    
                 <td>
                     <form action="/delete_spending/{{spent.id}}" method="POST" style="display: inline;">
                         <button class="btn btn-danger btn-sm" type="submit">Delete</button>

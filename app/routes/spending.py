@@ -114,3 +114,17 @@ def update_transaction_date(spending_id):
     
     else:
         return redirect(url_for("user.login"))
+    
+
+@spending.route("/edit_reasoning/<spent_id>", methods = ["POST"])
+def edit_reasoning(spent_id):
+    if helper.check_login():
+        spending = Spending.query.filter_by(id = int(spent_id)).first()
+        if request.method == "POST":
+            new = request.form.get("reasoning")
+            spending.reasoning = new
+            db.session.commit()
+            return redirect(url_for("entry.view_entry", entry_id = int(spending.entry_id)))
+
+    else:
+        return redirect(url_for("user.login"))
