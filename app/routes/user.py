@@ -398,8 +398,8 @@ def overview_data():
         total_deposits += expense.transferred
         total_savings += expense.savings
 
-    all_data = [total_earnings, total_spent, total_deposits, total_savings]
-    data_labels = ["Total Earnings", "Total Spent", "Deposits", "Total Savings"]
+    all_data = [total_spent, total_savings]
+    data_labels = ["Total Spent", "Total Savings"]
     
     data = {
         "all_data": all_data,
