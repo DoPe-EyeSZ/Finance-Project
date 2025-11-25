@@ -58,7 +58,24 @@
 
     
     {% block scripts%}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous">
+    </script>
+
+    <script>
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("scrollY", window.scrollY);
+    });
+
+    window.addEventListener("load", () => {
+      const y = localStorage.getItem("scrollY");
+      if (y !== null) {
+        window.scrollTo(0, parseFloat(y));
+      }
+    });
+    </script>
+
     {% endblock%}
   </body>
 

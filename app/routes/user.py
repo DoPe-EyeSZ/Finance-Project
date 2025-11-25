@@ -61,12 +61,12 @@ def login():
             
             else:     #Email exist but name!=pw
 
-                flash("wrong pw or email")
+                flash("Incorrect email or password.")
                 return render_template("login.html")  
             
         else:     #Email does not exist
 
-            flash("email no exist")
+            flash("Oops, Email does not exist.", "warning")
             return redirect(url_for("user.sign_up"))
 
     else:       #User went to login page unconventionally
@@ -82,7 +82,7 @@ def logout():
     if "user_id" in session:
         flash("You've successfully logged out", "info")
     else:
-        flash("You're not even logged in lol", "info")
+        flash("You're not logged in", "info")
     
     session.clear()     #Deletes user ID and name from session
     
@@ -101,7 +101,7 @@ def sign_up():
         existing_user = User.query.filter_by(email = inputted_email).first()        #Checks to see if email is already used
 
         if existing_user:        #Email already exists
-            flash("email already exists, use another one")
+            flash("Oops! Email already exists.")
             return render_template("signup.html")
         
         else:        #Email does not exist, so new user "row" is created
@@ -133,9 +133,9 @@ def delete():        #Deletes User account from DB
 
         db.session.delete(user)
         db.session.commit()
-        flash("deleted successfully")
+        flash("Account was deleted successfully., info")
     else:
-        flash("nothing deleted")
+        flash("Must log in to delete account.")
        
     return redirect(url_for("user.logout"))
 
@@ -203,12 +203,12 @@ def summary():
             spending = expense_dict[expense_id]["spending"]
             expense_dict[expense_id]["spending"] = round(spending, 2)
 
-            transferred = float(expense.transferred)
-            expense_dict[expense_id]["transferred"] = round(transferred, 2)
+            transferred = round(float(expense.transferred), 2)
+            expense_dict[expense_id]["transferred"] = transferred
             expense.transferred = transferred
 
-            balance = float(transferred + earnings)
-            expense_dict[expense_id]["balance"] = round(balance, 2)
+            balance = round(float(transferred + earnings), 2)
+            expense_dict[expense_id]["balance"] = balance
             expense.balance = balance
 
             saving = round(float(balance - spending), 2)
@@ -303,10 +303,10 @@ def edit_profile():
                     user.email = new_email
 
                 db.session.commit()
-                flash("update successfull")
+                flash("Profile update was successful!")
                 return redirect(url_for("user.profile"))
             else:
-                flash("password does not match")
+                flash("Your password does not match, please try again.")
                 return redirect(url_for("user.edit_profile"))
             
 

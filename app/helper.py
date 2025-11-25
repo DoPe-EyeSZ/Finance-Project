@@ -24,4 +24,4 @@ def calc_savings(expense_id):
     for snap in snaps:
         earnings += snap.expense_earnings
         spending += snap.total_spending
-    return earnings-spending
+    return round(earnings-spending, 2)

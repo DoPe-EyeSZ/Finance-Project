@@ -177,3 +177,21 @@
 </div>
 
 {% endblock %}
+
+
+{% block scripts%}
+    <script>
+        // save the scroll position before the user leaves
+        window.addEventListener("beforeunload", () => {
+        localStorage.setItem("scrollY", window.scrollY);
+        });
+
+        // when the page loads, scroll back to where the user was
+        window.addEventListener("load", () => {
+        const y = localStorage.getItem("scrollY");
+        if (y !== null) {
+            window.scrollTo(0, parseFloat(y));
+        }
+        });
+    </script>
+{% endblock%}
