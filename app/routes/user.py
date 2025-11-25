@@ -381,6 +381,33 @@ def get_all_expense_data():
         return redirect(url_for("user.login"))
     
 
+@user.route("/overview_data")
+def overview_data():
+    expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
+
+    total_earnings = 0
+    total_spent = 0
+    credit_balance = 0
+    total_deposits = 0
+    total_savings = 0
+
+    for expense in expenses:
+        total_earnings += expense.earnings
+        total_spent += expense.spendings
+        credit_balance += expense.credit_balance
+        total_deposits += expense.transferred
+        total_savings += expense.savings
+
+    all_data = [total_earnings, total_spent, total_deposits, total_savings]
+    data_labels = ["Total Earnings", "Total Spent", "Deposits", "Total Savings"]
+    
+    data = {
+        "all_data": all_data,
+        "data_labels": data_labels
+    }
+
+    return jsonify(data)
+
 
 
 @user.route("/charts", methods = ["POST", "GET"])

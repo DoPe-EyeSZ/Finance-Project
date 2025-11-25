@@ -20,6 +20,11 @@
         <div id="expense_bar"></div>
     </div>
 
+    <div class="chart-container">
+        <div id="pie"></div>
+        <h2>work on this laters</h2>
+    </div>
+
 
 
 {% endblock %}
@@ -122,6 +127,40 @@
             };
 
             Plotly.newPlot("expense_bar", [earned, spending, savings], layout, {displayModeBar: false})
+        });
+
+        fetch("/overview_data").then(response => response.json()).then(data => {
+            const values = [{
+                type: "pie",
+                values: data.all_data,
+                labels: data.data_labels,
+                marker: {
+                    colors: ['#dbe9ff', '#5fb878', '#e87373', '#a7c4ff', '#2d6cdf', '#1f9d6a']
+                },
+                textinfo: "label+percent",
+                textposition: "outside",
+                automargin: true,
+                textfont: {
+                    color: '#e0e0e0',
+                    size: 14
+                },
+                hovertemplate: '<b>%{label}</b><br>$%{value}<br>%{percent}<extra></extra>'
+            }];
+            
+            const layout = {
+                height: 500,
+                width: 500,
+                margin: {t: 40, b: 40, l: 40, r: 40},
+                showlegend: false,
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: {
+                    color: '#e0e0e0',
+                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif'
+                }
+            };
+            
+            Plotly.newPlot('pie', values, layout, {displayModeBar: false});
         });
     </script>
 
