@@ -151,6 +151,7 @@
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Reasoning</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -160,6 +161,9 @@
                 <td>{{spent.date}}</td>
                 <td class="spent-cell">${{spent.amount}}</td>
                 <td>{{spent.reasoning}}</td>
+                <td>
+                    <a href="{{url_for('entry.view_entry', entry_id = spent.entry_id)}}" class="btn btn-success">View</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -180,18 +184,5 @@
 
 
 {% block scripts%}
-    <script>
-        // save the scroll position before the user leaves
-        window.addEventListener("beforeunload", () => {
-        localStorage.setItem("scrollY", window.scrollY);
-        });
 
-        // when the page loads, scroll back to where the user was
-        window.addEventListener("load", () => {
-        const y = localStorage.getItem("scrollY");
-        if (y !== null) {
-            window.scrollTo(0, parseFloat(y));
-        }
-        });
-    </script>
 {% endblock%}

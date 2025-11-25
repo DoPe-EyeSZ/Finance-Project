@@ -2,6 +2,7 @@
 {% block title%} View Entry {% endblock%}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <div class="expense-container">
     {% set ns = namespace(total_spent=0) %}
@@ -125,16 +126,12 @@
                         <button class="btn btn-success btn-sm" type="submit">Save</button>
                     </form>
                 </td>
-                    <td>
-                        <form action="/edit_reasoning/{{spent.id}}" method="POST" class="inline-edit-form">
-                            <div class="input-wrapper-small">
-                                <input type="text" placeholder="{{spent.reasoning}}" name="reasoning" required>
-                            </div>
-                            <button class="btn btn-success" type="submit">Save</button>
-                            
-                        </form>
-                    </td>
-                    
+                <td>
+                    <form action="/edit_reasoning/{{spent.id}}" method="POST" class="inline-edit-form">
+                        <input type="text" placeholder="{{spent.reasoning}}" name="reasoning" class="note-input" required>
+                        <button class="btn btn-success btn-sm" type="submit">Save</button>
+                    </form>
+                </td>
                 <td>
                     <form action="/delete_spending/{{spent.id}}" method="POST" style="display: inline;">
                         <button class="btn btn-danger btn-sm" type="submit">Delete</button>

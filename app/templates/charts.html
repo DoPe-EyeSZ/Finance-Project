@@ -69,7 +69,8 @@
             const layout = {
                 title: "Income/Spending Over Time",
                 xaxis: {title: "Dates"},
-                yaxis: {title: "Cash ($)"}
+                yaxis: {title: "Cash ($)"},
+                TransitionEvent
             };
 
             Plotly.newPlot("chart", [income, spending], layout, {displayModeBar: false});
