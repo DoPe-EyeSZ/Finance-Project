@@ -1699,3 +1699,53 @@ h2 {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* ===================================
+   FLASH MESSAGES
+   =================================== */
+.flash-message {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 1200px;
+    font-size: 1.1em;
+    font-weight: 500;
+    border-left: 4px solid;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.flash-success {
+    background: rgba(95, 184, 120, 0.2);
+    color: #5fb878;
+    border-color: #5fb878;
+}
+
+.flash-error {
+    background: rgba(232, 115, 115, 0.2);
+    color: #e87373;
+    border-color: #e87373;
+}
+
+.flash-warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+.flash-info {
+    background: rgba(45, 108, 223, 0.2);
+    color: #2d6cdf;
+    border-color: #2d6cdf;
+}

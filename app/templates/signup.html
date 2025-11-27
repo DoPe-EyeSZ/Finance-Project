@@ -11,13 +11,6 @@
             <p class="auth-subtitle">Create your account and take control of your finances</p>
         </div>
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages%}
-                    <div class="flash-message">{{message}}</div>
-                {% endfor%}
-            {% endif %}
-        {% endwith %}
 
         <form action="#" method="POST" class="auth-form">
             <div class="auth-input-group">

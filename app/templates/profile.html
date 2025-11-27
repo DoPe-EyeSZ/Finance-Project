@@ -4,13 +4,6 @@
 {% block content %}
 
 <div class="expense-container">
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for msg in messages %}
-          <div class="flash-message">{{msg}}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
 
     <h1 class="main-title">Your Profile</h1>
 
