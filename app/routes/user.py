@@ -375,38 +375,82 @@ def get_all_expense_data():
             "total_saved": savings
         }
 
-        print(data)
         return jsonify(data)
     else:
         return redirect(url_for("user.login"))
     
 
-@user.route("/overview_data")
-def overview_data():
-    expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
+@user.route("/save_spend_data")
+def save_spend_data():
+    if helper.check_login():
 
-    total_earnings = 0
-    total_spent = 0
-    credit_balance = 0
-    total_deposits = 0
-    total_savings = 0
+        expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
 
-    for expense in expenses:
-        total_earnings += expense.earnings
-        total_spent += expense.spendings
-        credit_balance += expense.credit_balance
-        total_deposits += expense.transferred
-        total_savings += expense.savings
+        total_earnings = 0
+        total_spent = 0
+        credit_balance = 0
+        total_deposits = 0
+        total_savings = 0
 
-    all_data = [total_spent, total_savings]
-    data_labels = ["Total Spent", "Total Savings"]
+        for expense in expenses:
+            total_earnings += expense.earnings
+            total_spent += expense.spendings
+            credit_balance += expense.credit_balance
+            total_deposits += expense.transferred
+            total_savings += expense.savings
+
+        all_data = [total_spent, total_savings]
+        data_labels = ["Total Spent", "Total Savings"]
+        
+        data = {
+            "all_data": all_data,
+            "data_labels": data_labels
+        }
+
+        return jsonify(data)
     
-    data = {
-        "all_data": all_data,
-        "data_labels": data_labels
-    }
+    else:
+        return redirect(url_for("user.login"))
 
-    return jsonify(data)
+
+@user.route("/all_spend_data")
+def all_spend_data():
+    if helper.check_login():
+
+        spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
+
+        expense_totals = {}
+
+        for spending in spendings:
+            if spending.expense_id in expense_totals:
+                expense_totals[spending.expense_id] += spending.amount
+            else:
+                expense_totals[spending.expense_id] = spending.amount
+
+        expenses = Expenses.query.filter(Expenses.id.in_(list(expense_totals.keys()))).all()
+
+        # dict{expense's id: expense_name}
+        expense_lookup = {}
+        for expense in expenses:
+            expense_lookup[expense.id] = expense.name
+        
+        final_data = {}
+
+        for expense_id, amount in expense_totals.items():
+            final_data[expense_lookup[expense_id]] = amount
+
+
+        data = {
+            "expense_name": list(final_data.keys()),
+            "total": list(final_data.values())
+        }
+        
+
+        return jsonify(data)
+
+    else:
+        return(redirect(url_for("user.login")))
+
 
 
 
