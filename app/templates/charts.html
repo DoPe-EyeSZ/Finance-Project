@@ -11,10 +11,9 @@
       {% endif %}
     {% endwith %}
 
-    <h3>next step is  add piechart of all individual spending data</h3>
     <div class="chart-container">
         <div id="chart"></div>
-        <p>add description of how the more user add to entry the more accurate and visually appealing chart will be </p>
+        <p class="chart-description">The more entries you add, the more accurate and visually detailed your spending trends will become. Consistent tracking provides better financial insights over time.</p>
     </div>
 
     <div class="chart-container">
@@ -22,22 +21,20 @@
     </div>
 
     <div class="chart-container">
-        <div id="overview_pie"></div>
-        <p>pie chart of how much you've spent and saved of your entire money</p>
-        
+        <h3 class="chart-section-title">Financial Breakdown</h3>
+        <div class="pie-charts-grid">
+            <div class="pie-chart-wrapper">
+                <div id="overview_pie"></div>
+                <p class="chart-description">Distribution of total income between spending and savings</p>
+            </div>
+            <div class="pie-chart-wrapper">
+                <div id="spending_pie"></div>
+                <p class="chart-description">Breakdown of spending across all expense categories</p>
+            </div>
+        </div>
     </div>
-
-    <div class="chart-container">
-        <div id="spending_pie"></div>
-        <p>pie chart of how much you've spent and saved of your entire money</p>
-        
-    </div>
-
-
 
 {% endblock %}
-
-
 
 {% block scripts%}
     <script>
@@ -49,15 +46,15 @@
                 mode: "lines+markers",
                 name: "Income",
                 line: {
-                    color: '#5fb878',  // Green line
+                    color: '#5fb878',
                     width: 3
                 },
                 marker: {
-                    color: '#5fb878',  // Green markers
+                    color: '#5fb878',
                     size: 8
                 },
-                text: data.income.map(val => `$${val}`),  // Show income values
-                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'  // Display on hover
+                text: data.income.map(val => `$${val}`),
+                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'
             };
 
             const spending = {
@@ -75,21 +72,17 @@
                     size: 8
                 },
                 text: data.spending.map(val => `$${val}`),  
-                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'  // Display on hover
+                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'
             };
             
-
             const layout = {
                 title: "Income/Spending Over Time",
                 xaxis: {title: "Dates"},
-                yaxis: {title: "Cash ($)"},
-                TransitionEvent
+                yaxis: {title: "Cash ($)"}
             };
 
             Plotly.newPlot("chart", [income, spending], layout, {displayModeBar: false});
         });
-
-
 
         fetch("/all_expense_data").then(response => response.json()).then(data=>{
             const earned = {
@@ -128,7 +121,6 @@
                 hovertemplate: '<b>Total Savings</b><br> $%{y}<extra></extra>'
             };
 
-
             const layout = {
                 barmode: "group",
                 title: "Individual Expense Overview"
@@ -156,16 +148,15 @@
             }];
             
             const layout = {
-                title: "Overview of all Spending/Saving of total income (edit title to be professional)",
-                height: 500,
+                title: "Spending vs. Savings",
+                height: 400,
                 width: 500,
-                margin: {t: 40, b: 40, l: 40, r: 40},
+                margin: {t: 60, b: 40, l: 40, r: 40},
                 showlegend: false,
             };
             
             Plotly.newPlot('overview_pie', values, layout, {displayModeBar: false});
         });
-
 
         fetch("/all_spend_data").then(response => response.json()).then(data => {
             const values = [{
@@ -183,15 +174,15 @@
             }];
             
             const layout = {
-                title: "break down of all spending data (edit title to be professional)",
-                height: 500,
+                title: "Spending Breakdown",
+                height: 400,
                 width: 500,
-                margin: {t: 40, b: 40, l: 40, r: 40},
+                margin: {t: 60, b: 40, l: 40, r: 40},
                 showlegend: false,
             };
             
             Plotly.newPlot('spending_pie', values, layout, {displayModeBar: false});
-            });
+        });
     </script>
 
 {% endblock %}

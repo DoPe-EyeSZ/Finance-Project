@@ -5,12 +5,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <div class="expense-container">
-    {% set ns = namespace(total_spent=0) %}
-    {% for spent in spending %}
-        {% if not spent.credit_status %}
-            {% set ns.total_spent = ns.total_spent + spent.amount %}
-        {% endif %}
-    {% endfor %}
 
     <div class="date-editor">
         <h1 class="main-title">
@@ -37,9 +31,9 @@
         </div>
         <div class="entry-stat spent">
             <div class="entry-stat-label">Total Spent</div>
-            <div class="entry-stat-value">${{ ns.total_spent }}</div>
+            <div class="entry-stat-value">${{ total_spent }}</div>
         </div>
-        <div class="entry-stat {% if entry.income - ns.total_spent >= 0 %}income{% else %}spent{% endif %}">
+        <div class="entry-stat {% if entry.income - total_spent >= 0 %}income{% else %}spent{% endif %}">
             <div class="entry-stat-label">Net Earnings</div>
             <div class="entry-stat-value">${{net_earnings}}</div>
         </div>

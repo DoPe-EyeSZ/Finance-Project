@@ -64,10 +64,12 @@ def view_entry(entry_id):
             total_spent = 0
             for spend in spending:
                 total_spent += spend.amount
+
+            total_spent = round(total_spent, 2)
             net_earnings = round(entry.income - total_spent, 2)
 
             db.session.commit()
-            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending, net_earnings = net_earnings)
+            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending, net_earnings = net_earnings, total_spent = total_spent)
         else:
             return redirect(url_for("entry.all_entry"))
     
