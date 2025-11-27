@@ -1688,7 +1688,7 @@ h2 {
     color: #a7c4ff;
     font-size: 1em;
     text-align: center;
-    margin-top: 15px;
+    margin: 15px auto 0;  /* Changed from margin-top: 15px */
     line-height: 1.5;
     max-width: 500px;
 }

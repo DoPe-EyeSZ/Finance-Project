@@ -61,12 +61,12 @@ def login():
             
             else:     #Email exist but name!=pw
 
-                flash("Incorrect email or password.")
+                flash("Incorrect email or password.", "error")
                 return render_template("login.html")  
             
         else:     #Email does not exist
 
-            flash("Oops, Email does not exist.", "warning")
+            flash("Oops, Email does not exist.", "error")
             return redirect(url_for("user.sign_up"))
 
     else:       #User went to login page unconventionally
@@ -101,7 +101,7 @@ def sign_up():
         existing_user = User.query.filter_by(email = inputted_email).first()        #Checks to see if email is already used
 
         if existing_user:        #Email already exists
-            flash("Oops! Email already exists.")
+            flash("Oops! Email already exists.", "error")
             return render_template("signup.html")
         
         else:        #Email does not exist, so new user "row" is created
@@ -133,9 +133,9 @@ def delete():        #Deletes User account from DB
 
         db.session.delete(user)
         db.session.commit()
-        flash("Account was deleted successfully., info")
+        flash("Account was deleted successfully", "info")
     else:
-        flash("Must log in to delete account.")
+        flash("Must log in to delete account.", "error")
        
     return redirect(url_for("user.logout"))
 
@@ -303,10 +303,10 @@ def edit_profile():
                     user.email = new_email
 
                 db.session.commit()
-                flash("Profile update was successful!")
+                flash("Profile update was successful!", "success")
                 return redirect(url_for("user.profile"))
             else:
-                flash("Your password does not match, please try again.")
+                flash("Your password does not match, please try again.", "error")
                 return redirect(url_for("user.edit_profile"))
             
 
@@ -326,23 +326,26 @@ def get_spending_income_data():
         dates_income = [entry.date for entry in entries]
         income = [entry.income for entry in entries]
 
-        dates_spending = []
+        spending_data = {}
         for spending in spendings:
-            if spending.date in dates_spending:
-                pass
+            if spending.date in spending_data:
+                spending_data[spending.date] += spending.amount
             else:
-                dates_spending.append(spending.date)
-        
-        spending = [spending.amount for spending in spendings]
+                spending_data[spending.date] = spending.amount
 
+        sorted_spending = sorted(spending_data.items(), key=lambda x: x[0])
+        dates_spending = [item[0] for item in sorted_spending]
+        spending_amounts = [item[1] for item in sorted_spending]
+    
 
 
         data = {
             "dates_income": dates_income,
             "income": income,
             "dates_spending": dates_spending,
-            "spending":spending
+            "spending": spending_amounts
         }
+
 
         return jsonify(data)
     

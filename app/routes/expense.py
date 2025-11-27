@@ -78,7 +78,7 @@ def archive_expense(expense_id):
                 
             else:       
                 db.session.delete(removed_expense)
-                flash("there does not seem to be data for this expense")
+                flash("This expense had no data and has been removed.", "info")
 
 
             db.session.commit()
@@ -141,7 +141,8 @@ def reallocate():
                 db.session.commit()
 
             else:
-                flash("reallocation amount is too much")
+                flash("You don’t have enough funds for this transfer.", "error")
+
             
         return redirect(url_for("expense.expenses"))
     else:
