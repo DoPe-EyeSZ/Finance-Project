@@ -8,6 +8,8 @@
 
     <h1 class="main-title">MANAGE EXPENSES</h1>
 
+    <!-- Below is Deposit function -->
+
     <div class="function-sections">
         {% if active_expenses %}
         <div class="function-section">
@@ -21,13 +23,14 @@
                 </select>
 
                 <div class="input-wrapper">
-                    <input type="number" step="0.01" name="amount" placeholder="Amount" min="0" required>
+                    <input type="number" step="0.01" name="amount" placeholder="Amount"  required>
                 </div>
 
                 <button type="submit" class="form-btn">Transfer</button>
             </form>
         </div>
         
+        <!-- Below is actually transfer function -->
 
         <div class="function-section">
             <h2 class="function-title">Transfer</h2>
