@@ -19,158 +19,161 @@
         </form>
     </div>
 
-    {% if active_expenses or inactive_expenses %}
-    <div class="lifetime-stats-section">
-        <h2 class="lifetime-stats-title">Lifetime Statistics</h2>
-        <div class="stats-grid">
-            <div class="stat-card-main">
-                <div class="stat-label-main">Total Balance</div>
-                <div class="stat-value-main balance">${{lifetime_stats["Balance"]}}</div>
-            </div>
-            <div class="stat-card-main">
-                <div class="stat-label-main">Total Earnings</div>
-                <div class="stat-value-main earnings">${{lifetime_stats["Earnings"]}}</div>
-            </div>
-            
-            <div class="stat-card-main">
-                <div class="stat-label-main">Total Spent</div>
-                <div class="stat-value-main spent">${{lifetime_stats["Spendings"]}}</div>
-            </div>
-            <div class="stat-card-main">
-                <div class="stat-label-main">Total Credit Balance</div>
-                <div class="stat-value-main">${{lifetime_stats["Credit_Balance"]}}</div>
-            </div>
-            <div class="stat-card-main">
-                <div class="stat-label-main">Deposited</div>
-                <div class="stat-value-main">${{lifetime_stats["Transferred"]}}</div>
-            </div>
-            <div class="stat-card-main">
-                <div class="stat-label-main">Total Savings</div>
-                <div class="stat-value-main savings">${{lifetime_stats["Savings"]}}</div>
+<div class="expense-container">
+        {% if active_expenses or inactive_expenses %}
+        <div class="lifetime-stats-section">
+            <h2 class="lifetime-stats-title">Lifetime Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card-main">
+                    <div class="stat-label-main">Total Balance</div>
+                    <div class="stat-value-main balance">${{lifetime_stats["Balance"]}}</div>
+                </div>
+                <div class="stat-card-main">
+                    <div class="stat-label-main">Total Earnings</div>
+                    <div class="stat-value-main earnings">${{lifetime_stats["Earnings"]}}</div>
+                </div>
+                
+                <div class="stat-card-main">
+                    <div class="stat-label-main">Total Spent</div>
+                    <div class="stat-value-main spent">${{lifetime_stats["Spendings"]}}</div>
+                </div>
+                <div class="stat-card-main">
+                    <div class="stat-label-main">Total Credit Balance</div>
+                    <div class="stat-value-main">${{lifetime_stats["Credit_Balance"]}}</div>
+                </div>
+                <div class="stat-card-main">
+                    <div class="stat-label-main">Deposited</div>
+                    <div class="stat-value-main">${{lifetime_stats["Transferred"]}}</div>
+                </div>
+                <div class="stat-card-main">
+                    <div class="stat-label-main">Total Savings</div>
+                    <div class="stat-value-main savings">${{lifetime_stats["Savings"]}}</div>
+                </div>
             </div>
         </div>
-    </div>
-    {% endif %}
+        {% endif %}
 
-    {% if active_expenses %}
-    <div class="expenses-section">
-        <h1 class="section-title-large">Active Expenses</h1>
-    {% for expense_id in active_expenses %}
-    <div class="expense-block">
-        <h3 class="expense-name-small">{{active_expenses[expense_id]["name"]}}</h3>
-        {% set earned = active_expenses[expense_id]["earning"]%}
-        {% set spent = active_expenses[expense_id]["spending"]%}
-        {% set saved = active_expenses[expense_id]["saving"]%}
-        {% set balance = active_expenses[expense_id]["balance"]%}
-        {% set transferred = active_expenses[expense_id]["transferred"]%}
-        {% set credit_balance = active_expenses[expense_id]["credit_balance"]%}
+        {% if active_expenses %}
+        <div class="expenses-section">
+            <h1 class="section-title-large">Active Expenses</h1>
+        {% for expense_id in active_expenses %}
+        <div class="expense-block">
+            <h3 class="expense-name-small">{{active_expenses[expense_id]["name"]}}</h3>
+            {% set earned = active_expenses[expense_id]["earning"]%}
+            {% set spent = active_expenses[expense_id]["spending"]%}
+            {% set saved = active_expenses[expense_id]["saving"]%}
+            {% set balance = active_expenses[expense_id]["balance"]%}
+            {% set transferred = active_expenses[expense_id]["transferred"]%}
+            {% set credit_balance = active_expenses[expense_id]["credit_balance"]%}
 
-        <table class="expense-table stats-table">
+            <table class="expense-table stats-table">
+                <thead>
+                    <tr>
+                        <th>Total Balance</th>
+                        <th>Earned</th>
+                        <th>Spent</th>
+                        <th>Credit Balance</th>
+                        <th>Deposited</th>
+                        <th>Remaining</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="balance-cell" style="color: #a7c4ff;">${{balance}}</td>
+                        <td class="earnings-cell" style="color: #5fb878;">${{earned}}</td>
+                        <td class="spent-cell" style="color: #e87373;">${{spent}}</td>
+                        <td>${{credit_balance}}</td>
+                        <td>${{transferred}}</td>
+                        <td class="savings-cell" style="color: #5fb878;">${{saved}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if inactive_expenses %}
+        <hr class="section-divider">
+        <div class="expenses-section">
+            <h1 class="section-title-large">Archived Expenses</h1>
+        {% for expense_id in inactive_expenses %}
+        <div class="expense-block">
+            <h3 class="expense-name-small">{{inactive_expenses[expense_id]["name"]}}</h3>
+            {% set earned = inactive_expenses[expense_id]["earning"]%}
+            {% set spent = inactive_expenses[expense_id]["spending"]%}
+            {% set saved = inactive_expenses[expense_id]["saving"]%}
+            {% set balance = inactive_expenses[expense_id]["balance"]%}
+            {% set transferred = inactive_expenses[expense_id]["transferred"]%}
+            {% set credit_balance = inactive_expenses[expense_id]["credit_balance"]%}
+
+            <table class="expense-table stats-table">
+                <thead>
+                    <tr>
+                        <th>Total Balance</th>
+                        <th>Earned</th>
+                        <th>Spent</th>
+                        <th>Credit Balance</th>
+                        <th>Deposited</th>
+                        <th>Remaining</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="balance-cell">${{balance}}</td>
+                        <td class="earnings-cell">${{earned}}</td>
+                        <td class="spent-cell">${{spent}}</td>
+                        <td>${{credit_balance}}</td>
+                        <td>${{transferred}}</td>
+                        <td class="savings-cell">${{saved}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if spending %}
+        <hr class="section-divider">
+        <h1 class="section-title">Spending Log</h1>
+        <table class="expense-table">
             <thead>
                 <tr>
-                    <th>Total Balance</th>
-                    <th>Earned</th>
-                    <th>Spent</th>
-                    <th>Credit Balance</th>
-                    <th>Deposited</th>
-                    <th>Remaining</th>
+                    <th>Expense</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Reasoning</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
+                {% for spent in spending %}
                 <tr>
-                    <td class="balance-cell">${{balance}}</td>
-                    <td class="earnings-cell">${{earned}}</td>
-                    <td class="spent-cell">${{spent}}</td>
-                    <td>${{credit_balance}}</td>
-                    <td>${{transferred}}</td>
-                    <td class="savings-cell">${{saved}}</td>
+                    <td>{{spent.expense_name}}</td>
+                    <td>{{spent.date}}</td>
+                    <td class="spent-cell">${{spent.amount}}</td>
+                    <td>{{spent.reasoning}}</td>
+                    <td>
+                        <a href="{{url_for('entry.view_entry', entry_id = spent.entry_id)}}" class="btn btn-success">View</a>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
-    </div>
-    {% endfor %}
-    </div>
-    {% endif %}
+        {% endif %}
 
-    {% if inactive_expenses %}
-    <hr class="section-divider">
-    <div class="expenses-section">
-        <h1 class="section-title-large">Archived Expenses</h1>
-    {% for expense_id in inactive_expenses %}
-    <div class="expense-block">
-        <h3 class="expense-name-small">{{inactive_expenses[expense_id]["name"]}}</h3>
-        {% set earned = inactive_expenses[expense_id]["earning"]%}
-        {% set spent = inactive_expenses[expense_id]["spending"]%}
-        {% set saved = inactive_expenses[expense_id]["saving"]%}
-        {% set balance = inactive_expenses[expense_id]["balance"]%}
-        {% set transferred = inactive_expenses[expense_id]["transferred"]%}
-        {% set credit_balance = inactive_expenses[expense_id]["credit_balance"]%}
-
-        <table class="expense-table stats-table">
-            <thead>
-                <tr>
-                    <th>Total Balance</th>
-                    <th>Earned</th>
-                    <th>Spent</th>
-                    <th>Credit Balance</th>
-                    <th>Deposited</th>
-                    <th>Remaining</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="balance-cell">${{balance}}</td>
-                    <td class="earnings-cell">${{earned}}</td>
-                    <td class="spent-cell">${{spent}}</td>
-                    <td>${{credit_balance}}</td>
-                    <td>${{transferred}}</td>
-                    <td class="savings-cell">${{saved}}</td>
-                </tr>
-            </tbody>
-        </table>
+        {% if not all_expense_id %}
+        <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <h2 class="empty-title">No Entries Yet</h2>
+            <p class="empty-text">You haven't created an entry yet. Create your first entry to start tracking your budget!</p>
+            <a href="/entry" class="empty-cta">Create Your First Entry</a>
+        </div>
+        {% endif %}
     </div>
-    {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if spending %}
-    <hr class="section-divider">
-    <h1 class="section-title">Spending Log</h1>
-    <table class="expense-table">
-        <thead>
-            <tr>
-                <th>Expense</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Reasoning</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for spent in spending %}
-            <tr>
-                <td>{{spent.expense_name}}</td>
-                <td>{{spent.date}}</td>
-                <td class="spent-cell">${{spent.amount}}</td>
-                <td>{{spent.reasoning}}</td>
-                <td>
-                    <a href="{{url_for('entry.view_entry', entry_id = spent.entry_id)}}" class="btn btn-success">View</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-
-    {% if not all_expense_id %}
-    <div class="empty-state">
-        <div class="empty-icon">📊</div>
-        <h2 class="empty-title">No Entries Yet</h2>
-        <p class="empty-text">You haven't created an entry yet. Create your first entry to start tracking your budget!</p>
-        <a href="/entry" class="empty-cta">Create Your First Entry</a>
-    </div>
-    {% endif %}
 </div>
+    
 
 {% endblock %}
 
