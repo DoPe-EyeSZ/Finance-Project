@@ -323,8 +323,16 @@ def get_spending_income_data():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
         spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
 
-        dates_income = [entry.date for entry in entries]
-        income = [entry.income for entry in entries]
+        income_data = {}
+        for entry in entries:
+            if entry.date in income_data:
+                income_data[entry.date] += entry.income
+            else:
+                income_data[entry.date] = entry.income
+
+        sorted_income = sorted(income_data.items(), key=lambda x: x[0])
+        dates_income = [item[0] for item in sorted_income]
+        income_amounts = [item[1] for item in sorted_income]
 
         spending_data = {}
         for spending in spendings:
@@ -341,7 +349,7 @@ def get_spending_income_data():
 
         data = {
             "dates_income": dates_income,
-            "income": income,
+            "income": income_amounts,
             "dates_spending": dates_spending,
             "spending": spending_amounts
         }
