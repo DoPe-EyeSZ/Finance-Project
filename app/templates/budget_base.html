@@ -51,16 +51,17 @@
       </div>
     </nav>
 
-    
-    {% block content%}
-
-      {% with messages = get_flashed_messages(with_categories=true) %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for category, msg in messages %}
             <div class="flash-message flash-{{ category }}">{{ msg }}</div>
           {% endfor %}
         {% endif %}
     {% endwith %}
+    
+    {% block content%}
+
+      
 
     {% endblock%}
 
