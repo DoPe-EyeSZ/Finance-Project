@@ -37,7 +37,7 @@ def add_entry():
                 return redirect(url_for("entry.view_entry", entry_id = new_entry.id))
             
             else:       #User expenses don't add to 100%
-                flash("Total expenses must equal 100%. Please adjust your entries.", "error")
+                flash("Your expense allocation must total 100%. Please review and adjust your values.", "error")
                 return redirect(url_for("expense.expenses"))
     else:
         return redirect(url_for("user.login"))
