@@ -5,8 +5,12 @@
 
 
     <div class="chart-container">
-        <div id="chart"></div>
+        <div id="income_spending"></div>
         <p class="chart-description">The more entries you add, the more accurate and visually detailed your spending trends will become. Consistent tracking provides better financial insights over time.</p>
+    </div>
+
+    <div class="chart-container">
+        <div id="saving"></div>
     </div>
 
     <div class="chart-container">
@@ -74,7 +78,35 @@
                 yaxis: {title: "Cash ($)"}
             };
 
-            Plotly.newPlot("chart", [income, spending], layout, {displayModeBar: false});
+            Plotly.newPlot("income_spending", [income, spending], layout, {displayModeBar: false});
+        });
+
+        fetch("/savings_data").then(response =>response.json()).then(data =>{
+            const saving = {
+                x: data.dates,
+                y: data.saving_data,
+                name: "All Savings",
+                type: "scatter",
+                mode: "lines+markers",
+                line: {
+                    color: '#5fb878',
+                    width: 3
+                },
+                marker: {
+                    color: '#5fb878',
+                    size: 8
+                },
+                text: data.saving_data.map(val => `$${val}`),
+                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'
+            };
+
+            const layout = {
+                title: "Savings Over Time",
+                xaxis: {title: "Dates"},
+                yaxis: {title: "Cash ($)"}
+            };
+
+            Plotly.newPlot("saving", [saving], layout, {displayModeBar: false});
         });
 
         fetch("/all_expense_data").then(response => response.json()).then(data=>{

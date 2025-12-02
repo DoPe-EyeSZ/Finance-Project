@@ -461,6 +461,63 @@ def all_spend_data():
 
     else:
         return(redirect(url_for("user.login")))
+    
+
+
+@user.route("/savings_data")
+def savings_data():
+    if helper.check_login():
+        entries = Entry.query.filter_by(user_id = session["user_id"]).all()
+        spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
+
+        #{entryid: spending amount}
+        spending_data = {}
+        for spending in spendings:
+            if spending.entry_id in spending_data:
+                spending_data[spending.entry_id] += spending.amount
+            else:
+                spending_data[spending.entry_id] = spending.amount
+
+
+        #{date: income amount}
+        income_data = {}
+        for entry in entries:
+            if entry.date in income_data:
+                income_data[entry.date][0] += entry.income
+            else:
+                income_data[entry.date] = [entry.income, entry.id]
+
+
+        #sort income amount
+        sorted_income = sorted(income_data.items(), key=lambda x: x[0])     #(date, [income, entryid])
+        dates = [item[0] for item in sorted_income]
+
+
+        entry_income = {}       #{entry id: income amount}
+        for item in sorted_income:
+            id = item[1][1]
+            income = item[1][0]
+            entry_income[id] = income
+        print(entry_income)
+
+        income_spending = {}        #{income: spending}
+        for entry_id in entry_income:
+            income = entry_income[entry_id]
+            income_spending[income] = round(spending_data[entry_id], 2)
+
+        #savings sorted
+        saving_data = [round(income - spending, 2) for income, spending in income_spending.items()]
+
+        data = {
+            "saving_data": saving_data,
+            "dates": dates
+        }
+
+        
+
+        return jsonify(data)
+    else:
+        return redirect(url_for("user.login"))
 
 
 
