@@ -321,7 +321,7 @@ def edit_profile():
 def get_spending_income_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
-        spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
+        spendings = Spending.query.filter_by(user_id = session["user_id"], credit_status = False).all()
 
         income_data = {}
         for entry in entries:
@@ -428,7 +428,7 @@ def save_spend_data():
 def all_spend_data():
     if helper.check_login():
 
-        spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
+        spendings = Spending.query.filter_by(user_id = session["user_id"], credit_status = False).all()
 
         expense_totals = {}
 
@@ -468,7 +468,7 @@ def all_spend_data():
 def savings_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
-        spendings = Spending.query.filter_by(user_id = session["user_id"]).all()
+        spendings = Spending.query.filter_by(user_id = session["user_id"], credit_status = False).all()
 
         #{entryid: spending amount}
         spending_data = {}

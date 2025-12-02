@@ -63,7 +63,8 @@ def view_entry(entry_id):
             spending = Spending.query.filter_by(entry_id = entry_id).all()
             total_spent = 0
             for spend in spending:
-                total_spent += spend.amount
+                if not spend.credit_status:
+                    total_spent += spend.amount
 
             total_spent = round(total_spent, 2)
             net_earnings = round(entry.income - total_spent, 2)
