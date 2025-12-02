@@ -133,3 +133,22 @@ def update_date(entry_id):
             return redirect(url_for("entry.view_entry", entry_id = entry_id))
     else:
         return redirect(url_for("user.login"))
+    
+
+@entry.route("/entry_deposit", methods = ["POST"])
+def transfer():
+    
+    if helper.check_login():
+        snap_id = request.form.get("snap_id")
+        amount = request.form.get("amount")
+        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()
+
+        expense = Expenses.query.filter_by(id = int(snap.expense_id)).first()        #FIGUREOUT WHY NOT COMMITING CHANGES
+
+        expense.transfer_in(float(amount))
+
+        db.session.commit()
+        return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
+
+    else:
+        return redirect(url_for("user.login"))

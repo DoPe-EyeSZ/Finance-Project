@@ -32,15 +32,38 @@
         </div>
     </div>
 
-    <div class="form-section">
-        <h2 class="form-title">Add Income</h2>
-        <form action="/add_income/{{entry.id}}" method="POST" class="inline-form">
-            <div class="input-wrapper">
-                <input type="number" step="0.01" name="income" placeholder="Enter income" required>
+        <div class="function-sections">
+            <div class="form-section">
+                <h2 class="form-title">Add Income</h2>
+                <form action="/add_income/{{entry.id}}" method="POST" class="inline-form">
+                    <div class="input-wrapper">
+                        <input type="number" step="0.01" name="income" placeholder="Enter income" required>
+                    </div>
+                    <button type="submit" class="form-btn">Submit</button>
+                </form>
             </div>
-            <button type="submit" class="form-btn">Submit</button>
-        </form>
+
+            <div class="form-section">
+                <h2 class="form-title">Deposit</h2>
+                    <form action="/entry_deposit" method="POST" class="inline-form">
+                        <select name="snap_id" required>
+                            <option value="">Select Expense</option>
+                            {% for snap in snapshots %}
+                                <option value="{{snap.id}}">{{snap.expense_name}}</option>
+                            {% endfor %}
+                        </select>
+
+                        <div class="input-wrapper">
+                            <input type="number" step="0.01" name="amount" placeholder="Amount"  required>
+                        </div>
+
+                        <button type="submit" class="form-btn">Deposit</button>
+                </form>
+            </div>
+            
+        
     </div>
+    
 
     <h1 class="section-title">Expense Breakdown</h1>
     <table class="expense-table">
