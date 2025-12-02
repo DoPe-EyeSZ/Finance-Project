@@ -6,21 +6,24 @@
 
     <h1 class="main-title">Hello {{user.name}}</h1>
 
-    <!-- Chart Button Section -->
-    <div class="chart-button-section">
-        <form action="{{ url_for('user.charts') }}" method="POST">
-            <button class="chart-button" type="submit">
-                <span class="chart-icon">📊</span>
-                <span class="chart-text">
-                    <span class="chart-title">View Charts</span>
-                    <span class="chart-desc">Visualize your budget data</span>
-                </span>
-            </button>
-        </form>
-    </div>
+    
 
 <div class="expense-container">
-        {% if active_expenses or inactive_expenses %}
+    {% if active_expenses or inactive_expenses %}
+
+            <!-- Chart Button Section -->
+        <div class="chart-button-section">
+            <form action="{{ url_for('user.charts') }}" method="POST">
+                <button class="chart-button" type="submit">
+                    <span class="chart-icon">📊</span>
+                    <span class="chart-text">
+                        <span class="chart-title">View Charts</span>
+                        <span class="chart-desc">Visualize your budget data</span>
+                    </span>
+                </button>
+            </form>
+        </div>
+
         <div class="lifetime-stats-section">
             <h2 class="lifetime-stats-title">Lifetime Statistics</h2>
             <div class="stats-grid">
