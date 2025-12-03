@@ -28,30 +28,35 @@
             <h2 class="lifetime-stats-title">Lifetime Statistics</h2>
             <div class="stats-grid">
                 <div class="stat-card-main">
-                    <div class="stat-label-main">Total Balance</div>
+                    <div class="stat-label-main">Earnings and Deposits</div>
                     <div class="stat-value-main balance">${{lifetime_stats["Balance"]}}</div>
                 </div>
+
                 <div class="stat-card-main">
                     <div class="stat-label-main">Total Earnings</div>
                     <div class="stat-value-main earnings">${{lifetime_stats["Earnings"]}}</div>
                 </div>
                 
                 <div class="stat-card-main">
+                    <div class="stat-label-main">Deposited</div>
+                    <div class="stat-value-main">${{lifetime_stats["Transferred"]}}</div>
+                </div>
+
+                <div class="stat-card-main">
                     <div class="stat-label-main">Total Spent</div>
                     <div class="stat-value-main spent">${{lifetime_stats["Spendings"]}}</div>
                 </div>
+
                 <div class="stat-card-main">
                     <div class="stat-label-main">Total Credit Balance</div>
                     <div class="stat-value-main">${{lifetime_stats["Credit_Balance"]}}</div>
                 </div>
-                <div class="stat-card-main">
-                    <div class="stat-label-main">Deposited</div>
-                    <div class="stat-value-main">${{lifetime_stats["Transferred"]}}</div>
-                </div>
+
                 <div class="stat-card-main">
                     <div class="stat-label-main">Total Savings</div>
                     <div class="stat-value-main savings">${{lifetime_stats["Savings"]}}</div>
                 </div>
+
             </div>
         </div>
         {% endif %}
