@@ -52,9 +52,11 @@ def delete_spending(spending_id):
         entry_id = spending.entry_id
 
         if request.method == "POST":
-            if not spending.credit_status:
-                amount_added = -(spending.amount)
-                snap.add_spending(amount_added)
+            amount_removed = spending.amount
+            if spending.credit_status:
+                snap.credit_balance -= amount_removed
+            else:
+                snap.add_spending(-amount_removed)
 
             db.session.delete(spending)
             db.session.commit()
