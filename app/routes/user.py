@@ -214,19 +214,6 @@ def summary():
             saving = round(float(balance - spending), 2)
             expense_dict[expense_id]["saving"] = round(saving, 2)
             expense.savings = saving
-
-            if balance != 0:
-                saving_percent = round((saving/balance)*100, 2)
-                spending_percent = round((spending/balance)*100, 2)
-                
-            else:
-                saving_percent = 0
-                spending_percent = 0
-                
-            expense_dict[expense_id]["spending_percent"] = spending_percent
-            expense_dict[expense_id]["saving_percent"] = saving_percent
-
-
             
             #Setting overview stats
             overview_stats["Balance"] += balance
