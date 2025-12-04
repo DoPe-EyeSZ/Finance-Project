@@ -17,11 +17,20 @@ def check_login():
     return "user_id" in session
 
 def calc_savings(expense_id):
-    snaps = Exp_Snap.query.filter_by(expense_id = expense_id).all()
-    expense = Expenses.query.filter_by(id = expense_id).first()
-    earnings = expense.transferred
+    #Grabs distributed income and spending data
+    snaps = Exp_Snap.query.filter_by(expense_id = expense_id).all()     
+
+    #Grabs deposit data
+    deposits = Transaction.query.filter_by(expense_id = expense_id, user_id = session["user_id"], deposit_status = True).all()
+
+    earnings = 0
+    for deposit in deposits:        #Calculating total deposit for desired expense
+        earnings += deposit.amount
+        
     spending = 0
-    for snap in snaps:
+    for snap in snaps:      #Calculating total spending and income for desired expense
         earnings += snap.expense_earnings
         spending += snap.total_spending
-    return round(earnings-spending, 2)
+
+    
+    return round(earnings-spending, 2)      #Returns savings amount

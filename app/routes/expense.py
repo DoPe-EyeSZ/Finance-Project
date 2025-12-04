@@ -95,7 +95,7 @@ def transfer():
         expense_id = request.form.get("expense_id")
         amount = request.form.get("amount")
 
-        expense = Expenses.query.filter_by(id = int(expense_id)).first()        #FIGUREOUT WHY NOT COMMITING CHANGES
+        expense = Expenses.query.filter_by(id = int(expense_id)).first()        
 
         expense.transfer_in(float(amount))
 

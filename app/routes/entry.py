@@ -46,7 +46,9 @@ def add_entry():
 @entry.route("/entry/view_entry/<entry_id>", methods=["GET"])
 def view_entry(entry_id):
     if helper.check_login():
-        snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()        #Gets all data associated w/ requested entry
+        #Grabs data associated with desired entry (deposits, spending, allocated)
+
+        snapshots = Exp_Snap.query.filter_by(entry_id = int(entry_id)).all()        
         entry = Entry.query.filter_by(id = int(entry_id)).first()
         
         est_balance = {}        #Links the expense's total savings (amount able to spend) to the snapshot of the expense
@@ -59,8 +61,9 @@ def view_entry(entry_id):
                 savings = helper.calc_savings(snapshot.expense_id)      #Calculates the total savings to send to front
 
                 est_balance[snapshot] = round(savings,2)
-
-            spending = Transaction.query.filter_by(entry_id = entry_id).all()
+            print(est_balance)
+            spending = Transaction.query.filter_by(entry_id = entry_id, deposit_status = False).all()
+            deposits = Transaction.query.filter_by(entry_id = entry_id, deposit_status = True).all()
             total_spent = 0
             for spend in spending:
                 if not spend.credit_status:
@@ -70,7 +73,7 @@ def view_entry(entry_id):
             net_earnings = round(entry.income - total_spent, 2)
 
             db.session.commit()
-            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending, net_earnings = net_earnings, total_spent = total_spent)
+            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending, net_earnings = net_earnings, total_spent = total_spent, deposits = deposits)
         else:
             return redirect(url_for("entry.all_entry"))
     
@@ -140,13 +143,14 @@ def update_date(entry_id):
 def transfer():
     
     if helper.check_login():
+
         snap_id = request.form.get("snap_id")
         amount = request.form.get("amount")
         snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()
-
-        expense = Expenses.query.filter_by(id = int(snap.expense_id)).first()        #FIGUREOUT WHY NOT COMMITING CHANGES
-
-        expense.transfer_in(float(amount))
+        #__init__(self, expense_name, user_id, expense_id, amount, entry_id=None, reasoning=None):
+        deposit = Transaction(snap.expense_name, session["user_id"], snap.expense_id, float(amount), snap.entry_id, "Deposit")
+        db.session.add(deposit)
+        deposit.deposit_status = True
 
         db.session.commit()
         return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
