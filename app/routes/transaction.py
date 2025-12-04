@@ -49,21 +49,23 @@ def edit_spending(spending_id):
 @transaction.route("/delete_spending/<spending_id>", methods = ["POST"])
 def delete_spending(spending_id):
     if helper.check_login():
-        spending = Transaction.query.filter_by(id = spending_id).first()
-        snap = Exp_Snap.query.filter_by(entry_id = spending.entry_id, expense_id = spending.expense_id).first()
-        entry_id = spending.entry_id
+        #Grabs data associated with desired spending (spending column, snapshot of expense)
+        transaction = Transaction.query.filter_by(id = spending_id).first()
+        snap = Exp_Snap.query.filter_by(entry_id = transaction.entry_id, expense_id = transaction.expense_id).first()
 
         if request.method == "POST":
-            amount_removed = spending.amount
-            if spending.credit_status:
-                snap.credit_balance -= amount_removed
-            else:
-                snap.add_spending(-amount_removed)
+            transaction_amount = transaction.amount
 
-            db.session.delete(spending)
+            if transaction.credit_status:       #Subtracts total credit spending
+                snap.credit_balance -= transaction_amount
+            
+            elif not transaction.deposit_status:        #Subtracts total debit spending
+                snap.add_spending(-transaction_amount)
+
+            db.session.delete(transaction)
             db.session.commit()
 
-        return redirect(url_for("entry.view_entry", entry_id = entry_id))
+        return redirect(url_for("entry.view_entry", entry_id = transaction.entry_id))
     else:
         return redirect(url_for("user.login"))
     
