@@ -113,16 +113,19 @@ def archive_expense(expense_id):
         return redirect(url_for("user.login"))
     
 
-@expense.route("/transfer", methods = ["POST"])
-def transfer():
-    
+@expense.route("/deposit", methods = ["POST"])
+def deposit():
     if helper.check_login():
-        expense_id = request.form.get("expense_id")
-        amount = request.form.get("amount")
+        #Grabs the data from where route was requested
+        expense_id = int(request.form.get("expense_id"))
+        amount = float(request.form.get("amount"))
 
-        expense = Expenses.query.filter_by(id = int(expense_id)).first()        
+        expense = Expenses.query.filter_by(id = int(expense_id)).first()        #Use to retrieve name and id   
 
-        expense.transfer_in(float(amount))
+        #Creates new transaction 
+        deposit = Transaction(expense.name, session["user_id"], expense.id, amount, reasoning="Deposit")
+        deposit.deposit_status = True
+        db.session.add(deposit)
 
         db.session.commit()
         return redirect(url_for("expense.expenses"))

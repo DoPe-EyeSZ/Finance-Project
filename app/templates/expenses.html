@@ -14,7 +14,7 @@
         {% if active_expenses %}
         <div class="function-section">
             <h2 class="function-title">Deposit</h2>
-            <form action="/transfer" method="POST" class="inline-form">
+            <form action="/deposit" method="POST" class="inline-form">
                 <select name="expense_id" required>
                     <option value="">Select Expense</option>
                     {% for expense in active_expenses %}
