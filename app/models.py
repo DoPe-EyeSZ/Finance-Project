@@ -78,6 +78,7 @@ class Spending(db.Model):        #Stores every spending per entry
     expense_name = db.Column(db.String)
     amount = db.Column(db.Float)
     credit_status = db.Column(db.Boolean, default = False)
+    deposit_status = db.Column(db.Boolean, default = False)
     reasoning = db.Column(db.String(100), default = "N/A")
     date = db.Column(db.Integer, default = date.today())
 
@@ -91,6 +92,19 @@ class Spending(db.Model):        #Stores every spending per entry
             self.amount = amount
         else:
             self.entry_id = entry_id
+            self.expense_name = expense_name
+            self.user_id = user_id
+            self.expense_id = expense_id
+            self.amount = amount
+
+    def __init__(self, expense_name, user_id, expense_id, amount, reasoning=None):
+        if reasoning:
+            self.expense_name = expense_name
+            self.user_id = user_id
+            self.expense_id = expense_id
+            self.reasoning = reasoning
+            self.amount = amount
+        else:
             self.expense_name = expense_name
             self.user_id = user_id
             self.expense_id = expense_id
