@@ -3,28 +3,53 @@ from app.models import User, Expenses, Entry, Transaction, Exp_Snap
 from app import helper
 import os
 from app import db
+import time
 
 expense = Blueprint("expense", __name__, template_folder="templates")
 
 
 @expense.route("/expenses", methods = ["GET"])
 def expenses():
+
     if helper.check_login():
+        #Separating the types of expenses
         active_expenses = {}
         inactive_expenses = {}
-        all_expenses = {}
+
+        expense_data = {}       #Links expense id to total savings {expense_id: amount saved}
+
+        #Gathering all neccessary data
+        snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
+        deposits = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = True).all()
         expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
 
-        for expense in expenses:
-            if expense.status == True:
-                active_expenses[expense] = helper.calc_savings(expense.id)
+
+        #Calulating savings
+        for snap in snaps:      #Calculates net total from snapshots
+            expense_data[snap.expense_id] = expense_data.get(snap.expense_id, 0.0) + (snap.expense_earnings - snap.total_spending)
+
+        for deposit in deposits:        #Calculates total deposits per expense 
+            expense_data[deposit.expense_id] = expense_data.get(deposit.expense_id, 0.0) + deposit.amount
+
+        for expense in expenses:        #Separates expense types between archived and unarchived
+            if expense.status:
+                active_expenses[expense] = expense_data.get(expense.id, 0.0)
             else:
-                inactive_expenses[expense] = helper.calc_savings(expense.id)
+                inactive_expenses[expense] = expense_data.get(expense.id, 0.0)
 
-            all_expenses[expense] = helper.calc_savings(expense.id)
-    
 
-        return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = calculate_percentage(session["user_id"]), all_expenses = all_expenses)        #Shows all expenses
+        #Validates that active expense percentages sum to 100%      [allocation total, is_valid]
+        allocation_check = [0, True]
+        for expense in active_expenses:
+            allocation_check[0] += expense.percentage
+
+        if allocation_check[0] !=100:
+            allocation_check[1] = False
+
+        # Combined list for expense dropdown in template
+        all_expenses = list(active_expenses.keys()) + list(inactive_expenses.keys())        
+
+        return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = allocation_check, all_expenses = all_expenses)       
     
     else:
         return redirect(url_for("user.login")) 
@@ -112,19 +137,6 @@ def restore_expense(expense_id):
     restored_expense.status = True
     db.session.commit()
     return redirect(url_for("expense.expenses"))
-
-
-def calculate_percentage(user_id):
-    expenses = Expenses.query.filter_by(user_id = user_id, status = True).all()
-    total = 0
-    for expense in expenses:
-        if expense.status == True:      #Checks if the expense was deleted by user
-            total += expense.percentage
-    
-    if total!=100:
-        return [total, False]
-    else:
-        return [total, True]
     
 
 @expense.route("/reallocate", methods = ["POST"])

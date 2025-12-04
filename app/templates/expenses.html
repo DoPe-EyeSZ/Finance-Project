@@ -35,12 +35,10 @@
         <div class="function-section">
             <h2 class="function-title">Transfer</h2>
             <form action="/reallocate" method="POST" class="inline-form">
-                {% set ns = namespace(max=0) %}
                 <select name="from_expense" required>
                     <option value="">From Expense</option>
                     {% for expense in all_expenses %}
                         <option value="{{expense.id}}">{{expense.name}}</option>
-                        {% set ns.max = all_expenses[expense] %}
                     {% endfor %}
                 </select>
 
