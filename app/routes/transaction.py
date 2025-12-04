@@ -136,15 +136,15 @@ def pay_credit(spending_id):
         return redirect(url_for("user.login"))
     
 
-@transaction.route("/update_transaction_date/<spending_id>", methods = ["POST"])
-def update_transaction_date(spending_id):
+@transaction.route("/update_transaction_date/<transaction_id>", methods = ["POST"])
+def update_transaction_date(transaction_id):
     if helper.check_login():
-        spending = Transaction.query.filter_by(id = int(spending_id)).first()
+        transaction = Transaction.query.filter_by(id = int(transaction_id)).first()
         if request.method == "POST":
             new_date = request.form.get("new_date")
-            spending.date = new_date
+            transaction.date = new_date
             db.session.commit()
-            return redirect(url_for("entry.view_entry", entry_id = int(spending.entry_id)))
+            return redirect(url_for("entry.view_entry", entry_id = int(transaction.entry_id)))
     
     else:
         return redirect(url_for("user.login"))
