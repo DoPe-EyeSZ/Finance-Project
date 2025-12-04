@@ -159,3 +159,16 @@ def reallocate():
         return redirect(url_for("expense.expenses"))
     else:
         return redirect(url_for("user.login"))
+    
+
+def calculate_percentage(user_id):
+    expenses = Expenses.query.filter_by(user_id = user_id, status = True).all()
+    total = 0
+    for expense in expenses:
+        if expense.status == True:      #Checks if the expense was deleted by user
+            total += expense.percentage
+    
+    if total!=100:
+        return [total, False]
+    else:
+        return [total, True]
