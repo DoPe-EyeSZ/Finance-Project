@@ -192,8 +192,9 @@
                     </form>
                 </td>
                 <td>
-                    <form action="/delete_spending/{{deposit.id}}" method="POST" style="display: inline;">
+                    <form action="/delete_transaction/{{deposit.id}}" method="POST" style="display: inline;">
                         <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                        <input type="hidden" name="source" value="expenses">
                         {% if deposit.credit_status %}
                         <button class="btn btn-primary btn-sm" type="submit" formaction="/pay_credit/{{deposit.id}}">Pay Credit</button>
                         {% endif %}

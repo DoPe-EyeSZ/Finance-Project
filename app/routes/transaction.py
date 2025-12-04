@@ -60,26 +60,40 @@ def edit_transaction_amount(transaction_id):
         return redirect(url_for("user.login"))    
 
 
-@transaction.route("/delete_spending/<spending_id>", methods = ["POST"])
-def delete_spending(spending_id):
+@transaction.route("/delete_transaction/<transaction_id>", methods = ["POST"])
+def delete_transaction(transaction_id):
     if helper.check_login():
         #Grabs data associated with desired spending (spending column, snapshot of expense)
-        transaction = Transaction.query.filter_by(id = spending_id).first()
-        snap = Exp_Snap.query.filter_by(entry_id = transaction.entry_id, expense_id = transaction.expense_id).first()
+        transaction = Transaction.query.filter_by(id = transaction_id).first()
+        source = request.form.get("source")
 
-        if request.method == "POST":
+        #Deleting deposits
+        if transaction.deposit_status:
+            db.session.delete(transaction)
+
+            if source == "entry":        #Goes to entry deposit from entries 
+                db.session.commit()
+                return redirect(url_for("entry.view_entry", entry_id = transaction.entry_id))
+            
+            else:       #For deposits from manage expenses
+                db.session.commit()
+                return redirect(url_for("expense.expenses"))
+            
+        else:
+            #Editing spending/credit balance numbers
+            snap = Exp_Snap.query.filter_by(entry_id = transaction.entry_id, expense_id = transaction.expense_id).first()
             transaction_amount = transaction.amount
 
             if transaction.credit_status:       #Subtracts total credit spending
                 snap.credit_balance -= transaction_amount
             
-            elif not transaction.deposit_status:        #Subtracts total debit spending
-                snap.add_spending(-transaction_amount)
+            else:        #Subtracts total debit spending
+                snap.total_spending-=transaction_amount
 
             db.session.delete(transaction)
             db.session.commit()
 
-        return redirect(url_for("entry.view_entry", entry_id = transaction.entry_id))
+            return redirect(url_for("entry.view_entry", entry_id = transaction.entry_id))
     else:
         return redirect(url_for("user.login"))
     
