@@ -70,7 +70,7 @@ class Entry(db.Model):        #Stores each entry per user
         self.income = round(self.income, 2)
 
 
-class Spending(db.Model):        #Stores every spending per entry
+class Transaction(db.Model):        #Stores every transaction per entry
     id = db.Column(db.Integer, primary_key = True)
     entry_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer)
@@ -82,33 +82,17 @@ class Spending(db.Model):        #Stores every spending per entry
     reasoning = db.Column(db.String(100), default = "N/A")
     date = db.Column(db.Integer, default = date.today())
 
-    def __init__(self, entry_id, expense_name, user_id, expense_id, amount, reasoning=None):
-        if reasoning:
-            self.entry_id = entry_id
-            self.expense_name = expense_name
-            self.user_id = user_id
-            self.expense_id = expense_id
-            self.reasoning = reasoning
-            self.amount = amount
-        else:
-            self.entry_id = entry_id
-            self.expense_name = expense_name
-            self.user_id = user_id
-            self.expense_id = expense_id
-            self.amount = amount
+    def __init__(self, expense_name, user_id, expense_id, amount, entry_id=None, reasoning=None):
+        self.expense_name = expense_name
+        self.user_id = user_id
+        self.expense_id = expense_id
+        self.amount = amount
 
-    def __init__(self, expense_name, user_id, expense_id, amount, reasoning=None):
-        if reasoning:
-            self.expense_name = expense_name
-            self.user_id = user_id
-            self.expense_id = expense_id
+        if entry_id is not None:
+            self.entry_id = entry_id
+
+        if reasoning is not None:
             self.reasoning = reasoning
-            self.amount = amount
-        else:
-            self.expense_name = expense_name
-            self.user_id = user_id
-            self.expense_id = expense_id
-            self.amount = amount
 
 
 class Exp_Snap(db.Model):       #Stores a snapshot of the expense

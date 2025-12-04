@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash
-from app.models import User, Expenses, Entry, Spending, Exp_Snap
+from app.models import User, Expenses, Entry, Transaction, Exp_Snap
 from app import helper
 from .expense import calculate_percentage
 import os
@@ -60,7 +60,7 @@ def view_entry(entry_id):
 
                 est_balance[snapshot] = round(savings,2)
 
-            spending = Spending.query.filter_by(entry_id = entry_id).all()
+            spending = Transaction.query.filter_by(entry_id = entry_id).all()
             total_spent = 0
             for spend in spending:
                 if not spend.credit_status:
@@ -84,7 +84,7 @@ def delete_entry(entry_id):
     if helper.check_login():
         if request.method == "POST":        #Deletes all data assoicated with requested entry
             entry = Entry.query.filter_by(id = int(entry_id)).first()
-            spendings = Spending.query.filter_by(entry_id = entry_id).delete()
+            spendings = Transaction.query.filter_by(entry_id = entry_id).delete()
             snaps = Exp_Snap.query.filter_by(entry_id = entry_id).delete()
             db.session.delete(entry)
             db.session.commit()

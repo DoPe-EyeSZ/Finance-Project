@@ -1,12 +1,12 @@
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash
-from app.models import User, Expenses, Entry, Spending, Exp_Snap
+from app.models import User, Expenses, Entry, Transaction, Exp_Snap
 from app import helper
 import os
 from app import db
 
-spending = Blueprint("spending", __name__, template_folder="templates")
+transaction = Blueprint("transaction", __name__, template_folder="templates")
 
-@spending.route("/add_spending/<int:snap_id>", methods = ["POST"])
+@transaction.route("/add_spending/<int:snap_id>", methods = ["POST"])
 def add_spending(snap_id):
     if helper.check_login():
 
@@ -15,7 +15,9 @@ def add_spending(snap_id):
         reasoning = str(request.form.get("reasoning"))
         if request.method == "POST":
 
-            transaction = Spending(snap.entry_id, snap.expense_name, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
+            #    def __init__(self, expense_name, user_id, expense_id, amount, entry_id=None, reasoning=None):
+
+            transaction = Transaction( snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id,reasoning)     #Add spending to DB
             db.session.add(transaction)
             snap.add_spending(float(amount))
 
@@ -25,10 +27,10 @@ def add_spending(snap_id):
         return redirect(url_for("user.login"))
 
 
-@spending.route("/edit_spending/<spending_id>", methods = ["POST"])
+@transaction.route("/edit_spending/<spending_id>", methods = ["POST"])
 def edit_spending(spending_id):
     if helper.check_login():
-        spending = Spending.query.filter_by(id = spending_id).first()
+        spending = Transaction.query.filter_by(id = spending_id).first()
         snap = Exp_Snap.query.filter_by(entry_id = spending.entry_id, expense_id = spending.expense_id).first()
         if request.method == "POST":
             new_amount = float(request.form.get("amount"))
@@ -44,10 +46,10 @@ def edit_spending(spending_id):
         return redirect(url_for("user.login"))    
 
 
-@spending.route("/delete_spending/<spending_id>", methods = ["POST"])
+@transaction.route("/delete_spending/<spending_id>", methods = ["POST"])
 def delete_spending(spending_id):
     if helper.check_login():
-        spending = Spending.query.filter_by(id = spending_id).first()
+        spending = Transaction.query.filter_by(id = spending_id).first()
         snap = Exp_Snap.query.filter_by(entry_id = spending.entry_id, expense_id = spending.expense_id).first()
         entry_id = spending.entry_id
 
@@ -66,7 +68,7 @@ def delete_spending(spending_id):
         return redirect(url_for("user.login"))
     
 
-@spending.route("/add_credit/<int:snap_id>", methods = ["POST"])
+@transaction.route("/add_credit/<int:snap_id>", methods = ["POST"])
 def add_credit(snap_id):
     if helper.check_login():
 
@@ -75,7 +77,7 @@ def add_credit(snap_id):
         reasoning = str(request.form.get("reasoning"))
         if request.method == "POST":
 
-            transaction = Spending(snap.entry_id, snap.expense_name, session["user_id"], snap.expense_id, amount, reasoning)     #Add spending to DB
+            transaction = Transaction(snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id, reasoning)     #Add spending to DB
             transaction.credit_status = True
             snap.add_credit(amount)
             db.session.add(transaction)
@@ -86,10 +88,10 @@ def add_credit(snap_id):
         return redirect(url_for("user.login"))
 
 
-@spending.route("/pay_credit/<spending_id>", methods = ["POST"])
+@transaction.route("/pay_credit/<spending_id>", methods = ["POST"])
 def pay_credit(spending_id):
     if helper.check_login():
-        credit_spending = Spending.query.filter_by(id = int(spending_id)).first()
+        credit_spending = Transaction.query.filter_by(id = int(spending_id)).first()
         snap = Exp_Snap.query.filter_by(entry_id = credit_spending.entry_id, expense_id = credit_spending.expense_id).first()
 
         if request.method == "POST":
@@ -104,10 +106,10 @@ def pay_credit(spending_id):
         return redirect(url_for("user.login"))
     
 
-@spending.route("/update_transaction_date/<spending_id>", methods = ["POST"])
+@transaction.route("/update_transaction_date/<spending_id>", methods = ["POST"])
 def update_transaction_date(spending_id):
     if helper.check_login():
-        spending = Spending.query.filter_by(id = int(spending_id)).first()
+        spending = Transaction.query.filter_by(id = int(spending_id)).first()
         if request.method == "POST":
             new_date = request.form.get("new_date")
             spending.date = new_date
@@ -118,10 +120,10 @@ def update_transaction_date(spending_id):
         return redirect(url_for("user.login"))
     
 
-@spending.route("/edit_reasoning/<spent_id>", methods = ["POST"])
+@transaction.route("/edit_reasoning/<spent_id>", methods = ["POST"])
 def edit_reasoning(spent_id):
     if helper.check_login():
-        spending = Spending.query.filter_by(id = int(spent_id)).first()
+        spending = Transaction.query.filter_by(id = int(spent_id)).first()
         if request.method == "POST":
             new = request.form.get("reasoning")
             spending.reasoning = new

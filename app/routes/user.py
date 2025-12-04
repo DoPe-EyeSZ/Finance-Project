@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash, jsonify
-from app.models import User, Expenses, Entry, Spending, Exp_Snap
+from app.models import User, Expenses, Entry, Transaction, Exp_Snap
 from app import helper
 import os
 from app import db
@@ -29,7 +29,7 @@ def admin():
                 user_expense = Expenses.query.filter_by(user_id = user.id).all()
                 user_entry = Entry.query.filter_by(user_id = user.id).all()
                 user_snapshots = Exp_Snap.query.filter_by(user_id = user.id).all()
-                user_spending = Spending.query.filter_by(user_id = user.id).all()
+                user_spending = Transaction.query.filter_by(user_id = user.id).all()
 
                 info.append({"User": user, "Expenses": user_expense, "Entry": user_entry, "Snapshot": user_snapshots, "Spending": user_spending})
 
@@ -127,7 +127,7 @@ def delete():        #Deletes User account from DB
 
         user_entry = Entry.query.filter_by(user_id = session["user_id"]).delete()
 
-        user_spending = Spending.query.filter_by(user_id = session["user_id"]).delete()
+        user_spending = Transaction.query.filter_by(user_id = session["user_id"]).delete()
 
         user_snapshot = Exp_Snap.query.filter_by(user_id = session["user_id"]).delete()
 
@@ -239,7 +239,7 @@ def summary():
 
         db.session.commit()
         
-        spending = Spending.query.filter_by(user_id = session["user_id"]).all()
+        spending = Transaction.query.filter_by(user_id = session["user_id"]).all()
 
 
         return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending, all_expense_id = all_expense_id)
@@ -308,7 +308,7 @@ def edit_profile():
 def get_spending_income_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
-        spendings = Spending.query.filter_by(user_id = session["user_id"], credit_status = False).all()
+        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False).all()
 
         income_data = {}
         for entry in entries:
@@ -415,7 +415,7 @@ def save_spend_data():
 def all_spend_data():
     if helper.check_login():
 
-        spendings = Spending.query.filter_by(user_id = session["user_id"], credit_status = False).all()
+        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False).all()
 
         expense_totals = {}
 
@@ -455,7 +455,7 @@ def all_spend_data():
 def savings_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
-        spendings = Spending.query.filter_by(user_id = session["user_id"], credit_status = False).all()
+        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False).all()
 
         #{entryid: spending amount}
         spending_data = {}

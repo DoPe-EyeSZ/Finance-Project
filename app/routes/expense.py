@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash
-from app.models import User, Expenses, Entry, Spending, Exp_Snap
+from app.models import User, Expenses, Entry, Transaction, Exp_Snap
 from app import helper
 import os
 from app import db
