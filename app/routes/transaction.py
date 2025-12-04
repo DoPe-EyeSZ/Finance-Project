@@ -15,8 +15,6 @@ def add_spending(snap_id):
         reasoning = str(request.form.get("reasoning"))
         if request.method == "POST":
 
-            #    def __init__(self, expense_name, user_id, expense_id, amount, entry_id=None, reasoning=None):
-
             transaction = Transaction( snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id,reasoning)     #Add spending to DB
             db.session.add(transaction)
             snap.add_spending(float(amount))
@@ -27,20 +25,36 @@ def add_spending(snap_id):
         return redirect(url_for("user.login"))
 
 
-@transaction.route("/edit_spending/<spending_id>", methods = ["POST"])
-def edit_spending(spending_id):
+@transaction.route("/edit_transaction_amount/<transaction_id>", methods = ["POST"])
+def edit_transaction_amount(transaction_id):
     if helper.check_login():
-        spending = Transaction.query.filter_by(id = spending_id).first()
-        snap = Exp_Snap.query.filter_by(entry_id = spending.entry_id, expense_id = spending.expense_id).first()
-        if request.method == "POST":
-            new_amount = float(request.form.get("amount"))
-            reimburse = new_amount - spending.amount
-
-            snap.add_spending(reimburse)
-            spending.amount = request.form.get("amount")
-            db.session.commit()
         
-        return redirect(url_for("entry.view_entry", entry_id = spending.entry_id))
+        
+        if request.method == "POST":
+            transaction = Transaction.query.filter_by(id = transaction_id).first()
+            new_amount = float(request.form.get("amount"))
+
+            #Changing deposit amount
+            if transaction.deposit_status:
+                transaction.amount = new_amount
+                db.session.commit()
+
+                if transaction.entry_id is not None:        #For deposit from entries 
+                    return redirect(url_for("entry.view_entry", entry_id = transaction.entry_id))
+                
+                else:       #For deposits from manage expenses
+                    return redirect(url_for("expense.expenses"))
+                
+            #Changing spending amount    
+            else:       
+                #Needed to edit amount spent for expense
+                snap = Exp_Snap.query.filter_by(entry_id = transaction.entry_id, expense_id = transaction.expense_id).first()
+                reimburse = new_amount - transaction.amount
+                snap.add_spending(reimburse)
+                transaction.amount = new_amount
+                db.session.commit()
+                return redirect(url_for("entry.view_entry", entry_id = transaction.entry_id))
+            
 
     else:
         return redirect(url_for("user.login"))    

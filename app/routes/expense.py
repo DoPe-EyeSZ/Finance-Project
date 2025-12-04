@@ -47,9 +47,12 @@ def expenses():
             allocation_check[1] = False
 
         # Combined list for expense dropdown in template
-        all_expenses = list(active_expenses.keys()) + list(inactive_expenses.keys())        
+        all_expenses = list(active_expenses.keys()) + list(inactive_expenses.keys())
 
-        return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = allocation_check, all_expenses = all_expenses)       
+        #List of all deposits for display
+        deposits = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = True).all()
+
+        return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = allocation_check, all_expenses = all_expenses, deposits = deposits)       
     
     else:
         return redirect(url_for("user.login")) 
