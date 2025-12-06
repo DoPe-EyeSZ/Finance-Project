@@ -14,6 +14,7 @@
         {% if active_expenses %}
         <div class="function-section">
             <h2 class="function-title">Deposit</h2>
+            <p class="function-helper-text"><span class="tip-star">★</span> Add funds directly to a specific expense category</p>
             <form action="/deposit" method="POST" class="inline-form">
                 <select name="expense_id" required>
                     <option value="">Select Expense</option>
@@ -34,6 +35,7 @@
 
         <div class="function-section">
             <h2 class="function-title">Transfer</h2>
+            <p class="function-helper-text"><span class="tip-star">★</span> Reallocate funds between existing expense categories</p>
             <form action="/reallocate" method="POST" class="inline-form">
                 <select name="from_expense" required>
                     <option value="">From Expense</option>
