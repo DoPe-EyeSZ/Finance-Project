@@ -1781,3 +1781,54 @@ h2 {
 .stats-table thead th {
     font-size: 1.00em;
 }
+
+.display-text {
+    color: #d0d0d0;
+    font-size: 1em;
+}
+
+.log-row .display-mode {
+    padding: 8px 0;
+}
+
+/* Custom styling for info buttons */
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: #ffffff !important;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+    color: #ffffff !important;
+}
+
+.btn-info:focus,
+.btn-info:active {
+    background-color: #117a8b;
+    border-color: #10707f;
+    color: #ffffff !important;
+}
+
+/* Highlight rows with credit status */
+.log-row.credit-row {
+    background-color: #1e2530 !important;
+    border-left: 4px solid #2d6cdf;
+}
+
+.log-row.credit-row:hover {
+    background-color: #252d3a !important;
+}
+
+.edit-toggle-btn.btn-info {
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+.edit-toggle-btn.btn-secondary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+}
