@@ -149,96 +149,132 @@
 
         {% if deposits %}
         <hr class="section-divider">
-        <h1 class="section-title">Deposit Log</h1>
-        <table class="expense-table">
-            <thead>
-                <tr>
-                    <th>Expense</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Reasoning</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for deposit in deposits %}
-                <tr>
-                    <td>{{deposit.expense_name}}</td>
-                    <td>{{deposit.date}}</td>
-                    <td class="spent-cell">${{deposit.amount}}</td>
-                    <td>{{deposit.reasoning}}</td>
-                    {% if deposit.entry_id %}
-                        <td>
-                            <a href="{{url_for('entry.view_entry', entry_id = deposit.entry_id)}}" class="btn btn-success">View</a>
-                        </td>
-                    {% else %}
-                        <td>
-                            <a href="{{url_for('expense.expenses')}}" class="btn btn-success">View</a>
-                        </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="collapsible-section">
+            <div class="collapsible-header" onclick="toggleSection(this)">
+                <div class="collapsible-title-wrapper">
+                    <h2 class="collapsible-title">Deposit Log</h2>
+                    <span class="item-count">{{ deposits|length }} deposits</span>
+                </div>
+                <span class="collapsible-arrow">▼</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="collapsible-inner">
+                    <table class="expense-table">
+                        <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Reasoning</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for deposit in deposits %}
+                            <tr>
+                                <td>{{deposit.expense_name}}</td>
+                                <td>{{deposit.date}}</td>
+                                <td class="spent-cell">${{deposit.amount}}</td>
+                                <td>{{deposit.reasoning}}</td>
+                                {% if deposit.entry_id %}
+                                    <td>
+                                        <a href="{{url_for('entry.view_entry', entry_id = deposit.entry_id)}}" class="btn btn-success">View</a>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <a href="{{url_for('expense.expenses')}}" class="btn btn-success">View</a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         {% endif %}
 
 
         {% if spending %}
         <hr class="section-divider">
-        <h1 class="section-title">Spending Log</h1>
-        <table class="expense-table">
-            <thead>
-                <tr>
-                    <th>Expense</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Reasoning</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for spent in spending %}
-                <tr>
-                    <td>{{spent.expense_name}}</td>
-                    <td>{{spent.date}}</td>
-                    <td class="spent-cell">${{spent.amount}}</td>
-                    <td>{{spent.reasoning}}</td>
-                    <td>
-                        <a href="{{url_for('entry.view_entry', entry_id = spent.entry_id)}}" class="btn btn-success">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="collapsible-section">
+            <div class="collapsible-header" onclick="toggleSection(this)">
+                <div class="collapsible-title-wrapper">
+                    <h2 class="collapsible-title">Spending Log</h2>
+                    <span class="item-count">{{ spending|length }} expenses</span>
+                </div>
+                <span class="collapsible-arrow">▼</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="collapsible-inner">
+                    <table class="expense-table">
+                        <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Reasoning</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for spent in spending %}
+                            <tr>
+                                <td>{{spent.expense_name}}</td>
+                                <td>{{spent.date}}</td>
+                                <td class="spent-cell">${{spent.amount}}</td>
+                                <td>{{spent.reasoning}}</td>
+                                <td>
+                                    <a href="{{url_for('entry.view_entry', entry_id = spent.entry_id)}}" class="btn btn-success">View</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         {% endif %}
 
         {% if credits %}
         <hr class="section-divider">
-        <h1 class="section-title">Credit Spending Log</h1>
-        <table class="expense-table">
-            <thead>
-                <tr>
-                    <th>Expense</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Reasoning</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for credit in credits %}
-                <tr>
-                    <td>{{credit.expense_name}}</td>
-                    <td>{{credit.date}}</td>
-                    <td class="spent-cell">${{credit.amount}}</td>
-                    <td>{{credit.reasoning}}</td>
-                    <td>
-                        <a href="{{url_for('entry.view_entry', entry_id = credit.entry_id)}}" class="btn btn-success">View</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="collapsible-section">
+            <div class="collapsible-header" onclick="toggleSection(this)">
+                <div class="collapsible-title-wrapper">
+                    <h2 class="collapsible-title">Credit Spending Log</h2>
+                    <span class="item-count">{{ credits|length }} transactions</span>
+                </div>
+                <span class="collapsible-arrow">▼</span>
+            </div>
+            <div class="collapsible-content">
+                <div class="collapsible-inner">
+                    <table class="expense-table">
+                        <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Reasoning</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for credit in credits %}
+                            <tr>
+                                <td>{{credit.expense_name}}</td>
+                                <td>{{credit.date}}</td>
+                                <td class="spent-cell">${{credit.amount}}</td>
+                                <td>{{credit.reasoning}}</td>
+                                <td>
+                                    <a href="{{url_for('entry.view_entry', entry_id = credit.entry_id)}}" class="btn btn-success">View</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         {% endif %}
 
         {% if not expense_data %}
@@ -257,5 +293,10 @@
 
 
 {% block scripts%}
-
+<script>
+function toggleSection(header) {
+    const section = header.parentElement;
+    section.classList.toggle('active');
+}
+</script>
 {% endblock%}
