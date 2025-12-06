@@ -212,6 +212,35 @@
         </table>
         {% endif %}
 
+        {% if credits %}
+        <hr class="section-divider">
+        <h1 class="section-title">Credit Spending Log</h1>
+        <table class="expense-table">
+            <thead>
+                <tr>
+                    <th>Expense</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Reasoning</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for credit in credits %}
+                <tr>
+                    <td>{{credit.expense_name}}</td>
+                    <td>{{credit.date}}</td>
+                    <td class="spent-cell">${{credit.amount}}</td>
+                    <td>{{credit.reasoning}}</td>
+                    <td>
+                        <a href="{{url_for('entry.view_entry', entry_id = credit.entry_id)}}" class="btn btn-success">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
         {% if not expense_data %}
         <div class="empty-state">
             <div class="empty-icon">📊</div>

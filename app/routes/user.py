@@ -241,15 +241,16 @@ def summary():
         
 
 
-        #Used for displaying all spending data
+        #Used for displaying all spending/credit data
         spending = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = False).all()
+        credits = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = False, credit_status = True).all()
 
         db.session.commit()
         
         return render_template("summary.html", user = helper.get_user(session["user_id"]), 
                                active_expenses = active_expenses, inactive_expenses = inactive_expenses, 
                                lifetime_stats = accumulated_expense_data, spending = spending, 
-                               expense_data = expense_data, deposits = deposits)
+                               expense_data = expense_data, deposits = deposits, credits = credits)
     
 
     else:
