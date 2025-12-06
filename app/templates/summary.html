@@ -71,7 +71,7 @@
             {% set spent = active_expenses[expense_id]["spending"]%}
             {% set saved = active_expenses[expense_id]["savings"]%}
             {% set balance = active_expenses[expense_id]["balance"]%}
-            {% set transferred = active_expenses[expense_id]["deposits"]%}
+            {% set deposit = active_expenses[expense_id]["deposits"]%}
             {% set credit_balance = active_expenses[expense_id]["credit_balance"]%}
 
             <table class="expense-table stats-table">
@@ -89,7 +89,11 @@
                     <tr>
                         <td class="balance-cell" style="color: #a7c4ff;">${{balance}}</td>
                         <td class="earnings-cell" style="color: #5fb878;">${{earned}}</td>
-                        <td>${{transferred}}</td>
+                        {% if deposit %}
+                            <td>${{deposit}}</td>
+                        {% else %}
+                            <td>$0.0</td>
+                        {% endif %}
                         <td class="spent-cell" style="color: #e87373;">${{spent}}</td>
                         <td>${{credit_balance}}</td>
                         <td class="savings-cell" style="color: #5fb878;">${{saved}}</td>
@@ -141,6 +145,43 @@
         {% endfor %}
         </div>
         {% endif %}
+
+
+        {% if deposits %}
+        <hr class="section-divider">
+        <h1 class="section-title">Deposit Log</h1>
+        <table class="expense-table">
+            <thead>
+                <tr>
+                    <th>Expense</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Reasoning</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deposit in deposits %}
+                <tr>
+                    <td>{{deposit.expense_name}}</td>
+                    <td>{{deposit.date}}</td>
+                    <td class="spent-cell">${{deposit.amount}}</td>
+                    <td>{{deposit.reasoning}}</td>
+                    {% if deposit.entry_id %}
+                        <td>
+                            <a href="{{url_for('entry.view_entry', entry_id = deposit.entry_id)}}" class="btn btn-success">View</a>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href="{{url_for('expense.expenses')}}" class="btn btn-success">View</a>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
 
         {% if spending %}
         <hr class="section-divider">

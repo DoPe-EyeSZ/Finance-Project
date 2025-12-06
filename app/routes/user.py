@@ -143,7 +143,6 @@ def delete():        #Deletes User account from DB
 
 @user.route("/summary", methods=["GET"])
 def summary():
-    start_time =  time.perf_counter()  # Record the starting time
     if "user_id" in session:
 
         #Gathering raw data (earning, spending, credit balance, deposits)
@@ -206,6 +205,17 @@ def summary():
             accumulated_expense_data["Savings"] += savings
 
 
+        #Rounding final data values
+        for data in accumulated_expense_data:
+            accumulated_expense_data[data] = round(accumulated_expense_data[data], 2)
+
+        for expense_id in expense_data:
+            expense_dict = expense_data[expense_id]
+            for key, value in expense_dict.items():
+                if isinstance(value, (int, float)):
+                    expense_dict[key] = round(value, 2)
+
+                
         #Separating expenses, finalizing totals
         active_expenses = {}
         inactive_expenses = {}
@@ -215,12 +225,12 @@ def summary():
             expense_dict = expense_data[expense.id]
             expense_dict["name"] = expense.name     #Adding name
 
-            expense.earnings = float(expense_dict.get("earnings", 0.0))
-            expense.spendings = float(expense_dict.get("spending", 0.0))
-            expense.transferred = float(expense_dict.get("deposits", 0.0))
-            expense.balance = float(expense_dict.get("balance", 0.0))
-            expense.credit_balance = float(expense_dict.get("credit_balance", 0.0))
-            expense.savings = float(expense_dict.get("savings", 0.0))
+            expense.earnings = float(round(expense_dict.get("earnings", 0.0), 2))
+            expense.spendings = float(round(expense_dict.get("spending", 0.0), 2))
+            expense.transferred = float(round(expense_dict.get("deposits", 0.0), 2))
+            expense.balance = float(round(expense_dict.get("balance", 0.0), 2))
+            expense.credit_balance = float(round(expense_dict.get("credit_balance", 0.0), 2))
+            expense.savings = float(round(expense_dict.get("savings", 0.0), 2))
 
             if expense.status:      #Separating expenses
                 active_expenses[expense.id] = expense_dict
@@ -228,25 +238,18 @@ def summary():
                 inactive_expenses[expense.id] = expense_dict
 
         
-        #Rounding final accumulated_expense_data values
-        for data in accumulated_expense_data:
-            accumulated_expense_data[data] = round(accumulated_expense_data[data], 2)
+        
 
 
         #Used for displaying all spending data
-        spending = Transaction.query.filter_by(user_id = session["user_id"]).all()
+        spending = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = False).all()
+
         db.session.commit()
         
-        
-
-        end_time = time.perf_counter()    # Record the ending time
-
-        elapsed_time = end_time - start_time
-
-        # Print the run time
-        print(f"Code execution time: {elapsed_time:.4f} seconds")
-        
-        return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = accumulated_expense_data, spending = spending, expense_data = expense_data)
+        return render_template("summary.html", user = helper.get_user(session["user_id"]), 
+                               active_expenses = active_expenses, inactive_expenses = inactive_expenses, 
+                               lifetime_stats = accumulated_expense_data, spending = spending, 
+                               expense_data = expense_data, deposits = deposits)
     
 
     else:
@@ -314,7 +317,7 @@ def edit_profile():
 def get_spending_income_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
-        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False).all()
+        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False, deposit_status = False).all()
 
         income_data = {}
         for entry in entries:
@@ -421,7 +424,7 @@ def save_spend_data():
 def all_spend_data():
     if helper.check_login():
 
-        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False).all()
+        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False, deposit_status = False).all()
 
         expense_totals = {}
 
@@ -461,7 +464,7 @@ def all_spend_data():
 def savings_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
-        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False).all()
+        spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False, deposit_status = False).all()
 
         #{entryid: spending amount}
         spending_data = {}
@@ -491,7 +494,6 @@ def savings_data():
             id = item[1][1]
             income = item[1][0]
             entry_income[id] = income
-        print(entry_income)
 
         income_spending = {}        #{income: spending}
         for entry_id in entry_income:
