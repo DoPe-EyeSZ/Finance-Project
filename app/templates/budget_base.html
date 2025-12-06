@@ -14,40 +14,35 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">PTFT</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <!-- Left items -->
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/home">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/summary">Summary</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/entry">Entries</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/expenses">Manage Expenses</a>
-            </li>
-          </ul>
+        <!-- Left items -->
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/summary">Summary</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/entry">Entries</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/expenses">Manage Expenses</a>
+          </li>
+        </ul>
 
-          <!-- Right items -->
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/profile">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link logout" href="/logout">Logout</a>
-            </li>
-          </ul>
-        </div>
+        <!-- Right items -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link logout" href="/logout">Logout</a>
+          </li>
+        </ul>
       </div>
     </nav>
 
@@ -73,6 +68,14 @@
     </script>
 
     <script>
+    // Ensure Bootstrap is loaded and working
+    document.addEventListener('DOMContentLoaded', function() {
+      // Test if Bootstrap is available
+      if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap JS not loaded!');
+      }
+    });
+
     window.addEventListener("beforeunload", () => {
       localStorage.setItem("scrollY", window.scrollY);
     });
