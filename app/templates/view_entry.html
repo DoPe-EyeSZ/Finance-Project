@@ -123,6 +123,7 @@
                 <td>{{spent.expense_name}}</td>
                 <td>
                     <form action="/update_transaction_date/{{spent.id}}" method="POST" class="inline-date-form-table">
+                        <input type="hidden" name="source" value="entry">
                         <input type="date" value="{{spent.date}}" name="new_date" class="date-input-table">
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </form>
@@ -137,13 +138,15 @@
                     </form>
                 </td>
                 <td>
-                    <form action="/edit_reasoning/{{spent.id}}" method="POST" class="inline-edit-form">
+                    <form action="/edit_transaction_reasoning/{{spent.id}}" method="POST" class="inline-edit-form">
+                        <input type="hidden" name="source" value="entry">
                         <input type="text" placeholder="{{spent.reasoning}}" name="reasoning" class="note-input" required>
                         <button class="btn btn-success btn-sm" type="submit">Save</button>
                     </form>
                 </td>
                 <td>
                     <form action="/delete_transaction/{{spent.id}}" method="POST" style="display: inline;">
+                        <input type="hidden" name="source" value="entry">
                         <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                         {% if spent.credit_status %}
                         <button class="btn btn-primary btn-sm" type="submit" formaction="/pay_credit/{{spent.id}}">Pay Credit</button>
@@ -176,6 +179,7 @@
                 <td>{{deposit.expense_name}}</td>
                 <td>
                     <form action="/update_transaction_date/{{deposit.id}}" method="POST" class="inline-date-form-table">
+                        <input type="hidden" name="source" value="entry">
                         <input type="date" value="{{deposit.date}}" name="new_date" class="date-input-table">
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </form>

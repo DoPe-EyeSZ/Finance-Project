@@ -139,12 +139,22 @@ def pay_credit(spending_id):
 @transaction.route("/update_transaction_date/<transaction_id>", methods = ["POST"])
 def update_transaction_date(transaction_id):
     if helper.check_login():
+
+        #Grabs new data
+        new_date = request.form.get("new_date")
+        request_source = request.form.get("source")
+
+        #Updates date of transaction
         transaction = Transaction.query.filter_by(id = int(transaction_id)).first()
-        if request.method == "POST":
-            new_date = request.form.get("new_date")
-            transaction.date = new_date
-            db.session.commit()
+        transaction.date = new_date
+        db.session.commit()
+
+        #Decides where to redirect to
+        if request_source == "entry":
             return redirect(url_for("entry.view_entry", entry_id = int(transaction.entry_id)))
+        
+        else:
+            return redirect(url_for("expense.expenses"))
     
     else:
         return redirect(url_for("user.login"))

@@ -172,6 +172,7 @@
                 <td>{{deposit.expense_name}}</td>
                 <td>
                     <form action="/update_transaction_date/{{deposit.id}}" method="POST" class="inline-date-form-table">
+                        <input type="hidden" name="source" value="expenses">
                         <input type="date" value="{{deposit.date}}" name="new_date" class="date-input-table">
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>
                     </form>
