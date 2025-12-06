@@ -150,15 +150,22 @@ def update_transaction_date(transaction_id):
         return redirect(url_for("user.login"))
     
 
-@transaction.route("/edit_reasoning/<spent_id>", methods = ["POST"])
-def edit_reasoning(spent_id):
+@transaction.route("/edit_transaction_reasoning/<transaction_id>", methods = ["POST"])
+def edit_transaction_reasoning(transaction_id):
     if helper.check_login():
-        spending = Transaction.query.filter_by(id = int(spent_id)).first()
-        if request.method == "POST":
-            new = request.form.get("reasoning")
-            spending.reasoning = new
-            db.session.commit()
-            return redirect(url_for("entry.view_entry", entry_id = int(spending.entry_id)))
+        transaction = Transaction.query.filter_by(id = int(transaction_id)).first()
 
+        #Updates to new reasoning
+        new_reasoning = request.form.get("reasoning")
+        transaction.reasoning = new_reasoning
+        db.session.commit()
+
+        #Decides where to redirect user back to
+        request_source = request.form.get("source")
+        if request_source == "entry":       #Redirects back to entry
+            return redirect(url_for("entry.view_entry", entry_id = int(transaction.entry_id)))
+        
+        else:       #Redirects back to manage expense section
+            return redirect(url_for("expense.expenses"))
     else:
         return redirect(url_for("user.login"))

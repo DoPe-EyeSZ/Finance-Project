@@ -190,7 +190,8 @@
                     </form>
                 </td>
                 <td>
-                    <form action="/edit_reasoning/{{deposit.id}}" method="POST" class="inline-edit-form">
+                    <form action="/edit_transaction_reasoning/{{deposit.id}}" method="POST" class="inline-edit-form">
+                        <input type="hidden" name="source" value="entry">
                         <input type="text" placeholder="{{deposit.reasoning}}" name="reasoning" class="note-input" required>
                         <button class="btn btn-success btn-sm" type="submit">Save</button>
                     </form>
