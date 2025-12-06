@@ -144,109 +144,126 @@ def delete():        #Deletes User account from DB
 @user.route("/summary", methods=["GET"])
 def summary():
     if "user_id" in session:
+
+
+        #Gathering raw data (earning, spending, credit balance, deposits)
+
+
+        expense_data = {}       #Store raw data from snapshots
+        accumulated_expense_data = {"Balance": 0.0,
+                                    "Earnings": 0.0,
+                                    "Deposits": 0.0,
+                                    "Spendings": 0.0,
+                                    "Savings": 0.0,
+                                    "Credit_Balance": 0.0}
+       
+        #Grab  important information
+        snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
+        deposits = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = True).all()
+
+
+
+
+        for snap in snaps:
+            earnings = float(snap.expense_earnings)
+            spending = float(snap.total_spending)
+            credit_balance = float(snap.credit_balance)
+           
+            #Adding all data across all snapshots for ONE expense
+            if snap.expense_id not in expense_data:
+                expense_data[snap.expense_id] = {}
+               
+            expense_dict = expense_data[snap.expense_id]       #Shortening code for readability
+            expense_dict["earnings"] = expense_dict.get("earnings", 0.0) + earnings
+            expense_dict["spending"] = expense_dict.get("spending", 0.0) + spending
+            expense_dict["credit_balance"] = expense_dict.get("credit_balance", 0.0) + credit_balance
+
+
+            #Adding data to accumulated_expense_data
+            accumulated_expense_data["Earnings"] += earnings
+            accumulated_expense_data["Spendings"] += spending
+            accumulated_expense_data["Credit_Balance"] += credit_balance
+           
+
+
+        for deposit in deposits:
+            deposit_amount = deposit.amount
+            expense_dict = expense_data[deposit.expense_id]
+            expense_dict["deposits"] = expense_dict.get("deposits", 0.0) + deposit_amount
+
+
+            #Adding deposit to accumulated_expense_data
+            accumulated_expense_data["Deposits"] += deposit_amount
+
+
+
+
+        #Deriving total balance and savings data
+        for expense_id in expense_data:
+            expense_dict = expense_data[expense_id]
+
+
+            #Calculating balance and savings
+            balance = expense_dict.get("earnings", 0.0) + expense_dict.get("deposits", 0.0)
+            savings = balance - expense_dict.get("spending", 0.0)
+
+
+            expense_dict["balance"] = balance
+            expense_dict["savings"] = savings
+
+
+            #Adding total balance and savings to accumulated_expense_data
+            accumulated_expense_data["Balance"] += balance
+            accumulated_expense_data["Savings"] += savings
+
+
+        #Rounding all data
+        for data in accumulated_expense_data:
+            accumulated_expense_data[data] = round(accumulated_expense_data[data], 2)
+
+        #Separating expenses, finalizing totals
         active_expenses = {}
         inactive_expenses = {}
-        
-        snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
-
         expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
-        expenses_ID = {expense.id: expense for expense in expenses}
+
+
+        for expense in expenses:        #Finalizing totals
+            expense_dict = expense_data[expense.id]
+            expense_dict["name"] = expense.name     #Adding name
+
+
+            expense.earnings = float(expense_dict.get("earnings", 0.0))
+            expense.spendings = float(expense_dict.get("spending", 0.0))
+            expense.transferred = float(expense_dict.get("deposits", 0.0))
+            expense.balance = float(expense_dict.get("balance", 0.0))
+            expense.credit_balance = float(expense_dict.get("credit_balance", 0.0))
+            expense.savings = float(expense_dict.get("savings", 0.0))
+
+
+            if expense.status:      #Separating expenses
+                active_expenses[expense.id] = expense_dict
+            else:
+                inactive_expenses[expense.id] = expense_dict
+
+
+       
         
-        for snap in snaps:      #Gathering snapshot data
-
-            expense = expenses_ID[snap.expense_id]
-
-            if expense.status:      #Checks to see if expense is not deleted
-
-                if snap.expense_id in active_expenses:     #Updates data in dict
-                    expense = active_expenses[snap.expense_id]
-                    expense["earning"] += snap.expense_earnings
-                    expense["spending"] += snap.total_spending
-                    expense["credit_balance"] += snap.credit_balance
-                    
-                else:       #Creates new key-val pair [name, earnings, spending]
-                    active_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending, "credit_balance": snap.credit_balance}             
-            
-            else:
-
-                if snap.expense_id in inactive_expenses:
-                    expense = inactive_expenses[snap.expense_id]
-                    expense["earning"] += snap.expense_earnings
-                    expense["spending"] += snap.total_spending
-                    expense["credit_balance"] += snap.credit_balance
-                
-                else:
-                    inactive_expenses[snap.expense_id] = {"name": snap.expense_name, "earning": snap.expense_earnings, "spending": snap.total_spending, "credit_balance": snap.credit_balance}             
-            
-
-        overview_stats = {"Balance": 0.0, "Earnings": 0.0, "Transferred": 0.0, "Spendings": 0.0, "Savings": 0.0, "Credit_Balance": 0.0}      #Gather's user overview
-
-        #Combines all the expense id's in a list to update for overview_stats
-        all_expense_id = list(active_expenses.keys()) + list(inactive_expenses.keys())
-
-        for expense_id in all_expense_id:       #Updating overview stats 
-            expense = Expenses.query.filter_by(id = expense_id).first()
-            
-            #Picks which dictionary to use
-            expense_dict = None
-
-            if expense_id in active_expenses:
-                expense_dict = active_expenses
-            else:
-                expense_dict = inactive_expenses
-            
-
-            #Deriving other forms of data from the spending/earning 
-            earnings = expense_dict[expense_id]["earning"]
-            expense_dict[expense_id]["earning"] = round(earnings, 2)
-
-            spending = expense_dict[expense_id]["spending"]
-            expense_dict[expense_id]["spending"] = round(spending, 2)
-
-            transferred = round(float(expense.transferred), 2)
-            expense_dict[expense_id]["transferred"] = transferred
-            expense.transferred = transferred
-
-            balance = round(float(transferred + earnings), 2)
-            expense_dict[expense_id]["balance"] = balance
-            expense.balance = balance
-
-            saving = round(float(balance - spending), 2)
-            expense_dict[expense_id]["saving"] = round(saving, 2)
-            expense.savings = saving
-            
-            #Setting overview stats
-            overview_stats["Balance"] += balance
-            
-
-            overview_stats["Earnings"] += earnings
-            expense.set_earnings(earnings)
-            
-            overview_stats["Transferred"] += transferred
-            
-            overview_stats["Spendings"] += spending
-            expense.set_spending(spending)
-            
-            expense.set_savings()
-            overview_stats["Savings"] += saving
-
-            expense.credit_balance += expense_dict[expense_id]["credit_balance"]
-            overview_stats["Credit_Balance"] += expense_dict[expense_id]["credit_balance"]
 
 
-        for stat in overview_stats:
-            overview_stats[stat] = round(overview_stats[stat], 2)
 
+
+        #Used for displaying all spending data
+        spending = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = False).all()
         db.session.commit()
-        
-        spending = Transaction.query.filter_by(user_id = session["user_id"]).all()
+       
+        return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = accumulated_expense_data, spending = spending, expense_data = expense_data)
+   
 
-
-        return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending, all_expense_id = all_expense_id)
-    
 
     else:
         return render_template("login.html")
+
+
     
 
 @user.route("/profile", methods = ["GET"])

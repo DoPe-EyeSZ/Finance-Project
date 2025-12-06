@@ -39,7 +39,7 @@
                 
                 <div class="stat-card-main">
                     <div class="stat-label-main">Deposited</div>
-                    <div class="stat-value-main">${{lifetime_stats["Transferred"]}}</div>
+                    <div class="stat-value-main">${{lifetime_stats["Deposits"]}}</div>
                 </div>
 
                 <div class="stat-card-main">
@@ -67,11 +67,11 @@
         {% for expense_id in active_expenses %}
         <div class="expense-block">
             <h3 class="expense-name-small">{{active_expenses[expense_id]["name"]}}</h3>
-            {% set earned = active_expenses[expense_id]["earning"]%}
+            {% set earned = active_expenses[expense_id]["earnings"]%}
             {% set spent = active_expenses[expense_id]["spending"]%}
-            {% set saved = active_expenses[expense_id]["saving"]%}
+            {% set saved = active_expenses[expense_id]["savings"]%}
             {% set balance = active_expenses[expense_id]["balance"]%}
-            {% set transferred = active_expenses[expense_id]["transferred"]%}
+            {% set transferred = active_expenses[expense_id]["deposits"]%}
             {% set credit_balance = active_expenses[expense_id]["credit_balance"]%}
 
             <table class="expense-table stats-table">
@@ -108,11 +108,11 @@
         {% for expense_id in inactive_expenses %}
         <div class="expense-block">
             <h3 class="expense-name-small">{{inactive_expenses[expense_id]["name"]}}</h3>
-            {% set earned = inactive_expenses[expense_id]["earning"]%}
+            {% set earned = inactive_expenses[expense_id]["earnings"]%}
             {% set spent = inactive_expenses[expense_id]["spending"]%}
-            {% set saved = inactive_expenses[expense_id]["saving"]%}
+            {% set saved = inactive_expenses[expense_id]["savings"]%}
             {% set balance = inactive_expenses[expense_id]["balance"]%}
-            {% set transferred = inactive_expenses[expense_id]["transferred"]%}
+            {% set transferred = inactive_expenses[expense_id]["deposits"]%}
             {% set credit_balance = inactive_expenses[expense_id]["credit_balance"]%}
 
             <table class="expense-table stats-table">
@@ -171,7 +171,7 @@
         </table>
         {% endif %}
 
-        {% if not all_expense_id %}
+        {% if not expense_data %}
         <div class="empty-state">
             <div class="empty-icon">📊</div>
             <h2 class="empty-title">No Entries Yet</h2>
