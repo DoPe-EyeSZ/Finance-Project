@@ -143,6 +143,7 @@ def delete():        #Deletes User account from DB
 
 @user.route("/summary", methods=["GET"])
 def summary():
+    start_time = time.time()  # Record the starting time
     if "user_id" in session:
         active_expenses = {}
         inactive_expenses = {}
@@ -241,7 +242,10 @@ def summary():
         
         spending = Transaction.query.filter_by(user_id = session["user_id"]).all()
 
+        end_time = time.time()    # Record the ending time
 
+        elapsed_time = end_time - start_time
+        print(f"Elapsed time: {elapsed_time:.2f} seconds")
         return render_template("summary.html", user = helper.get_user(session["user_id"]), active_expenses = active_expenses, inactive_expenses = inactive_expenses, lifetime_stats = overview_stats, spending = spending, all_expense_id = all_expense_id)
     
 
