@@ -35,6 +35,7 @@
         <div class="function-sections">
             <div class="form-section">
                 <h2 class="form-title">Add Income</h2>
+                <p class="function-helper-text"><span class="tip-star">★</span> Automatically distributes income</p>
                 <form action="/add_income/{{entry.id}}" method="POST" class="inline-form">
                     <div class="input-wrapper">
                         <input type="number" step="0.01" name="income" placeholder="Enter income" required>
@@ -45,6 +46,7 @@
 
             <div class="form-section">
                 <h2 class="form-title">Deposit</h2>
+                    <p class="function-helper-text"><span class="tip-star">★</span> Add funds directly to a specific expense category</p>
                     <form action="/entry_deposit" method="POST" class="inline-form">
                         <select name="snap_id" required>
                             <option value="">Select Expense</option>

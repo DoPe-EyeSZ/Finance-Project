@@ -89,22 +89,49 @@
         </thead>
         <tbody>
             {% for active_expense in active_expenses %}
-            <tr>
-                <form action="/edit_expense/{{active_expense.id}}" method="POST">
-                    <td>{{loop.index}}</td>
-                    <td><input type="text" name="name" value="{{active_expense.name}}" class="table-input"></td>
-                    <td>
+            <tr class="log-row" data-row-id="active-{{active_expense.id}}">
+                <td>{{loop.index}}</td>
+                
+                <!-- Expense Name Display/Edit -->
+                <td>
+                    <div class="display-mode">
+                        <span class="display-text">{{active_expense.name}}</span>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <input type="text" name="name" value="{{active_expense.name}}" class="table-input">
+                    </div>
+                </td>
+                
+                <!-- Percentage Display/Edit -->
+                <td>
+                    <div class="display-mode">
+                        <span class="display-text">{{active_expense.percentage}}%</span>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
                         <div class="percent-wrapper">
                             <input type="number" name="percentage" value="{{active_expense.percentage}}" class="table-input percent-input">
                             <span class="percent-symbol">%</span>
                         </div>
-                    </td>
-                    <td class="cash-cell">${{active_expenses[active_expense]}}</td>
-                    <td>
-                        <button type="submit" class="btn btn-success">Save</button>
-                        <button class="btn btn-danger" formaction="/archive_expense/{{active_expense.id}}">Archive</button>
-                    </td>
-                </form>
+                    </div>
+                </td>
+                
+                <td class="cash-cell">${{active_expenses[active_expense]}}</td>
+                
+                <!-- Actions -->
+                <td>
+                    <div class="display-mode">
+                        <button class="btn btn-dark btn-info btn-sm edit-toggle-btn" onclick="toggleEdit('active-{{active_expense.id}}')">Edit</button>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <form action="/edit_expense/{{active_expense.id}}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-success btn-sm" onclick="submitEdit(event, 'active-{{active_expense.id}}')">Save</button>
+                        </form>
+                        <button class="btn btn-secondary btn-sm edit-toggle-btn" onclick="toggleEdit('active-{{active_expense.id}}')">Cancel</button>
+                        <form action="/archive_expense/{{active_expense.id}}" method="POST" style="display: inline;">
+                            <button class="btn btn-danger btn-sm" type="submit">Archive</button>
+                        </form>
+                    </div>
+                </td>
             </tr>
             {% endfor %}
             <tr class="add-row">
@@ -138,16 +165,43 @@
         </thead>
         <tbody>
             {% for inactive_expense in inactive_expenses %}
-            <tr>
-                <form action="restore_expense/{{inactive_expense.id}}" method="POST">
-                    <td>{{loop.index}}</td>
-                    <td>{{inactive_expense.name}}</td>
-                    <td>{{inactive_expense.percentage}}%</td>
-                    <td class="cash-cell">${{inactive_expenses[inactive_expense]}}</td>
-                    <td>
-                        <button type="submit" class="btn btn-success">Restore</button>
-                    </td>
-                </form>
+            <tr class="log-row" data-row-id="inactive-{{inactive_expense.id}}">
+                <td>{{loop.index}}</td>
+                
+                <!-- Expense Name Display/Edit -->
+                <td>
+                    <div class="display-mode">
+                        <span class="display-text">{{inactive_expense.name}}</span>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <input type="text" name="name" value="{{inactive_expense.name}}" class="table-input" readonly>
+                    </div>
+                </td>
+                
+                <!-- Percentage Display/Edit -->
+                <td>
+                    <div class="display-mode">
+                        <span class="display-text">{{inactive_expense.percentage}}%</span>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <span class="display-text">{{inactive_expense.percentage}}%</span>
+                    </div>
+                </td>
+                
+                <td class="cash-cell">${{inactive_expenses[inactive_expense]}}</td>
+                
+                <!-- Actions -->
+                <td>
+                    <div class="display-mode">
+                        <button class="btn btn-dark btn-info btn-sm edit-toggle-btn" onclick="toggleEdit('inactive-{{inactive_expense.id}}')">View</button>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <button class="btn btn-secondary btn-sm edit-toggle-btn" onclick="toggleEdit('inactive-{{inactive_expense.id}}')">Cancel</button>
+                        <form action="restore_expense/{{inactive_expense.id}}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                        </form>
+                    </div>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -180,35 +234,64 @@
                     </thead>
                     <tbody>
                         {% for deposit in deposits %}
-                        <tr>
+                        <tr class="log-row" data-row-id="deposit-{{deposit.id}}">
                             <td>{{deposit.expense_name}}</td>
+                            
+                            <!-- Date Display/Edit -->
                             <td>
-                                <form action="/update_transaction_date/{{deposit.id}}" method="POST" class="inline-date-form-table">
-                                    <input type="hidden" name="source" value="expenses">
-                                    <input type="date" value="{{deposit.date}}" name="new_date" class="date-input-table">
-                                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                                </form>
+                                <div class="display-mode">
+                                    <span class="display-text">{{deposit.date}}</span>
+                                </div>
+                                <div class="edit-mode" style="display: none;">
+                                    <form action="/update_transaction_date/{{deposit.id}}" method="POST" class="inline-edit-form">
+                                        <input type="hidden" name="source" value="expenses">
+                                        <input type="date" value="{{deposit.date}}" name="new_date" class="date-input-table">
+                                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                                    </form>
+                                </div>
                             </td>
+                            
+                            <!-- Amount Display/Edit -->
                             <td>
-                                <form action="/edit_transaction_amount/{{deposit.id}}" method="POST" class="inline-edit-form">
-                                    <div class="input-wrapper-small">
-                                        <span class="currency-symbol-small">$</span>
-                                        <input type="number" min="0" placeholder="{{deposit.amount}}" name="amount" step="0.01" required>
-                                    </div>
-                                    <button class="btn btn-success btn-sm" type="submit">Save</button>
-                                </form>
+                                <div class="display-mode">
+                                    <span class="display-text">${{deposit.amount}}</span>
+                                </div>
+                                <div class="edit-mode" style="display: none;">
+                                    <form action="/edit_transaction_amount/{{deposit.id}}" method="POST" class="inline-edit-form">
+                                        <div class="input-wrapper-small">
+                                            <span class="currency-symbol-small">$</span>
+                                            <input type="number" min="0" placeholder="{{deposit.amount}}" name="amount" step="0.01" required>
+                                        </div>
+                                        <button class="btn btn-success btn-sm" type="submit">Save</button>
+                                    </form>
+                                </div>
                             </td>
+                            
+                            <!-- Reasoning Display/Edit -->
                             <td>
-                                <form action="/edit_transaction_reasoning/{{deposit.id}}" method="POST" class="inline-edit-form">
-                                    <input type="hidden" name="source" value="expenses">
-                                    <input type="text" placeholder="{{deposit.reasoning}}" name="reasoning" class="note-input" required>
-                                    <button class="btn btn-success btn-sm" type="submit">Save</button>
-                                </form>
+                                <div class="display-mode">
+                                    <span class="display-text">{{deposit.reasoning}}</span>
+                                </div>
+                                <div class="edit-mode" style="display: none;">
+                                    <form action="/edit_transaction_reasoning/{{deposit.id}}" method="POST" class="inline-edit-form">
+                                        <input type="hidden" name="source" value="expenses">
+                                        <input type="text" placeholder="{{deposit.reasoning}}" name="reasoning" class="note-input" required>
+                                        <button class="btn btn-success btn-sm" type="submit">Save</button>
+                                    </form>
+                                </div>
                             </td>
+                            
+                            <!-- Actions -->
                             <td>
+                                <div class="display-mode">
+                                    <button class="btn btn-dark btn-info btn-sm edit-toggle-btn" onclick="toggleEdit('deposit-{{deposit.id}}')">Edit</button>
+                                </div>
+                                <div class="edit-mode" style="display: none;">
+                                    <button class="btn btn-secondary btn-sm edit-toggle-btn" onclick="toggleEdit('deposit-{{deposit.id}}')">Cancel</button>
+                                </div>
                                 <form action="/delete_transaction/{{deposit.id}}" method="POST" style="display: inline;">
-                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                                     <input type="hidden" name="source" value="expenses">
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                                     {% if deposit.credit_status %}
                                     <button class="btn btn-primary btn-sm" type="submit" formaction="/pay_credit/{{deposit.id}}">Pay Credit</button>
                                     {% endif %}
@@ -231,6 +314,51 @@
 function toggleSection(header) {
     const section = header.parentElement;
     section.classList.toggle('active');
+}
+
+function toggleEdit(rowId) {
+    const row = document.querySelector(`[data-row-id="${rowId}"]`);
+    const displayModes = row.querySelectorAll('.display-mode');
+    const editModes = row.querySelectorAll('.edit-mode');
+    
+    // Check current state (check first edit mode element)
+    const isEditing = editModes[0].style.display !== 'none';
+    
+    if (isEditing) {
+        // Switch to display mode
+        displayModes.forEach(el => el.style.display = 'block');
+        editModes.forEach(el => el.style.display = 'none');
+    } else {
+        // Switch to edit mode
+        displayModes.forEach(el => el.style.display = 'none');
+        editModes.forEach(el => el.style.display = 'block');
+    }
+}
+
+function submitEdit(event, rowId) {
+    const row = document.querySelector(`[data-row-id="${rowId}"]`);
+    const form = event.target.closest('form');
+    
+    // Get input values from edit mode
+    const nameInput = row.querySelector('input[name="name"]');
+    const percentInput = row.querySelector('input[name="percentage"]');
+    
+    // Add inputs to form if they exist
+    if (nameInput) {
+        const hiddenName = document.createElement('input');
+        hiddenName.type = 'hidden';
+        hiddenName.name = 'name';
+        hiddenName.value = nameInput.value;
+        form.appendChild(hiddenName);
+    }
+    
+    if (percentInput) {
+        const hiddenPercent = document.createElement('input');
+        hiddenPercent.type = 'hidden';
+        hiddenPercent.name = 'percentage';
+        hiddenPercent.value = percentInput.value;
+        form.appendChild(hiddenPercent);
+    }
 }
 </script>
 {% endblock %}
