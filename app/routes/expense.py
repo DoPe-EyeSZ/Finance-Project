@@ -33,9 +33,9 @@ def expenses():
 
         for expense in expenses:        #Separates expense types between archived and unarchived
             if expense.status:
-                active_expenses[expense] = expense_data.get(expense.id, 0.0)
+                active_expenses[expense] = round(expense_data.get(expense.id, 0.0), 2)
             else:
-                inactive_expenses[expense] = expense_data.get(expense.id, 0.0)
+                inactive_expenses[expense] = round(expense_data.get(expense.id, 0.0), 2)
 
 
         #Validates that active expense percentages sum to 100%      [allocation total, is_valid]
