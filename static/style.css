@@ -145,6 +145,16 @@ h2 {
     filter: invert(1);
 }
 
+.nav-link.entries-link {
+    color: #dbe9ff !important;
+    font-weight: 600;
+}
+
+.nav-link.entries-link:hover {
+    background: #23262d;
+    color: #5fb878 !important;
+}
+
 /* ===================================
    CARDS & CONTENT BLOCKS
    =================================== */
