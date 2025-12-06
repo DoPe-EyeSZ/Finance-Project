@@ -365,6 +365,7 @@ def get_all_expense_data():
         spending = []
         earnings = []
         savings = []
+        deposits = []
 
         all_expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
 
@@ -373,13 +374,15 @@ def get_all_expense_data():
             spending.append(round(expense.spendings, 2))
             earnings.append(round(expense.earnings, 2))
             savings.append(round(expense.savings, 2))
+            deposits.append(round(expense.transferred, 2))
 
 
         data = {
             "expenses": expenses,
             "total_spent": spending,
             "total_earned": earnings,
-            "total_saved": savings
+            "total_saved": savings,
+            "total_deposit": deposits
         }
 
         return jsonify(data)

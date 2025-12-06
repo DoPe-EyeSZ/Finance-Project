@@ -122,6 +122,18 @@
                 hovertemplate: '<b>Total Earnings</b><br> $%{y}<extra></extra>'
             };
 
+            const deposits = {
+                x: data.expenses,
+                y: data.total_deposit,
+                name: "Total Deposit",
+                type: "bar",
+                marker: { color: "#e8be3f" },
+                text: data.total_deposit.map(val => `$${val}`),
+                textposition: "auto",
+                hoverinfo: "none",
+                hovertemplate: '<b>Total Deposited</b><br> $%{y}<extra></extra>'
+            };
+
             const spending = {
                 x: data.expenses,
                 y: data.total_spent,
@@ -151,7 +163,7 @@
                 title: "Individual Expense Overview"
             };
 
-            Plotly.newPlot("expense_bar", [earned, spending, savings], layout, {displayModeBar: false})
+            Plotly.newPlot("expense_bar", [earned, spending, deposits, savings], layout, {displayModeBar: false})
         });
 
         fetch("/save_spend_data").then(response => response.json()).then(data => {
