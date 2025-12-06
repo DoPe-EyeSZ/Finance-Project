@@ -9,15 +9,15 @@ transaction = Blueprint("transaction", __name__, template_folder="templates")
 @transaction.route("/add_spending/<int:snap_id>", methods = ["POST"])
 def add_spending(snap_id):
     if helper.check_login():
-
-        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      #Gets neccesary data
+        #Gets neccesary data
+        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      
         amount = float(request.form.get("spending"))        
         reasoning = str(request.form.get("reasoning"))
-        if request.method == "POST":
-
-            transaction = Transaction( snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id,reasoning)     #Add spending to DB
-            db.session.add(transaction)
-            snap.add_spending(float(amount))
+        
+        #Creates new spending record
+        transaction = Transaction( snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id,reasoning)     #Add spending to DB
+        db.session.add(transaction)
+        snap.add_spending(float(amount))
 
         db.session.commit()
         return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
@@ -102,15 +102,16 @@ def delete_transaction(transaction_id):
 def add_credit(snap_id):
     if helper.check_login():
 
-        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      #Gets neccesary data
+        #Gets neccesary data
+        snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      
         amount = float(request.form.get("spending"))        
         reasoning = str(request.form.get("reasoning"))
-        if request.method == "POST":
 
-            transaction = Transaction(snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id, reasoning)     #Add spending to DB
-            transaction.credit_status = True
-            snap.add_credit(amount)
-            db.session.add(transaction)
+        #Creates new transaction record 
+        transaction = Transaction(snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id, reasoning)     #Add spending to DB
+        transaction.credit_status = True        #Sets setting to be credit spending
+        snap.add_credit(amount)
+        db.session.add(transaction)
 
         db.session.commit()
         return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
@@ -121,14 +122,15 @@ def add_credit(snap_id):
 @transaction.route("/pay_credit/<spending_id>", methods = ["POST"])
 def pay_credit(spending_id):
     if helper.check_login():
-        credit_spending = Transaction.query.filter_by(id = int(spending_id)).first()
-        snap = Exp_Snap.query.filter_by(entry_id = credit_spending.entry_id, expense_id = credit_spending.expense_id).first()
+        paid_credit_balance = Transaction.query.filter_by(id = int(spending_id)).first()
+        snap = Exp_Snap.query.filter_by(entry_id = paid_credit_balance.entry_id, expense_id = paid_credit_balance.expense_id).first()
 
-        if request.method == "POST":
-            amount = float(credit_spending.amount)
-            credit_spending.credit_status = False
-            snap.add_spending(amount)
-            snap.credit_balance -= amount
+        amount = float(paid_credit_balance.amount)
+        paid_credit_balance.credit_status = False
+
+        #Subracting credit balance from snapshot; Add PAID credit to total spent
+        snap.total_spending += amount
+        snap.credit_balance -= amount
             
         db.session.commit()
         return redirect(url_for("entry.view_entry", entry_id = snap.entry_id))
