@@ -1767,3 +1767,17 @@ h2 {
     color: #ffc107;
     margin-right: 5px;
 }
+
+/* Add this to your CSS file */
+
+/* Make the numbers in expense stat tables bigger */
+.stats-table tbody td {
+    font-size: 1.1em;
+    font-weight: 600;
+    padding: 18px 15px;
+}
+
+/* Optional: Make the headers slightly bigger too for balance */
+.stats-table thead th {
+    font-size: 1.00em;
+}

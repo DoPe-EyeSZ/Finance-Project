@@ -93,6 +93,8 @@ class Transaction(db.Model):        #Stores every transaction per entry
 
         if reasoning is not None:
             self.reasoning = reasoning
+        else:
+            self.reasoning = "N/A"
 
 
 class Exp_Snap(db.Model):       #Stores a snapshot of the expense
