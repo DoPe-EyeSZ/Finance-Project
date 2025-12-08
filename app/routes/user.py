@@ -247,7 +247,6 @@ def summary():
 
             if expense.id in expense_data:
                 expense_dict = expense_data[expense.id]
-                print(expense_dict)
                 expense_dict["name"] = expense.name     #Adding name
 
                 expense.earnings = float(round(expense_dict.get("earnings", 0.0), 2))
