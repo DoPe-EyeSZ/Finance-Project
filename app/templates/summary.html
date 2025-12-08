@@ -62,47 +62,47 @@
         {% endif %}
 
         {% if active_expenses %}
-        <div class="expenses-section">
-            <h1 class="section-title-large">Active Expenses</h1>
-        {% for expense_id in active_expenses %}
-        <div class="expense-block">
-            <h3 class="expense-name-small">{{active_expenses[expense_id]["name"]}}</h3>
-            {% set earned = active_expenses[expense_id]["earnings"]%}
-            {% set spent = active_expenses[expense_id]["spending"]%}
-            {% set saved = active_expenses[expense_id]["savings"]%}
-            {% set balance = active_expenses[expense_id]["balance"]%}
-            {% set deposit = active_expenses[expense_id]["deposits"]%}
-            {% set credit_balance = active_expenses[expense_id]["credit_balance"]%}
+            <div class="expenses-section">
+                <h1 class="section-title-large">Active Expenses</h1><p class="function-helper-text"><span class="tip-star">★</span> Only expenses with transaction history are shown below. Create entries/deposits to view all your expenses.</p>
+            {% for expense_id in active_expenses %}
+            <div class="expense-block">
+                <h3 class="expense-name-small">{{active_expenses[expense_id]["name"]}}</h3>
+                {% set earned = active_expenses[expense_id]["earnings"]%}
+                {% set spent = active_expenses[expense_id]["spending"]%}
+                {% set saved = active_expenses[expense_id]["savings"]%}
+                {% set balance = active_expenses[expense_id]["balance"]%}
+                {% set deposit = active_expenses[expense_id]["deposits"]%}
+                {% set credit_balance = active_expenses[expense_id]["credit_balance"]%}
 
-            <table class="expense-table stats-table">
-                <thead>
-                    <tr>
-                        <th>Earnings and Deposits</th>
-                        <th>Earned</th>
-                        <th>Deposited</th>
-                        <th>Spent</th>
-                        <th>Credit Balance</th>
-                        <th>Remaining</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="balance-cell" style="color: #a7c4ff;">${{balance}}</td>
-                        <td class="earnings-cell" style="color: #5fb878;">${{earned}}</td>
-                        {% if deposit %}
-                            <td>${{deposit}}</td>
-                        {% else %}
-                            <td>$0.0</td>
-                        {% endif %}
-                        <td class="spent-cell" style="color: #e87373;">${{spent}}</td>
-                        <td>${{credit_balance}}</td>
-                        <td class="savings-cell" style="color: #5fb878;">${{saved}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        {% endfor %}
-        </div>
+                <table class="expense-table stats-table">
+                    <thead>
+                        <tr>
+                            <th>Earnings and Deposits</th>
+                            <th>Earned</th>
+                            <th>Deposited</th>
+                            <th>Spent</th>
+                            <th>Credit Balance</th>
+                            <th>Remaining</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="balance-cell" style="color: #a7c4ff;">${{balance}}</td>
+                            <td class="earnings-cell" style="color: #5fb878;">${{earned}}</td>
+                            {% if deposit %}
+                                <td>${{deposit}}</td>
+                            {% else %}
+                                <td>$0.0</td>
+                            {% endif %}
+                            <td class="spent-cell" style="color: #e87373;">${{spent}}</td>
+                            <td>${{credit_balance}}</td>
+                            <td class="savings-cell" style="color: #5fb878;">${{saved}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+            </div>
         {% endif %}
 
         {% if inactive_expenses %}
@@ -148,7 +148,6 @@
 
 
         {% if deposits %}
-        <hr class="section-divider">
         <div class="collapsible-section">
             <div class="collapsible-header" onclick="toggleSection(this)">
                 <div class="collapsible-title-wrapper">
