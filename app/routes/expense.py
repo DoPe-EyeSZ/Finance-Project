@@ -98,10 +98,11 @@ def archive_expense(expense_id):
     if helper.check_login():
         if request.method == "POST":        
             snap_count = Exp_Snap.query.filter_by(expense_id = expense_id).count()
+            deposits = Transaction.query.filter_by(expense_id = expense_id).count()
             removed_expense = Expenses.query.filter_by(id = expense_id).first()
 
             #If expense still holds user data, then don't display; Otherwise permanently delete expense
-            if snap_count>0:    
+            if snap_count>0 or deposits > 0:    
                 removed_expense.status = False
                 
             else:       

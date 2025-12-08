@@ -89,11 +89,7 @@
                         <tr>
                             <td class="balance-cell" style="color: #a7c4ff;">${{balance}}</td>
                             <td class="earnings-cell" style="color: #5fb878;">${{earned}}</td>
-                            {% if deposit %}
-                                <td>${{deposit}}</td>
-                            {% else %}
-                                <td>$0.0</td>
-                            {% endif %}
+                            <td>${{deposit}}</td>
                             <td class="spent-cell" style="color: #e87373;">${{spent}}</td>
                             <td>${{credit_balance}}</td>
                             <td class="savings-cell" style="color: #5fb878;">${{saved}}</td>
@@ -132,12 +128,12 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="balance-cell">${{balance}}</td>
-                        <td class="earnings-cell">${{earned}}</td>
-                        <td>${{transferred}}</td>
-                        <td class="spent-cell">${{spent}}</td>
+                        <td class="balance-cell" style="color: #a7c4ff;">${{balance}}</td>
+                        <td class="earnings-cell" style="color: #5fb878;">${{earned}}</td>
+                        <td>${{deposit}}</td>
+                        <td class="spent-cell" style="color: #e87373;">${{spent}}</td>
                         <td>${{credit_balance}}</td>
-                        <td class="savings-cell">${{saved}}</td>
+                        <td class="savings-cell" style="color: #5fb878;">${{saved}}</td>
                     </tr>
                 </tbody>
             </table>
