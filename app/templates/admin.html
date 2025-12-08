@@ -42,7 +42,21 @@
         <h2>SPENDING DATA</h2>
         {% for spending in data["Spending"] %}
         <div class="data-item">
-            <p><span class="label">Spending:</span> ${{spending.amount}} | <span class="label">Reasoning:</span> {{spending.reasoning}}</p>
+            <p><span class="label">Amount:</span> ${{spending.amount}} | <span class="label">Reasoning:</span> {{spending.reasoning}}</p>
+        </div>
+        {% endfor %}
+
+        <h2>CREDIT DATA</h2>
+        {% for credit in data["Credit"] %}
+        <div class="data-item">
+            <p><span class="label">Amount:</span> ${{credit.amount}} | <span class="label">Reasoning:</span> {{credit.reasoning}}</p>
+        </div>
+        {% endfor %}
+
+        <h2>DEPOSIT DATA</h2>
+        {% for deposit in data["Deposits"] %}
+        <div class="data-item">
+            <p><span class="label">Amount:</span> ${{deposit.amount}} | <span class="label">Reasoning:</span> {{deposit.reasoning}}</p>
         </div>
         {% endfor %}
     </div>

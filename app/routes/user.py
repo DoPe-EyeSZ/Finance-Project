@@ -29,9 +29,17 @@ def admin():
                 user_expense = Expenses.query.filter_by(user_id = user.id).all()
                 user_entry = Entry.query.filter_by(user_id = user.id).all()
                 user_snapshots = Exp_Snap.query.filter_by(user_id = user.id).all()
-                user_spending = Transaction.query.filter_by(user_id = user.id).all()
+                user_spending = Transaction.query.filter_by(user_id = user.id, credit_status = False, deposit_status = False).all()
+                user_credit = Transaction.query.filter_by(user_id = user.id, credit_status = True).all()
+                user_deposit = Transaction.query.filter_by(user_id = user.id, deposit_status = True).all()
 
-                info.append({"User": user, "Expenses": user_expense, "Entry": user_entry, "Snapshot": user_snapshots, "Spending": user_spending})
+                info.append({"User": user, 
+                             "Expenses": user_expense, 
+                             "Entry": user_entry, 
+                             "Snapshot": user_snapshots, 
+                             "Spending": user_spending,
+                             "Credit": user_credit,
+                             "Deposits": user_deposit})
 
             return render_template("admin.html", info = info)
 
@@ -159,7 +167,6 @@ def summary():
         snaps = Exp_Snap.query.filter_by(user_id = session["user_id"]).all()
         deposits = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = True).all()
 
-
         for snap in snaps:
             earnings = float(snap.expense_earnings)
             spending = float(snap.total_spending)
@@ -167,7 +174,12 @@ def summary():
             
             #Adding all data across all snapshots for ONE expense
             if snap.expense_id not in expense_data:
-                expense_data[snap.expense_id] = {}
+                expense_data[snap.expense_id] = {"earnings": 0.0, 
+                                                 "spending": 0.0,
+                                                 "credit_balance": 0.0,
+                                                 "deposits": 0.0,
+                                                 "balance": 0.0,
+                                                 "savings": 0.0}
                 
             expense_dict = expense_data[snap.expense_id]       #Shortening code for readability
             expense_dict["earnings"] = expense_dict.get("earnings", 0.0) + earnings
@@ -179,9 +191,17 @@ def summary():
             accumulated_expense_data["Spendings"] += spending
             accumulated_expense_data["Credit_Balance"] += credit_balance
             
-
         for deposit in deposits:
             deposit_amount = deposit.amount
+
+            if deposit.expense_id not in expense_data:
+                expense_data[deposit.expense_id] = {"earnings": 0.0, 
+                                                 "spending": 0.0,
+                                                 "credit_balance": 0.0,
+                                                 "deposits": 0.0,
+                                                 "balance": 0.0,
+                                                 "savings": 0.0}
+                
             expense_dict = expense_data[deposit.expense_id]
             expense_dict["deposits"] = expense_dict.get("deposits", 0.0) + deposit_amount
 
@@ -206,14 +226,16 @@ def summary():
 
 
         #Rounding final data values
-        for data in accumulated_expense_data:
-            accumulated_expense_data[data] = round(accumulated_expense_data[data], 2)
+        if accumulated_expense_data:
+            for data in accumulated_expense_data:
+                accumulated_expense_data[data] = round(accumulated_expense_data[data], 2)
 
-        for expense_id in expense_data:
-            expense_dict = expense_data[expense_id]
-            for key, value in expense_dict.items():
-                if isinstance(value, (int, float)):
-                    expense_dict[key] = round(value, 2)
+        if expense_data:
+            for expense_id in expense_data:
+                expense_dict = expense_data[expense_id]
+                for key, value in expense_dict.items():
+                    if isinstance(value, (int, float)):
+                        expense_dict[key] = round(value, 2)
 
                 
         #Separating expenses, finalizing totals
@@ -222,20 +244,22 @@ def summary():
         expenses = Expenses.query.filter_by(user_id = session["user_id"]).all()
 
         for expense in expenses:        #Finalizing totals
-            expense_dict = expense_data[expense.id]
-            expense_dict["name"] = expense.name     #Adding name
 
-            expense.earnings = float(round(expense_dict.get("earnings", 0.0), 2))
-            expense.spendings = float(round(expense_dict.get("spending", 0.0), 2))
-            expense.transferred = float(round(expense_dict.get("deposits", 0.0), 2))
-            expense.balance = float(round(expense_dict.get("balance", 0.0), 2))
-            expense.credit_balance = float(round(expense_dict.get("credit_balance", 0.0), 2))
-            expense.savings = float(round(expense_dict.get("savings", 0.0), 2))
+            if expense.id in expense_data:
+                expense_dict = expense_data[expense.id]
+                expense_dict["name"] = expense.name     #Adding name
 
-            if expense.status:      #Separating expenses
-                active_expenses[expense.id] = expense_dict
-            else:
-                inactive_expenses[expense.id] = expense_dict
+                expense.earnings = float(round(expense_dict.get("earnings", 0.0), 2))
+                expense.spendings = float(round(expense_dict.get("spending", 0.0), 2))
+                expense.transferred = float(round(expense_dict.get("deposits", 0.0), 2))
+                expense.balance = float(round(expense_dict.get("balance", 0.0), 2))
+                expense.credit_balance = float(round(expense_dict.get("credit_balance", 0.0), 2))
+                expense.savings = float(round(expense_dict.get("savings", 0.0), 2))
+
+                if expense.status:      #Separating expenses
+                    active_expenses[expense.id] = expense_dict
+                else:
+                    inactive_expenses[expense.id] = expense_dict
 
         
         
