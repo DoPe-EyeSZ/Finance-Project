@@ -102,7 +102,6 @@
         {% endif %}
 
         {% if inactive_expenses %}
-        <hr class="section-divider">
         <div class="expenses-section">
             <h1 class="section-title-large">Archived Expenses</h1>
         {% for expense_id in inactive_expenses %}
@@ -112,7 +111,7 @@
             {% set spent = inactive_expenses[expense_id]["spending"]%}
             {% set saved = inactive_expenses[expense_id]["savings"]%}
             {% set balance = inactive_expenses[expense_id]["balance"]%}
-            {% set transferred = inactive_expenses[expense_id]["deposits"]%}
+            {% set deposit = inactive_expenses[expense_id]["deposits"]%}
             {% set credit_balance = inactive_expenses[expense_id]["credit_balance"]%}
 
             <table class="expense-table stats-table">
@@ -191,7 +190,6 @@
 
 
         {% if spending %}
-        <hr class="section-divider">
         <div class="collapsible-section">
             <div class="collapsible-header" onclick="toggleSection(this)">
                 <div class="collapsible-title-wrapper">
@@ -232,7 +230,6 @@
         {% endif %}
 
         {% if credits %}
-        <hr class="section-divider">
         <div class="collapsible-section">
             <div class="collapsible-header" onclick="toggleSection(this)">
                 <div class="collapsible-title-wrapper">
