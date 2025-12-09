@@ -1,10 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     load_dotenv()
@@ -22,6 +24,7 @@ def create_app():
     app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     from app.routes import register_blueprint
     register_blueprint(app)
