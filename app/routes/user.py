@@ -15,8 +15,13 @@ def welcome():
 
 @user.route("/home")
 def home():
-    return render_template("home.html")
-
+    if helper.check_login():
+        user = helper.get_user(session["user_id"])
+        viewed_tutorial = user.view_tutorial
+        return render_template("home.html", viewed_tutorial = viewed_tutorial)
+    
+    else:
+        return redirect(url_for("user.login"))
 
 @user.route("/admin")        #Admin page
 def admin():
@@ -70,7 +75,7 @@ def login():
             else:     #Email exist but name!=pw
 
                 flash("Incorrect email or password.", "error")
-                return render_template("login.html")  
+                return redirect(url_for("user.login"))
             
         else:     #Email does not exist
 
@@ -287,6 +292,7 @@ def summary():
 def profile():
     if helper.check_login():
         user = User.query.filter_by(id = session["user_id"]).first()
+        print(user.view_tutorial)
         entry_count = Entry.query.filter_by(user_id = session["user_id"]).count()
         return render_template("profile.html", user = user, entry_count = entry_count)
     else:

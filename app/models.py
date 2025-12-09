@@ -3,6 +3,7 @@ from datetime import date
 
 class User(db.Model):        #Stores all user info
     id = db.Column(db.Integer, primary_key = True)
+    view_tutorial = db.Column(db.Boolean, default = False)
     email = db.Column(db.String(25))
     name = db.Column(db.String(25))
     pw = db.Column(db.String(25))
