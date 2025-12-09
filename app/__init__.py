@@ -10,10 +10,12 @@ def create_app():
     load_dotenv()
 
     app = Flask(__name__, static_folder="../static", template_folder="templates")
-    app.secret_key = os.getenv("secret_key")
+    app.secret_key = os.getenv("SECRET_KEY")
     database_url = os.environ.get('DATABASE_URL', 'sqlite:///finance.db')
+
     if database_url.startswith('postgresql://'):
         database_url = database_url.replace('postgresql://', 'postgresql+psycopg2://', 1)
+
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config["SESSION_PERMANENT"] = True
