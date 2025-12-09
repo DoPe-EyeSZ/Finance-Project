@@ -11,7 +11,7 @@ def create_app():
 
     app = Flask(__name__, static_folder="../static", template_folder="templates")
     app.secret_key = os.getenv("secret_key")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///budget.db"
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///budget.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config["SESSION_PERMANENT"] = True
     app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
