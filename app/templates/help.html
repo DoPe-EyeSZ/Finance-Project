@@ -1,0 +1,253 @@
+{% extends "budget_base.html" %}
+{% block title %} Help Center {% endblock %}
+
+{% block content %}
+
+<div class="data-container">
+
+    <h1 class="main-title">Help Center</h1>
+    <p class="welcome-subtitle">Learn how to navigate your money with clarity and control.</p>
+
+    <div class="mission-statement">
+        <p>
+            Important: This app depends on accurate setup. Start by creating expenses first.
+        </p>
+    </div>
+
+    <div class="data-block">
+        <h2 class="section-title-large">Navigation Overview</h2>
+
+        <div class="info-list">
+
+            <div class="info-item">
+                <div class="info-icon">🏠</div>
+                <div>
+                    <strong>Home</strong>
+                    <p>Welcome page only. No financial data lives here.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📊</div>
+                <div>
+                    <strong>Summary</strong>
+                    <p>See your earnings, spending, credit, and balances across all expenses.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📝</div>
+                <div>
+                    <strong>Entries</strong>
+                    <p>Track income, spending, and credit per entry.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">💼</div>
+                <div>
+                    <strong>Manage Expenses</strong>
+                    <p>Create and control how income is divided.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">👤</div>
+                <div>
+                    <strong>Profile</strong>
+                    <p>View your account details and lifetime usage.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">🚪</div>
+                <div>
+                    <strong>Logout</strong>
+                    <p>Sign out safely.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="data-block">
+        <h2 class="section-title-large">First Time Setup</h2>
+
+        <div class="steps-container">
+
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Create Expenses</h3>
+                    <p>Add categories like Rent, Food, or Savings.</p>
+                    <div class="step-example">Example: Rent 40, Food 30, Savings 20, Fun 10</div>
+                </div>
+            </div>
+
+            <div class="step-arrow">→</div>
+
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Reach 100 Percent</h3>
+                    <p>All expenses must total exactly 100.</p>
+                    <div class="step-example">40 + 30 + 20 + 10 = 100</div>
+                </div>
+            </div>
+
+            <div class="step-arrow">→</div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Create Entries</h3>
+                    <p>Now log income and track spending.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="data-block">
+        <h2 class="section-title-large">Entries Explained</h2>
+
+        <div class="function-sections">
+
+            <div class="function-section">
+                <h3 class="function-title">Income</h3>
+                <p>Add your total earnings for that entry.</p>
+            </div>
+
+            <div class="function-section">
+                <h3 class="function-title">Allocated Money</h3>
+                <p>Each expense automatically receives its share.</p>
+            </div>
+
+            <div class="function-section">
+                <h3 class="function-title">Debit</h3>
+                <p>Immediately reduces available money.</p>
+            </div>
+
+            <div class="function-section">
+                <h3 class="function-title">Credit</h3>
+                <p>Tracked separately until paid.</p>
+            </div>
+
+            <div class="function-section">
+                <h3 class="function-title">Deposit</h3>
+                <p>Add money directly into an expense.</p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="data-block">
+        <h2 class="section-title-large">Manage Expenses</h2>
+
+        <div class="tips-list">
+
+            <div class="tip-item">
+                <div class="tip-icon">⚠️</div>
+                <p>Deleting expenses with history archives them.</p>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon">🔄</div>
+                <p>Transfers move money between expenses.</p>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon">💰</div>
+                <p>Deposits fund an expense instantly.</p>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon">✏️</div>
+                <p>Expenses can be edited anytime.</p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="data-block">
+        <h2 class="section-title-large">Summary</h2>
+
+        <div class="info-list">
+
+            <div class="info-item">
+                <div class="info-icon">📈</div>
+                <div>
+                    <strong>Income</strong>
+                    <p>Total earned money.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📉</div>
+                <div>
+                    <strong>Spending</strong>
+                    <p>Money actually used.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">💳</div>
+                <div>
+                    <strong>Credit</strong>
+                    <p>Unpaid balances.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">💼</div>
+                <div>
+                    <strong>Expense Totals</strong>
+                    <p>All categories at once.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="data-block">
+        <h2 class="section-title-large">Friendly Reminders</h2>
+
+        <div class="tips-list">
+
+            <div class="tip-item">
+                <div class="tip-icon">✅</div>
+                <p>Percentages must equal 100.</p>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon">🧾</div>
+                <p>Archived expenses preserve your history.</p>
+            </div>
+
+            <div class="tip-item">
+                <div class="tip-icon">💳</div>
+                <p>Credit only counts when paid.</p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="data-block cta-section">
+        <p class="cta-text">Get started now.</p>
+
+        <div class="cta-buttons">
+            <a href="/manage-expenses" class="cta-button primary-cta">Set Up Expenses</a>
+            <a href="/entries" class="cta-button secondary-cta">Create Entry</a>
+            <a href="/summary" class="cta-button tertiary-cta">View Summary</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

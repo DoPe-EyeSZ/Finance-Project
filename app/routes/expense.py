@@ -154,13 +154,13 @@ def reallocate():
             to_expense = Expenses.query.filter_by(id = int(request.form.get("to_expense"))).first()
             amount = float(request.form.get("amount"))
 
-            if helper.calc_savings(int(request.form.get("from_expense"))) >= amount:
+            if helper.calc_savings(from_expense.id) >= amount:
                 from_expense.transferred -= amount
                 to_expense.transferred += amount
                 db.session.commit()
 
             else:
-                flash("You don’t have enough funds for this transfer.", "error")
+                flash(f"You don’t have enough funds in {from_expense.name} to transfer to {to_expense.name}.", "error")
 
             
         return redirect(url_for("expense.expenses"))

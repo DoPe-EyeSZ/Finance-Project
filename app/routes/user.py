@@ -18,10 +18,22 @@ def home():
     if helper.check_login():
         user = helper.get_user(session["user_id"])
         viewed_tutorial = user.view_tutorial
+
         return render_template("home.html", viewed_tutorial = viewed_tutorial)
     
     else:
         return redirect(url_for("user.login"))
+    
+
+@user.route("/help")
+def help():
+    if helper.check_login():
+        
+        return render_template("help.html")
+    
+    else:
+        return redirect(url_for("user.login"))
+
 
 @user.route("/admin")        #Admin page
 def admin():
