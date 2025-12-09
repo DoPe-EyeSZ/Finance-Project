@@ -10,7 +10,7 @@ def create_app():
     load_dotenv()
 
     app = Flask(__name__, static_folder="../static", template_folder="templates")
-    app.secret_key = os.getenv("SECRET_KEY")
+    app.secret_key = os.environ.get("SECRET_KEY")
     database_url = os.environ.get('DATABASE_URL', 'sqlite:///finance.db')
 
     if database_url.startswith('postgresql://'):
