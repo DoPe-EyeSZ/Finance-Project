@@ -518,7 +518,7 @@ def all_spend_data():
     
 
 
-@user.route("/savings_data")
+'''@user.route("/savings_data")
 def savings_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
@@ -579,7 +579,7 @@ def savings_data():
         return jsonify(data)
     else:
         return redirect(url_for("user.login"))
-
+'''
 
 
 

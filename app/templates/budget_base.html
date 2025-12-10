@@ -6,7 +6,6 @@
     <title>{% block title %}{% endblock %}</title>
 
     {% block css %}
-      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
       <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
       <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -14,40 +13,47 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand">
+    <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">PTFT</a>
 
-        <!-- Left items -->
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/home">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/summary">Summary</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/expenses">Manage Expenses</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link entries-link" href="/entry">Entries</a>
-          </li>
-        </ul>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <!-- Right items -->
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/help">Help Center</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/profile">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link logout" href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- Left items -->
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/summary">Summary</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/expenses">Manage Expenses</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link entries-link" href="/entry">Entries</a>
+              </li>
+            </ul>
+
+            <!-- Right items -->
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/help">Help Center</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link logout" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        </div>
+        
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}

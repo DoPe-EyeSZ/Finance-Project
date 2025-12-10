@@ -87,7 +87,7 @@ h2 {
    NAVIGATION
    =================================== */
 
-.navbar {
+/*.navbar {
     background-color: #1a1c22 !important;
     border-bottom: 2px solid #2d6cdf;
 }
@@ -161,7 +161,7 @@ h2 {
     margin: -10px 0 20px 0;
     font-style: italic;
     opacity: 0.9;
-}
+}*/
 
 /* ===================================
    CARDS & CONTENT BLOCKS
