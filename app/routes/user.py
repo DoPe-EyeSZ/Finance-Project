@@ -523,6 +523,8 @@ def savings_data():
     if helper.check_login():
         entries = Entry.query.filter_by(user_id = session["user_id"]).all()
         spendings = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False, deposit_status = False).all()
+        deposits = Transaction.query.filter_by(user_id = session["user_id"], credit_status = False, deposit_status = True).all()
+
 
         #{entryid: spending amount}
         spending_data = {}
@@ -532,7 +534,6 @@ def savings_data():
             else:
                 spending_data[spending.entry_id] = spending.amount
 
-
         #{date: income amount}
         income_data = {}
         for entry in entries:
@@ -541,6 +542,12 @@ def savings_data():
             else:
                 income_data[entry.date] = [entry.income, entry.id]
 
+        #Adding deposits ONLY from entries
+        for deposit in deposits:
+            if deposit.date in income_data:
+                income_data[deposit.date][0] += deposit.amount
+            else:
+                income_data[deposit.date] = [deposit.amount, None]
 
         #sort income amount
         sorted_income = sorted(income_data.items(), key=lambda x: x[0])     #(date, [income, entryid])
@@ -556,7 +563,8 @@ def savings_data():
         income_spending = {}        #{income: spending}
         for entry_id in entry_income:
             income = entry_income[entry_id]
-            income_spending[income] = round(spending_data[entry_id], 2)
+            spending = spending_data.get(entry_id, 0.0)
+            income_spending[income] = round(spending, 2)
 
         #savings sorted
         saving_data = [round(income - spending, 2) for income, spending in income_spending.items()]
