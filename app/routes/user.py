@@ -17,10 +17,22 @@ def welcome():
 def home():
     if helper.check_login():
         user = helper.get_user(session["user_id"])
-        viewed_tutorial = user.view_tutorial
+        show_tutorial = not user.view_tutorial
+        print(show_tutorial)
 
-        return render_template("home.html", viewed_tutorial = viewed_tutorial)
+        return render_template("home.html", show_tutorial = show_tutorial)
     
+    else:
+        return redirect(url_for("user.login"))
+    
+@user.route('/complete_tutorial', methods=['POST'])
+def complete_tutorial():
+    if helper.check_login():
+        user = helper.get_user(session["user_id"])
+        user.view_tutorial = True
+        db.session.commit()
+        return jsonify({'success': True})
+
     else:
         return redirect(url_for("user.login"))
     

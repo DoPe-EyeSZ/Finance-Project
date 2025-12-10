@@ -68,7 +68,257 @@
     </div>
 </div>
 
-{% endblock %}
+<!-- Tutorial Modal -->
+{% if show_tutorial %}
+    <div class="tutorial-overlay" id="tutorialOverlay">
+        <div class="tutorial-modal">
+            <div class="tutorial-header">
+                <div class="tutorial-progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-text" id="progressText">Step 1 of 5</div>
+                </div>
+            </div>
 
-{% block scripts%}
+            <div class="tutorial-body">
+                <h2 class="tutorial-title" id="tutorialTitle"></h2>
+                <div class="tutorial-content" id="tutorialContent"></div>
+            </div>
+
+            <div class="tutorial-footer">
+                <button class="btn-skip" onclick="skipTutorial()">Skip Tutorial</button>
+                <div class="nav-buttons">
+                    <button class="btn-prev" id="prevBtn" onclick="previousStep()" style="display: none;">Previous</button>
+                    <button class="btn-next" id="nextBtn" onclick="nextStep()">Next</button>
+                    <button class="btn-finish" id="finishBtn" onclick="completeTutorial()" style="display: none;">Get Started! 🚀</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endblock %}
+
+    {% block scripts%}
+    {% if show_tutorial %}
+        <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        const tutorialSteps = [
+            {
+                title: "Welcome to PTFT",
+                content: '<p class="tutorial-intro">Part Time Finance Tracker helps you manage your income by automatically allocating funds to your expense categories.</p>' +
+                    '<div class="tutorial-highlight">' +
+                        '<h4>What You\'ll Learn:</h4>' +
+                        '<ul>' +
+                            '<li>Setting up expense categories</li>' +
+                            '<li>Managing your money flow</li>' +
+                            '<li>Tracking income and spending</li>' +
+                            '<li>Monitoring your financial progress</li>' +
+                        '</ul>' +
+                    '</div>'
+            },
+            {
+                title: "Step 1: Set Up Expense Categories",
+                content: '<p>Navigate to the <strong>Manage Expenses</strong> tab to create your budget categories.</p>' +
+                    '<div class="tutorial-visual">' +
+                        '<div class="mock-table">' +
+                            '<div class="mock-row header">' +
+                                '<span>Expense</span>' +
+                                '<span>Percentage</span>' +
+                                '<span>Available Cash</span>' +
+                            '</div>' +
+                            '<div class="mock-row">' +
+                                '<span>Rent</span>' +
+                                '<span>40%</span>' +
+                                '<span>$0.00</span>' +
+                            '</div>' +
+                            '<div class="mock-row">' +
+                                '<span>Food</span>' +
+                                '<span>30%</span>' +
+                                '<span>$0.00</span>' +
+                            '</div>' +
+                            '<div class="mock-row">' +
+                                '<span>Savings</span>' +
+                                '<span>30%</span>' +
+                                '<span>$0.00</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="tutorial-critical">' +
+                        '<strong>⚠️ Critical:</strong> Your expense percentages must total exactly 100%. This ensures your entire income is properly allocated.' +
+                    '</div>' +
+                    '<div class="tutorial-tip">' +
+                        '<strong>💡 Pro Tip:</strong> Start with 3-5 main categories. You can always add more later as your needs become clearer.' +
+                    '</div>'
+            },
+            {
+                title: "Step 2: Manage Your Money Flow",
+                content: '<p>Once your expenses are set up, you have two ways to move money around:</p>' +
+                    '<div class="tutorial-options">' +
+                        '<div class="option-card">' +
+                            '<h4>💰 Deposit</h4>' +
+                            '<p>Add funds directly to a specific expense category when you have extra money or need to manually allocate funds.</p>' +
+                            '<div class="example">Example: Adding $50 bonus directly to Savings</div>' +
+                        '</div>' +
+                        '<div class="option-card">' +
+                            '<h4>🔄 Transfer</h4>' +
+                            '<p>Reallocate funds between existing categories when your priorities change or you need to balance your budget.</p>' +
+                            '<div class="example">Example: Moving $30 from Food to Gas when needed</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="tutorial-tip">' +
+                        '<strong>💡 Best Practice:</strong> Use the reasoning field to document why you\'re moving money. This creates accountability and helps you spot spending patterns.' +
+                    '</div>'
+            },
+            {
+                title: "Step 3: Track Income & Spending",
+                content: '<p>Head to the <strong>Add Entry</strong> page to log all your financial activity:</p>' +
+                    '<div class="tutorial-entry-types">' +
+                        '<div class="entry-type">' +
+                            '<div class="entry-icon">💵</div>' +
+                            '<h4>Income</h4>' +
+                            '<p>Log your paychecks and they\'ll automatically distribute across your expense categories based on your percentages.</p>' +
+                        '</div>' +
+                        '<div class="entry-type">' +
+                            '<div class="entry-icon">💳</div>' +
+                            '<h4>Spending</h4>' +
+                            '<p>Record purchases to track where your money goes and deduct from the appropriate category.</p>' +
+                        '</div>' +
+                        '<div class="entry-type">' +
+                            '<div class="entry-icon">💰</div>' +
+                            '<h4>Deposits</h4>' +
+                            '<p>Document direct deposits to specific categories for money that doesn\'t come from regular income.</p>' +
+                        '</div>' +
+                        '<div class="entry-type">' +
+                            '<div class="entry-icon">💳</div>' +
+                            '<h4>Credit Card</h4>' +
+                            '<p>Track credit card spending separately to maintain visibility on debt and payment obligations.</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="tutorial-tip">' +
+                        '<strong>💡 Stay Organized:</strong> You can edit or delete any entry if you make a mistake. Keep your records accurate for the best insights.' +
+                    '</div>'
+            },
+            {
+                title: "Step 4: Monitor Your Progress",
+                content: '<p>Visit the <strong>Summary Dashboard</strong> to see the big picture of your finances:</p>' +
+                    '<div class="tutorial-dashboard-preview">' +
+                        '<div class="dashboard-item">' +
+                            '<div class="dash-icon">📈</div>' +
+                            '<div>' +
+                                '<h4>Financial Overview</h4>' +
+                                '<p>Track total earned, spent, saved, and deposited over any time period</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="dashboard-item">' +
+                            '<div class="dash-icon">📊</div>' +
+                            '<div>' +
+                                '<h4>Visual Analytics</h4>' +
+                                '<p>Interactive charts show spending patterns, category breakdowns, and trends over time</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="dashboard-item">' +
+                            '<div class="dash-icon">🎯</div>' +
+                            '<div>' +
+                                '<h4>Category Performance</h4>' +
+                                '<p>See which categories are over or under budget and adjust accordingly</p>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="tutorial-highlight">' +
+                        '<h4>Building History Matters</h4>' +
+                        '<p>The more consistently you track your finances, the more valuable insights you\'ll gain. After a few weeks, you\'ll see clear patterns and can make data-driven financial decisions.</p>' +
+                    '</div>'
+            }
+        ];
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.innerHTML = '';
+            
+            for (let i = 0; i < totalSteps; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot' + (i < currentStep ? ' active' : '');
+                progressBar.appendChild(dot);
+            }
+            
+            document.getElementById('progressText').textContent = `Step ${currentStep} of ${totalSteps}`;
+        }
+
+        function renderStep() {
+            const step = tutorialSteps[currentStep - 1];
+            document.getElementById('tutorialTitle').textContent = step.title;
+            document.getElementById('tutorialContent').innerHTML = step.content;
+            
+            updateProgressBar();
+            
+            // Update button visibility
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            
+            if (currentStep > 1) {
+                prevBtn.style.display = 'block';
+            } else {
+                prevBtn.style.display = 'none';
+            }
+            
+            if (currentStep < totalSteps) {
+                nextBtn.style.display = 'block';
+                finishBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'block';
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                renderStep();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                renderStep();
+            }
+        }
+
+        function skipTutorial() {
+            fetch('/complete_tutorial', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('tutorialOverlay').style.display = 'none';
+                }
+            });
+        }
+
+        function completeTutorial() {
+            fetch('/complete_tutorial', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('tutorialOverlay').style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize tutorial
+        renderStep();
+        </script>
+    {% endif %}
 {% endblock %}
