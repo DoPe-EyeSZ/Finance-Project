@@ -492,6 +492,30 @@ h2 {
     text-align: center;
 }
 
+/* Responsive stats table */
+@media (max-width: 768px) {
+    .stats-table {
+        font-size: 0.85em;
+    }
+    
+    .stats-table th,
+    .stats-table td {
+        padding: 8px 5px;
+        width: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .stats-table {
+        font-size: 0.75em;
+    }
+    
+    .stats-table th,
+    .stats-table td {
+        padding: 6px 3px;
+    }
+}
+
 .percent-wrapper {
     display: flex;
     align-items: center;
