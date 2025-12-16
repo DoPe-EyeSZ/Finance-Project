@@ -13,6 +13,8 @@ def add_spending(snap_id):
         snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      
         amount = float(request.form.get("spending"))        
         reasoning = str(request.form.get("reasoning"))
+        if not reasoning:
+            reasoning = "N/A"
         
         #Creates new spending record
         transaction = Transaction( snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id,reasoning)     #Add spending to DB
@@ -106,6 +108,8 @@ def add_credit(snap_id):
         snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()      
         amount = float(request.form.get("spending"))        
         reasoning = str(request.form.get("reasoning"))
+        if not reasoning:
+            reasoning = "N/A"
 
         #Creates new transaction record 
         transaction = Transaction(snap.expense_name, session["user_id"], snap.expense_id, amount, snap.entry_id, reasoning)     #Add spending to DB

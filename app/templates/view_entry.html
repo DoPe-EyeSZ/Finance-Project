@@ -186,6 +186,84 @@
     {% endif %}
 
 
+    {% if credits %}
+    <h1 class="section-title">Entry's Credit Log</h1>
+    <table class="expense-table">
+        <thead>
+            <tr>
+                <th>Expense</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Reasoning</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for credit in credits %}
+            <tr class="log-row" data-row-id="spending-{{credit.id}}">
+                <td>{{credit.expense_name}}</td>
+                
+                <!-- Date Display/Edit -->
+                <td>
+                    <div class="display-mode">
+                        <span class="display-text">{{credit.date}}</span>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <form action="/update_transaction_date/{{credit.id}}" method="POST" class="inline-edit-form">
+                            <input type="hidden" name="source" value="entry">
+                            <input type="date" value="{{credit.date}}" name="new_date" class="date-input-table">
+                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        </form>
+                    </div>
+                </td>
+                
+                <!-- Amount Display/Edit -->
+                <td>
+                    <div class="display-mode">
+                        <span class="display-text spent-cell">${{credit.amount}}</span>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <form action="/edit_transaction_amount/{{credit.id}}" method="POST" class="inline-edit-form">
+                            <div class="input-wrapper-small">
+                                <span class="currency-symbol-small">$</span>
+                                <input type="number" min="0" placeholder="{{credit.amount}}" name="amount" step="0.01" required>
+                            </div>
+                            <button class="btn btn-success btn-sm" type="submit">Save</button>
+                        </form>
+                    </div>
+                </td>
+                
+                <!-- Reasoning Display/Edit -->
+                <td>
+                    <div class="display-mode">
+                        <span class="display-text">{{credit.reasoning}}</span>
+                    </div>
+                    <div class="edit-mode" style="display: none;">
+                        <form action="/edit_transaction_reasoning/{{credit.id}}" method="POST" class="inline-edit-form">
+                            <input type="hidden" name="source" value="entry">
+                            <input type="text" placeholder="{{credit.reasoning}}" name="reasoning" class="note-input" required>
+                            <button class="btn btn-success btn-sm" type="submit">Save</button>
+                        </form>
+                    </div>
+                </td>
+                
+                <!-- Actions -->
+                <td>
+                    <button class="btn btn-info btn-dark btn-sm edit-toggle-btn" onclick="toggleEdit('spending-{{credit.id}}')">Edit</button>
+                    <form action="/delete_transaction/{{credit.id}}" method="POST" style="display: inline;">
+                        <input type="hidden" name="source" value="entry">
+                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                        {% if credit.credit_status %}
+                        <button class="btn btn-primary btn-sm" type="submit" formaction="/pay_credit/{{credit.id}}">Pay</button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
 
     {% if deposits %}
     <h1 class="section-title">Entry's Deposit Log</h1>

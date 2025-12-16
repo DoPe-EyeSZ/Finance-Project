@@ -61,19 +61,21 @@ def view_entry(entry_id):
                 savings = helper.calc_savings(snapshot.expense_id)      #Calculates the total savings to send to front
 
                 est_balance[snapshot] = round(savings,2)
-            print(est_balance)
-            spending = Transaction.query.filter_by(entry_id = entry_id, deposit_status = False).all()
-            deposits = Transaction.query.filter_by(entry_id = entry_id, deposit_status = True).all()
+
+
+            spending = Transaction.query.filter_by(entry_id = entry_id, credit_status = False, deposit_status = False).all()
+            credits = Transaction.query.filter_by(entry_id = entry_id, credit_status = True, deposit_status = False).all()
+            deposits = Transaction.query.filter_by(entry_id = entry_id, credit_status = False, deposit_status = True).all()
+
             total_spent = 0
             for spend in spending:
-                if not spend.credit_status:
-                    total_spent += spend.amount
+                total_spent += spend.amount
 
             total_spent = round(total_spent, 2)
             net_earnings = round(entry.income - total_spent, 2)
 
             db.session.commit()
-            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending, net_earnings = net_earnings, total_spent = total_spent, deposits = deposits)
+            return render_template("view_entry.html", snapshots = snapshots, entry = entry, est_balance = est_balance, spending = spending, net_earnings = net_earnings, total_spent = total_spent, deposits = deposits, credits = credits)
         else:
             return redirect(url_for("entry.all_entry"))
     
