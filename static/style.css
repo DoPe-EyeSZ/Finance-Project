@@ -2260,3 +2260,7 @@ h2 {
         padding: 24px;
     }
 }
+
+.collapsible-section {
+    margin-top: 2rem;
+}
