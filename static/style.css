@@ -1531,23 +1531,27 @@ h2 {
    =================================== */
 .date-editor {
     text-align: center;
+    padding: clamp(8px, 2vw, 15px);
 }
 
 .inline-date-form {
     display: inline-flex;
     align-items: center;
-    gap: 15px;
+    gap: clamp(8px, 2vw, 15px);
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .inline-date-form .btn {
-    font-size: 0.4em;
-    padding: 8px 16px;
+    font-size: clamp(0.35em, 0.8vw, 0.4em);
+    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2.5vw, 16px);
 }
 
 .inline-date-form-table {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: clamp(6px, 1.5vw, 8px);
+    flex-wrap: wrap;
 }
 
 /* ===================================
