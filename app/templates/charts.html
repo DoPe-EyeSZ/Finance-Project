@@ -6,11 +6,13 @@
     <h1 class="main-title">Your Charts</h1>
         <div class="chart-container">
             <div class="chart-box">
+                <h3>Income (Earnings Only) vs. Spending</h3>
                 <div id="income_spending"></div>
-                <p class="chart-description">The more entries you add, the more accurate and visually detailed your spending trends will become. Consistent tracking provides better financial insights over time.</p>
+                <p class="chart-description">Add more entries so the graph shows more detail</p>
             </div>
 
             <div class="chart-box">
+                <h3>Expense Breakdown</h3>
                 <div id="expense_bar"></div>
             </div>
 
@@ -20,13 +22,15 @@
                 <div class="pie-charts-grid">
 
                     <div class="pie-chart-wrapper">
+                        <h3>Savings vs. Spending</h3>
                         <div id="overview_pie"></div>
-                        <p class="chart-description">Distribution of total income between spending and savings</p>
+                        <p class="chart-description">Ratio between your income and spendings</p>
                     </div>
 
                     <div class="pie-chart-wrapper">
+                        <h3>Spending Breakdown</h3>
                         <div id="spending_pie"></div>
-                        <p class="chart-description">Breakdown of spending across all expense categories</p>
+                        <p class="chart-description">Breakdown of all your spending</p>
                     </div>
 
                 </div>
@@ -75,7 +79,6 @@
             };
             
             const layout = {
-                title: "Income/Spending Over Time",
                 autosize: true,
                 margin: {t: 60, b: 60, l: 60, r: 40},
                 xaxis: {title: "Dates"},
@@ -142,7 +145,6 @@
 
             const layout = {
                 barmode: "group",
-                title: "Individual Expense Overview",
                 autosize: true,
                 margin: {t: 60, b: 60, l: 60, r: 40}
             };
@@ -173,7 +175,6 @@
             }];
             
             const layout = {
-                title: "Spending vs. Savings",
                 autosize: true,
                 height: 400,
                 margin: {t: 70, b: 40, l: 20, r: 20},
@@ -208,7 +209,6 @@
             }];
             
             const layout = {
-                title: "Spending Breakdown",
                 autosize: true,
                 height: 400,
                 margin: {t: 70, b: 40, l: 20, r: 20},
