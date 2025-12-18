@@ -18,7 +18,6 @@ def home():
     if helper.check_login():
         user = helper.get_user(session["user_id"])
         show_tutorial = not user.view_tutorial
-        print(show_tutorial)
 
         return render_template("home.html", show_tutorial = show_tutorial)
     
@@ -320,7 +319,6 @@ def summary():
 def profile():
     if helper.check_login():
         user = User.query.filter_by(id = session["user_id"]).first()
-        print(user.view_tutorial)
         entry_count = Entry.query.filter_by(user_id = session["user_id"]).count()
         return render_template("profile.html", user = user, entry_count = entry_count)
     else:
