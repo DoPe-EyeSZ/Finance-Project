@@ -343,11 +343,16 @@ def edit_profile():
         else:
             if request.form.get("curr_pw") == user.pw:
                 new_pw = request.form.get("new_pw")
+                confirm_pw = request.form.get("confirm_pw")
                 new_name = request.form.get("new_name")
                 new_email = request.form.get("new_email")
 
                 if new_pw:
-                    user.pw = new_pw
+                    if new_pw == confirm_pw:
+                        user.pw = new_pw
+                    else:
+                        flash("Passwords do not match", "error")
+                        return redirect(url_for("user.edit_profile"))
 
                 if new_name:
                     user.name = new_name
