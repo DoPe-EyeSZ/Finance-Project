@@ -152,7 +152,11 @@ def sign_up():
             return redirect(url_for("user.home"))
         
     else:        #User just clicks on signup button
-        return render_template("signup.html")
+        if not helper.check_login():
+            return render_template("signup.html")
+        else:
+            flash("You are already signed in", "info")
+            return redirect(url_for("user.home"))
 
 
 @user.route("/delete")
