@@ -1736,18 +1736,13 @@ h2 {
     padding: clamp(10px, 2vw, 15px);
 }
 
-.pie-chart-wrapper > div {
-    width: 100%;
-    max-width: 100%;
-}
-
 .chart-description {
     color: #a7c4ff;
-    font-size: clamp(0.85em, 1.5vw, 1em);
+    font-size: 1em;
     text-align: center;
-    margin: clamp(10px, 2vw, 15px) auto 0;
+    margin: 15px auto 0;  /* Changed from margin-top: 15px */
     line-height: 1.5;
-    max-width: clamp(300px, 80vw, 500px);
+    max-width: 500px;
 }
 
 /* Responsive for smaller screens */
