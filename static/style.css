@@ -1103,12 +1103,13 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 30px;
-    margin: 15px 0;
+    padding: clamp(12px, 3vw, 20px) clamp(15px, 4vw, 30px);
+    margin: clamp(10px, 2vw, 15px) 0;
     background: #23262d;
-    border-radius: 12px;
-    border-left: 4px solid #2d6cdf;
+    border-radius: clamp(8px, 1.5vw, 12px);
+    border-left: clamp(3px, 0.5vw, 4px) solid #2d6cdf;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 15px;
 }
 
 .profile-info-item:hover {
@@ -1126,13 +1127,14 @@ h2 {
 
 .profile-value {
     color: #dbe9ff;
-    font-size: clamp(1.1em, 2.5vw, 1.4em);
+    font-size: clamp(1em, 2.5vw, 1.4em);
     font-weight: bold;
 }
 
 .profile-value.highlight {
     color: #5fb878;
-    font-size: 1.6em;
+    font-size: clamp(1.1em, 2.5vw, 1.4em);
+    font-weight: bold;
 }
 
 .profile-actions,
