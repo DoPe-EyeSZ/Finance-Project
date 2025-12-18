@@ -3,33 +3,35 @@
 
 {% block content %}
 
-
-    <div class="chart-container">
-        <div id="income_spending"></div>
-        <p class="chart-description">The more entries you add, the more accurate and visually detailed your spending trends will become. Consistent tracking provides better financial insights over time.</p>
-    </div>
-
-    <div class="chart-container">
-        <div id="expense_bar"></div>
-    </div>
-
-    <div class="chart-container">
-        <h3 class="chart-section-title">Pie Breakdown</h3>
-
-        <div class="pie-charts-grid">
-
-            <div class="pie-chart-wrapper">
-                <div id="overview_pie"></div>
-                <p class="chart-description">Distribution of total income between spending and savings</p>
+    <h1 class="main-title">Your Charts</h1>
+        <div class="chart-container">
+            <div class="chart-box">
+                <div id="income_spending"></div>
+                <p class="chart-description">The more entries you add, the more accurate and visually detailed your spending trends will become. Consistent tracking provides better financial insights over time.</p>
             </div>
 
-            <div class="pie-chart-wrapper">
-                <div id="spending_pie"></div>
-                <p class="chart-description">Breakdown of spending across all expense categories</p>
+            <div class="chart-box">
+                <div id="expense_bar"></div>
             </div>
 
+            <div class="chart-box">
+                <h3 class="chart-section-title">Pie Breakdown</h3>
+
+                <div class="pie-charts-grid">
+
+                    <div class="pie-chart-wrapper">
+                        <div id="overview_pie"></div>
+                        <p class="chart-description">Distribution of total income between spending and savings</p>
+                    </div>
+
+                    <div class="pie-chart-wrapper">
+                        <div id="spending_pie"></div>
+                        <p class="chart-description">Breakdown of spending across all expense categories</p>
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
 
 {% endblock %}
 
@@ -74,11 +76,18 @@
             
             const layout = {
                 title: "Income/Spending Over Time",
+                autosize: true,
+                margin: {t: 60, b: 60, l: 60, r: 40},
                 xaxis: {title: "Dates"},
                 yaxis: {title: "Cash ($)"}
             };
 
-            Plotly.newPlot("income_spending", [income, spending], layout, {displayModeBar: false});
+            const config = {
+                responsive: true,
+                displayModeBar: false
+            };
+
+            Plotly.newPlot("income_spending", [income, spending], layout, config);
         });
 
 
@@ -133,10 +142,17 @@
 
             const layout = {
                 barmode: "group",
-                title: "Individual Expense Overview"
+                title: "Individual Expense Overview",
+                autosize: true,
+                margin: {t: 60, b: 60, l: 60, r: 40}
             };
 
-            Plotly.newPlot("expense_bar", [earned, spending, deposits, savings], layout, {displayModeBar: false})
+            const config = {
+                responsive: true,
+                displayModeBar: false
+            };
+
+            Plotly.newPlot("expense_bar", [earned, spending, deposits, savings], layout, config);
         });
 
         fetch("/save_spend_data").then(response => response.json()).then(data => {
@@ -151,16 +167,16 @@
                 textposition: "outside",
                 automargin: true,
                 textfont: {
-                    size: 14
+                    size: 12
                 },
                 hovertemplate: '<b>%{label}</b><br>$%{value}<br>%{percent}<extra></extra>'
             }];
             
             const layout = {
                 title: "Spending vs. Savings",
+                autosize: true,
                 height: 400,
-                width: 500,
-                margin: {t: 60, b: 40, l: 40, r: 40},
+                margin: {t: 70, b: 40, l: 20, r: 20},
                 showlegend: false,
                 hoverlabel: {
                     font: {
@@ -169,7 +185,12 @@
                 }
             };
             
-            Plotly.newPlot('overview_pie', values, layout, {displayModeBar: false});
+            const config = {
+                responsive: true,
+                displayModeBar: false
+            };
+            
+            Plotly.newPlot('overview_pie', values, layout, config);
         });
 
         fetch("/all_spend_data").then(response => response.json()).then(data => {
@@ -181,16 +202,16 @@
                 textposition: "outside",
                 automargin: true,
                 textfont: {
-                    size: 14
+                    size: 12
                 },
                 hovertemplate: '<b>%{label}</b><br>$%{value}<br>%{percent}<extra></extra>'
             }];
             
             const layout = {
                 title: "Spending Breakdown",
+                autosize: true,
                 height: 400,
-                width: 500,
-                margin: {t: 60, b: 40, l: 40, r: 40},
+                margin: {t: 70, b: 40, l: 20, r: 20},
                 showlegend: false,
                 hoverlabel: {
                     font: {
@@ -199,7 +220,12 @@
                 }
             };
             
-            Plotly.newPlot('spending_pie', values, layout, {displayModeBar: false});
+            const config = {
+                responsive: true,
+                displayModeBar: false
+            };
+            
+            Plotly.newPlot('spending_pie', values, layout, config);
         });
     </script>
 

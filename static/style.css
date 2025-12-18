@@ -1734,6 +1734,13 @@ h2 {
     flex-direction: column;
     align-items: center;
     padding: clamp(10px, 2vw, 15px);
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.pie-chart-wrapper > div {
+    width: 100%;
+    max-width: 600px;
 }
 
 .chart-description {
@@ -2310,4 +2317,15 @@ h2 {
     .button-group .btn {
         width: 100%;
     }
+}
+
+.chart-box {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: clamp(6px, 1.5vw, 10px);
+    padding: clamp(15px, 3vw, 25px);
+    margin-bottom: clamp(20px, 3vw, 30px);
+}
+
+.chart-box:last-child {
+    margin-bottom: 0;
 }
