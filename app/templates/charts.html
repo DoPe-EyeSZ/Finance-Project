@@ -77,33 +77,6 @@
             Plotly.newPlot("income_spending", [income, spending], layout, {displayModeBar: false});
         });
 
-        fetch("/savings_data").then(response =>response.json()).then(data =>{
-            const saving = {
-                x: data.dates,
-                y: data.saving_data,
-                name: "All Savings",
-                type: "scatter",
-                mode: "lines+markers",
-                line: {
-                    color: '#5fb878',
-                    width: 3
-                },
-                marker: {
-                    color: '#5fb878',
-                    size: 8
-                },
-                text: data.saving_data.map(val => `$${val}`),
-                hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'
-            };
-
-            const layout = {
-                title: "Savings Over Time",
-                xaxis: {title: "Dates"},
-                yaxis: {title: "Cash ($)"}
-            };
-
-            Plotly.newPlot("saving", [saving], layout, {displayModeBar: false});
-        });
 
         fetch("/all_expense_data").then(response => response.json()).then(data=>{
             const earned = {
