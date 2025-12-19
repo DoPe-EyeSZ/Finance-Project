@@ -1467,12 +1467,11 @@ h2 {
     padding: clamp(12px, 2.5vw, 16px) clamp(28px, 5vw, 40px);
 }
 
-.hero-btn.primary:hover { 
+.hero-btn.primary:hover {
     background: #1f5bb8;
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(45, 108, 223, 0.5);
 }
-
 
 .hero-btn.secondary {
     background: transparent;
