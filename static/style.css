@@ -1463,6 +1463,8 @@ h2 {
     background: #2d6cdf;
     color: white;
     box-shadow: 0 4px 15px rgba(45, 108, 223, 0.4);
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    padding: clamp(12px, 2.5vw, 16px) clamp(28px, 5vw, 40px);
 }
 
 .hero-btn.primary:hover {
@@ -1475,6 +1477,8 @@ h2 {
     background: transparent;
     color: #a7c4ff;
     border: 2px solid #2d6cdf;
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    padding: clamp(12px, 2.5vw, 16px) clamp(28px, 5vw, 40px);
 }
 
 .hero-btn.secondary:hover {
