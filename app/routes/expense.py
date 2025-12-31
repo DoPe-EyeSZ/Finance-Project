@@ -65,6 +65,7 @@ def add_expense():
         if request.method == "POST":        #Adds a new expense
             inputted_expense = request.form["expense_name"]
             inputted_percentage = float(request.form["percent"])
+
             expense = Expenses(session["user_id"], inputted_expense.upper(), inputted_percentage)
             db.session.add(expense)
             db.session.commit()
@@ -74,6 +75,7 @@ def add_expense():
     else:
         return redirect(url_for("user.login"))
 
+
 @expense.route("/edit_expense/<expense_id>", methods = ["POST"])     
 def edit_expense(expense_id):
     if helper.check_login():
@@ -81,6 +83,7 @@ def edit_expense(expense_id):
         if request.method == "POST":        #Edits an expense
             new_name = request.form.get("name")
             new_percent = request.form.get("percentage")
+
             old_expense = Expenses.query.filter_by(id = expense_id).first()
             old_expense.change_name(new_name.upper())
             old_expense.change_percentage(new_percent)
@@ -98,11 +101,11 @@ def archive_expense(expense_id):
     if helper.check_login():
         if request.method == "POST":        
             snap_count = Exp_Snap.query.filter_by(expense_id = expense_id).count()
-            deposits = Transaction.query.filter_by(expense_id = expense_id).count()
+            transaction = Transaction.query.filter_by(expense_id = expense_id).count()
             removed_expense = Expenses.query.filter_by(id = expense_id).first()
 
             #If expense still holds user data, then don't display; Otherwise permanently delete expense
-            if snap_count>0 or deposits > 0:    
+            if snap_count>0 or transaction > 0:    
                 removed_expense.status = False
                 
             else:       
