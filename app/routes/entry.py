@@ -95,14 +95,16 @@ def delete_entry(entry_id):
             db.session.commit()
 
 
-            #Deletes all inactive expenses that no longer have snapshots in entries 
+            #Deletes all inactive expenses that no longer have snapshots or deposits in entries 
             inactive_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = False).all()
             inactive_expense_id = [expense.id for expense in inactive_expenses]     #Used to query snapshots of only inactive expenses
             inactive_snaps = Exp_Snap.query.filter(Exp_Snap.expense_id.in_(inactive_expense_id)).all()
             inactive_snaps_id = [snap.expense_id for snap in inactive_snaps]
 
+            all_deposits = Transaction.query.filter(Transaction.expense_id.in_(inactive_expense_id)).all()
+
             for expense in inactive_expenses:
-                if expense.id not in inactive_snaps_id:
+                if not (expense.id in inactive_snaps_id or expense.id in all_deposits):
                     db.session.delete(expense)
 
         
