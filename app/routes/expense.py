@@ -32,10 +32,13 @@ def expenses():
             expense_data[deposit.expense_id] = expense_data.get(deposit.expense_id, 0.0) + deposit.amount
 
         for expense in expenses:        #Separates expense types between archived and unarchived
+            savings = round(expense_data.get(expense.id, 0.0), 2)
+            expense.savings = savings
+            
             if expense.status:
-                active_expenses[expense] = round(expense_data.get(expense.id, 0.0), 2)
+                active_expenses[expense] = savings
             else:
-                inactive_expenses[expense] = round(expense_data.get(expense.id, 0.0), 2)
+                inactive_expenses[expense] = savings
 
 
         #Validates that active expense percentages sum to 100%      [allocation total, is_valid]
