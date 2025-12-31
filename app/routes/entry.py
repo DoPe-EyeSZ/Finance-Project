@@ -105,8 +105,6 @@ def delete_entry(entry_id):
                 if expense.id not in inactive_snaps_id:
                     db.session.delete(expense)
 
-                    
-            
         
         db.session.commit()    
         return redirect(url_for("entry.all_entry"))
@@ -119,9 +117,11 @@ def delete_entry(entry_id):
 def add_income(entry_id):
     if helper.check_login():
         if request.method == "POST":
-            income = float(request.form.get("income"))
+
+            income = float(request.form.get("income"))      #Retrieve income amount
             current_entry = Entry.query.filter_by(user_id = session["user_id"], id = int(entry_id)).first()
-            current_entry.add_money(income)
+            current_entry.add_money(income)     #Sums current income amount with added
+
             db.session.commit()
             return redirect(url_for("entry.view_entry", entry_id = entry_id))
         
@@ -136,6 +136,7 @@ def add_income(entry_id):
 def update_date(entry_id):
     if helper.check_login():
         entry = Entry.query.filter_by(id = int(entry_id)).first()
+
         if request.method == "POST":
             new_date = request.form.get("new_date")
             entry.date = new_date
@@ -152,8 +153,8 @@ def transfer():
 
         snap_id = request.form.get("snap_id")
         amount = request.form.get("amount")
+
         snap = Exp_Snap.query.filter_by(id = int(snap_id)).first()
-        #__init__(self, expense_name, user_id, expense_id, amount, entry_id=None, reasoning=None):
         deposit = Transaction(snap.expense_name, session["user_id"], snap.expense_id, float(amount), snap.entry_id, "Deposit")
         db.session.add(deposit)
         deposit.deposit_status = True
