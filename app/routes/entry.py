@@ -102,9 +102,10 @@ def delete_entry(entry_id):
             inactive_snaps_id = [snap.expense_id for snap in inactive_snaps]
 
             all_deposits = Transaction.query.filter(Transaction.expense_id.in_(inactive_expense_id)).all()
+            deposit_id = [deposit.expense_id for deposit in all_deposits]
 
             for expense in inactive_expenses:
-                if not (expense.id in inactive_snaps_id or expense.id in all_deposits):
+                if not (expense.id in inactive_snaps_id or expense.id in deposit_id):
                     db.session.delete(expense)
 
         
