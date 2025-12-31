@@ -32,9 +32,9 @@ def expenses():
             expense_data[deposit.expense_id] = expense_data.get(deposit.expense_id, 0.0) + deposit.amount
 
         for expense in expenses:        #Separates expense types between archived and unarchived
-            savings = round(expense_data.get(expense.id, 0.0), 2)
+            savings = round((expense_data.get(expense.id, 0.0) + expense.transferred), 2)
             expense.savings = savings
-            
+
             if expense.status:
                 active_expenses[expense] = savings
             else:
@@ -55,6 +55,7 @@ def expenses():
         #List of all deposits for display
         deposits = Transaction.query.filter_by(user_id = session["user_id"], deposit_status = True).all()
 
+        db.session.commit()
         return render_template("expenses.html", active_expenses = active_expenses, inactive_expenses = inactive_expenses, status = allocation_check, all_expenses = all_expenses, deposits = deposits)       
     
     else:
@@ -160,15 +161,16 @@ def reallocate():
             to_expense = Expenses.query.filter_by(id = int(request.form.get("to_expense"))).first()
             amount = float(request.form.get("amount"))
 
-            if helper.calc_savings(from_expense.id) >= amount:
+            print(from_expense.savings)
+            if from_expense.savings >= amount:
                 from_expense.transferred -= amount
                 to_expense.transferred += amount
-                db.session.commit()
-
+                
             else:
                 flash(f"You don’t have enough funds in {from_expense.name} to transfer to {to_expense.name}.", "error")
 
-            
+
+        db.session.commit()    
         return redirect(url_for("expense.expenses"))
     else:
         return redirect(url_for("user.login"))
