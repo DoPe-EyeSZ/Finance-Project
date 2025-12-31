@@ -77,6 +77,60 @@
                 text: data.spending.map(val => `$${val}`),  
                 hovertemplate: '<b>%{text}</b><br>Date: %{x}<extra></extra>'
             };
+
+            // Function to interpolate income at a given date
+            function getIncomeAtDate(targetDate) {
+                const targetTime = new Date(targetDate).getTime();
+                
+                // Find the two income points that bracket this date
+                for (let i = 0; i < data.dates_income.length - 1; i++) {
+                    const date1 = new Date(data.dates_income[i]).getTime();
+                    const date2 = new Date(data.dates_income[i + 1]).getTime();
+                    
+                    if (targetTime >= date1 && targetTime <= date2) {
+                        // Linear interpolation
+                        const ratio = (targetTime - date1) / (date2 - date1);
+                        const income1 = data.income[i];
+                        const income2 = data.income[i + 1];
+                        return income1 + ratio * (income2 - income1);
+                    }
+                }
+                
+                // If before first income point or after last, return null
+                return null;
+            }
+
+            // Create warning markers
+            const warningPoints = {
+                x: [],
+                y: [],
+                type: "scatter",
+                mode: "markers",
+                name: "⚠️ Over Spent",
+                marker: {
+                    color: '#f4d03f',
+                    size: 9,
+                    symbol: 'circle',
+                    line: {
+                        color: '#f39c12',
+                        width: 2
+                    }
+                },
+                text: [],
+                hovertemplate: '<b>⚠️ WARNING</b><br>Spending: %{text}<br>Date: %{x}<extra></extra>'
+            };
+
+            // Check each spending point against interpolated income
+            data.spending.forEach((spend, i) => {
+                const spendDate = data.dates_spending[i];
+                const interpolatedIncome = getIncomeAtDate(spendDate);
+                
+                if (interpolatedIncome !== null && spend > interpolatedIncome) {
+                    warningPoints.x.push(spendDate);
+                    warningPoints.y.push(spend);
+                    warningPoints.text.push(`$${spend}`);
+                }
+            });
             
             const layout = {
                 autosize: true,
@@ -90,7 +144,7 @@
                 displayModeBar: false
             };
 
-            Plotly.newPlot("income_spending", [income, spending], layout, config);
+            Plotly.newPlot("income_spending", [income, spending, warningPoints], layout, config);
         });
 
 
