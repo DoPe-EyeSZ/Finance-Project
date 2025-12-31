@@ -95,16 +95,20 @@ def delete_entry(entry_id):
             db.session.commit()
 
 
-            #If a deleted expense does not hold user data then permanently delete expense
-            expenses = Expenses.query.filter_by(user_id = session["user_id"], status = False).all()
-            for expense in expenses:
-                remaining_snaps = Exp_Snap.query.filter_by(expense_id = expense.id).count()
-                if remaining_snaps ==0:
+            #Deletes all inactive expenses that no longer have snapshots in entries 
+            inactive_expenses = Expenses.query.filter_by(user_id = session["user_id"], status = False).all()
+            inactive_expense_id = [expense.id for expense in inactive_expenses]     #Used to query snapshots of only inactive expenses
+            inactive_snaps = Exp_Snap.query.filter(Exp_Snap.expense_id.in_(inactive_expense_id)).all()
+            inactive_snaps_id = [snap.expense_id for snap in inactive_snaps]
+
+            for expense in inactive_expenses:
+                if expense.id not in inactive_snaps_id:
                     db.session.delete(expense)
-                    db.session.commit()
+
+                    
             
         
-            
+        db.session.commit()    
         return redirect(url_for("entry.all_entry"))
     
     else:
