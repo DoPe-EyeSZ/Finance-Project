@@ -19,12 +19,6 @@ As a result of this struggle, I decided to make a finance system that allows one
 4. View overall financial and individual expense details (total balance, total spending, total income, total credit balance, total saved)
 5. View graphs
 
-## Screenshots/Demo
-
-![Screenshot description](path/to/screenshot.png)
-
-Or link to a demo video if you have one
-
 ## Takeaways/Learnings
 
 - I learned how to design and create data models
